@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Komila Zokirova — Frontend Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #07070f;
+    --accent: #ff6eb4;
+    --accent2: #b06eff;
+    --accent3: #6effd4;
+    --text: #e8e8f0;
+    --muted: #5a5a7a;
+    --card-bg: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.08);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; overflow-x: hidden; cursor: none; }
+
+  #cursor { width:12px; height:12px; background:var(--accent); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; mix-blend-mode:difference; top:0; left:0; }
+  #cursor-ring { width:40px; height:40px; border:1px solid rgba(255,110,180,0.5); border-radius:50%; position:fixed; pointer-events:none; z-index:9998; transition:all 0.12s ease; top:0; left:0; transform:translate(-14px,-14px); }
+  #canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; }
+
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; justify-content:space-between; align-items:center; padding:1.5rem 3rem; border-bottom:1px solid var(--border); backdrop-filter:blur(16px); background:rgba(7,7,15,0.65); }
+  .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; color:var(--accent); letter-spacing:-0.01em; }
+  .nav-links { display:flex; gap:2rem; list-style:none; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--text); }
+
+  section { position:relative; z-index:10; min-height:100vh; display:flex; align-items:center; }
+  .container { width:100%; max-width:1100px; margin:0 auto; padding:0 3rem; }
+
+  /* HERO */
+  #hero { padding-top:80px; }
+  .hero-label { font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:1.5rem; opacity:0; animation:fadeUp 0.8s 0.3s forwards; }
+  h1 { font-family:'Syne',sans-serif; font-size:clamp(2.8rem,7vw,6.5rem); font-weight:800; line-height:0.95; letter-spacing:-0.03em; margin-bottom:2rem; opacity:0; animation:fadeUp 0.8s 0.5s forwards; }
+  h1 .pink { color:var(--accent); }
+  h1 .purple { color:var(--accent2); font-style:italic; }
+  .hero-desc { max-width:480px; font-size:0.88rem; line-height:1.9; color:var(--muted); margin-bottom:3rem; opacity:0; animation:fadeUp 0.8s 0.7s forwards; }
+  .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; opacity:0; animation:fadeUp 0.8s 0.9s forwards; }
+  .btn { padding:0.8rem 2rem; font-family:'Space Mono',monospace; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; border-radius:2px; transition:all 0.2s; cursor:none; }
+  .btn-primary { background:var(--accent); color:#07070f; font-weight:700; }
+  .btn-primary:hover { background:#ff9dd0; transform:translateY(-2px); }
+  .btn-outline { border:1px solid var(--border); color:var(--text); }
+  .btn-outline:hover { border-color:var(--accent2); color:var(--accent2); transform:translateY(-2px); }
+
+  .scroll-indicator { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:0.5rem; font-size:0.65rem; letter-spacing:0.15em; color:var(--muted); animation:bounce 2s infinite; }
+  .scroll-line { width:1px; height:40px; background:linear-gradient(to bottom,var(--accent),transparent); }
+
+  /* ABOUT */
+  #about { background:rgba(0,0,0,0.2); }
+  .section-tag { font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--accent); margin-bottom:1rem; display:block; }
+  h2 { font-family:'Syne',sans-serif; font-size:clamp(2rem,4.5vw,3.2rem); font-weight:800; line-height:1.1; letter-spacing:-0.02em; margin-bottom:2rem; }
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start; }
+  .about-text { font-size:0.88rem; line-height:1.9; color:var(--muted); }
+  .about-text p + p { margin-top:1rem; }
+  .about-text strong { color:var(--text); font-weight:700; }
+  .goal-card { background:var(--card-bg); border:1px solid var(--border); border-left:2px solid var(--accent); border-radius:0 4px 4px 0; padding:1rem 1.25rem; margin-top:1.5rem; font-size:0.82rem; color:var(--muted); line-height:1.7; }
+  .goal-card span { color:var(--accent); font-weight:700; }
+
+  .skills-section h3 { font-family:'Syne',sans-serif; font-size:1.4rem; font-weight:700; margin-bottom:1.2rem; }
+  .skill-group { margin-bottom:1.4rem; }
+  .skill-group-label { font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; }
+  .skills-pills { display:flex; flex-wrap:wrap; gap:0.5rem; }
+  .pill { font-size:0.72rem; font-weight:700; padding:0.35rem 0.85rem; border-radius:2px; letter-spacing:0.05em; text-transform:uppercase; transition:transform 0.15s; cursor:default; }
+  .pill:hover { transform:translateY(-2px); }
+  .pill-html  { background:rgba(255,100,50,0.15);  color:#ff8060; border:1px solid rgba(255,100,50,0.25); }
+  .pill-css   { background:rgba(100,150,255,0.15); color:#7eaaff; border:1px solid rgba(100,150,255,0.25); }
+  .pill-js    { background:rgba(255,220,50,0.12);  color:#ffd950; border:1px solid rgba(255,220,50,0.25); }
+  .pill-react { background:rgba(100,220,255,0.12); color:#61dbfb; border:1px solid rgba(100,220,255,0.25); }
+  .pill-bs    { background:rgba(160,90,240,0.15);  color:#b06eff; border:1px solid rgba(160,90,240,0.25); }
+  .pill-scss  { background:rgba(255,100,180,0.12); color:#ff8fd6; border:1px solid rgba(255,100,180,0.25); }
+  .pill-tw    { background:rgba(50,200,200,0.12);  color:#3bd6c6; border:1px solid rgba(50,200,200,0.25); }
+  .pill-git   { background:rgba(255,140,60,0.12);  color:#ff9c55; border:1px solid rgba(255,140,60,0.25); }
+  .pill-fig   { background:rgba(255,110,180,0.12); color:#ff6eb4; border:1px solid rgba(255,110,180,0.25); }
+
+  /* PROJECTS */
+  .projects-note { font-size:0.8rem; color:var(--muted); margin-top:-1rem; margin-bottom:2.5rem; border-left:2px solid var(--accent2); padding-left:0.8rem; }
+  .projects-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+  .project-card { background:var(--card-bg); border:1px solid var(--border); border-radius:4px; padding:1.75rem; transition:all 0.3s; position:relative; overflow:hidden; }
+  .project-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transform:scaleX(0); transform-origin:left; transition:transform 0.3s; }
+  .project-card:hover { border-color:rgba(255,255,255,0.15); transform:translateY(-4px); }
+  .project-card:hover::before { transform:scaleX(1); }
+  .project-num { font-size:0.65rem; color:var(--muted); letter-spacing:0.15em; margin-bottom:1.2rem; }
+  .project-card h3 { font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:700; margin-bottom:0.6rem; }
+  .project-card p { font-size:0.8rem; color:var(--muted); line-height:1.7; margin-bottom:1.2rem; }
+  .tags { display:flex; gap:0.4rem; flex-wrap:wrap; }
+  .tag { font-size:0.65rem; padding:0.2rem 0.55rem; border-radius:2px; background:rgba(176,110,255,0.1); color:var(--accent2); }
+  .wip-badge { display:inline-block; font-size:0.6rem; padding:0.2rem 0.6rem; border-radius:2px; background:rgba(255,110,180,0.12); color:var(--accent); border:1px solid rgba(255,110,180,0.25); margin-bottom:1rem; letter-spacing:0.1em; text-transform:uppercase; }
+
+  /* CONTACT */
+  #contact { text-align:center; }
+  #contact h2 { margin-bottom:1rem; }
+  .contact-sub { font-size:0.85rem; color:var(--muted); margin-bottom:3rem; }
+  .contact-email { font-family:'Syne',sans-serif; font-size:clamp(1.1rem,3vw,2.2rem); font-weight:800; color:var(--text); text-decoration:none; border-bottom:2px solid var(--accent); padding-bottom:4px; transition:color 0.2s; cursor:none; word-break:break-all; }
+  .contact-email:hover { color:var(--accent); }
+  .contact-links { display:flex; justify-content:center; flex-wrap:wrap; gap:1rem; margin-top:2.5rem; }
+  .contact-link { display:flex; align-items:center; gap:0.6rem; font-size:0.75rem; color:var(--muted); text-decoration:none; border:1px solid var(--border); padding:0.65rem 1.2rem; border-radius:2px; transition:all 0.2s; cursor:none; }
+  .contact-link:hover { color:var(--text); border-color:var(--accent); transform:translateY(-2px); }
+
+  footer { position:relative; z-index:10; border-top:1px solid var(--border); padding:2rem 3rem; display:flex; justify-content:space-between; align-items:center; font-size:0.7rem; color:var(--muted); }
+  .footer-links { display:flex; gap:1.5rem; }
+  .footer-links a { color:var(--muted); text-decoration:none; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--accent); }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes bounce { 0%,100% { transform:translateX(-50%) translateY(0); } 50% { transform:translateX(-50%) translateY(8px); } }
+
+  @media (max-width:768px) {
+    nav { padding:1.2rem 1.5rem; }
+    .container { padding:0 1.5rem; }
+    .about-grid { grid-template-columns:1fr; gap:2.5rem; }
+    footer { flex-direction:column; gap:1rem; text-align:center; }
+    body { cursor:auto; }
+    #cursor, #cursor-ring { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<canvas id="canvas"></canvas>
+
+<nav>
+  <div class="logo">komila.dev</div>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <p class="hero-label">// Frontend Developer — Uzbekistan</p>
+    <h1>Hi, I'm<br><span class="pink">Komila</span><br><span class="purple">Zokirova</span></h1>
+    <p class="hero-desc">I craft user-friendly and visually compelling web interfaces. Currently deepening my skills in JavaScript and the React ecosystem. Open to collaborating on open-source projects.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn btn-primary">View my work</a>
+      <a href="#contact" class="btn btn-outline">Get in touch</a>
+    </div>
+    <div class="scroll-indicator">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <span class="section-tag">// 01 — about me</span>
+    <div class="about-grid">
+      <div>
+        <h2>Who<br>am I?</h2>
+        <div class="about-text">
+          <p>I'm <strong>Komila Zokirova</strong>, a creative frontend developer based in <strong>Uzbekistan</strong>. My goal is to build high-quality, user-friendly web interfaces that are both functional and beautiful.</p>
+          <p>I'm currently diving deeper into <strong>JavaScript</strong> and the <strong>React</strong> ecosystem. I believe that great design and great code go hand in hand.</p>
+          <p>I'm passionate about <strong>open-source</strong> and love being part of the developer community — learning, sharing, and growing together.</p>
+        </div>
+        <div class="goal-card">
+          <span>// My goal:</span><br>
+          To become a professional frontend developer who creates fast, accessible, and delightful web experiences that make a real impact.
+        </div>
+      </div>
+
+      <div class="skills-section">
+        <h3>My skills</h3>
+        <div class="skill-group">
+          <div class="skill-group-label">core</div>
+          <div class="skills-pills">
+            <span class="pill pill-html">HTML5</span>
+            <span class="pill pill-css">CSS3</span>
+            <span class="pill pill-js">JavaScript</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-label">frameworks & libraries</div>
+          <div class="skills-pills">
+            <span class="pill pill-react">React</span>
+            <span class="pill pill-bs">Bootstrap</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-label">styling</div>
+          <div class="skills-pills">
+            <span class="pill pill-scss">SCSS / Sass</span>
+            <span class="pill pill-tw">Tailwind CSS</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-label">tools</div>
+          <div class="skills-pills">
+            <span class="pill pill-git">Git & GitHub</span>
+            <span class="pill pill-fig">Figma</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <span class="section-tag">// 02 — projects</span>
+    <h2>My work</h2>
+    <p class="projects-note">Early stage — more coming soon as I keep building!</p>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="wip-badge">In progress</div>
+        <div class="project-num">001</div>
+        <h3>Personal Portfolio</h3>
+        <p>The site you're looking at right now — built with Three.js for 3D effects, smooth animations, and a modern dark aesthetic.</p>
+        <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JS</span><span class="tag">Three.js</span></div>
+      </div>
+      <div class="project-card">
+        <div class="wip-badge">Planned</div>
+        <div class="project-num">002</div>
+        <h3>React App</h3>
+        <p>An interactive web application built while learning the React ecosystem. Details coming soon.</p>
+        <div class="tags"><span class="tag">React</span><span class="tag">Tailwind</span><span class="tag">JS</span></div>
+      </div>
+      <div class="project-card">
+        <div class="wip-badge">Planned</div>
+        <div class="project-num">003</div>
+        <h3>Open-Source Contributions</h3>
+        <p>Contributions to open-source projects on GitHub — from small bug fixes to meaningful pull requests.</p>
+        <div class="tags"><span class="tag">GitHub</span><span class="tag">Open-Source</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <span class="section-tag">// 03 — contact</span>
+    <h2>Let's work<br>together?</h2>
+    <p class="contact-sub">Whether it's a new project, a collaboration, or just a hello — reach out!</p>
+    <a href="mailto:zokirovakomila500@gmail.com" class="contact-email">zokirovakomila500@gmail.com</a>
+    <div class="contact-links">
+      <a href="https://github.com/komilazokirova" target="_blank" class="contact-link">GitHub</a>
+      <a href="https://t.me/Komila2608" target="_blank" class="contact-link">Telegram</a>
+      <a href="https://www.linkedin.com/feed/" target="_blank" class="contact-link">LinkedIn</a>
+      <a href="https://youtube.com/@KomilaZokirova-n2z" target="_blank" class="contact-link">YouTube</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Komila Zokirova — Frontend Developer</span>
+  <div class="footer-links">
+    <a href="https://github.com/komilazokirova" target="_blank">GitHub</a>
+    <a href="https://t.me/Komila2608" target="_blank">Telegram</a>
+    <a href="mailto:zokirovakomila500@gmail.com">Email</a>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ── CURSOR ──────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+(function lerpCursor() {
+  requestAnimationFrame(lerpCursor);
+  rx += (mx - rx) * 0.18;
+  ry += (my - ry) * 0.18;
+  cursor.style.transform = `translate(${mx-6}px,${my-6}px)`;
+  ring.style.transform = `translate(${rx-20}px,${ry-20}px)`;
+})();
+
+document.querySelectorAll('a,.project-card,.pill').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.width='64px'; ring.style.height='64px'; ring.style.borderColor='rgba(255,110,180,0.8)'; });
+  el.addEventListener('mouseleave', () => { ring.style.width='40px'; ring.style.height='40px'; ring.style.borderColor='rgba(255,110,180,0.5)'; });
+});
+
+// ── THREE.JS ─────────────────────────────────────
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 5);
+
+// ── GALAXY PARTICLES ──────────────────────────────
+function createGalaxy() {
+  const count = 4000;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  const col = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+
+  const branches = 4;
+  const spin = 1.2;
+  const spread = 2.5;
+
+  for (let i = 0; i < count; i++) {
+    const r = Math.random() * 6;
+    const branch = (i % branches) / branches * Math.PI * 2;
+    const spinAngle = r * spin;
+    const randX = Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1) * spread * (r / 6);
+    const randY = Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1) * spread * (r / 6);
+    const randZ = Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1) * spread * (r / 6);
+
+    pos[i*3]   = Math.cos(branch + spinAngle) * r + randX;
+    pos[i*3+1] = randY * 0.3;
+    pos[i*3+2] = Math.sin(branch + spinAngle) * r + randZ;
+
+    sizes[i] = Math.random() * 2 + 0.5;
+
+    // Color gradient: pink center → purple mid → teal outer
+    const ratio = r / 6;
+    if (ratio < 0.4) {
+      col[i*3] = 1.0; col[i*3+1] = 0.43 + ratio; col[i*3+2] = 0.7 + ratio * 0.5;
+    } else if (ratio < 0.7) {
+      col[i*3] = 0.69 - ratio * 0.3; col[i*3+1] = 0.43; col[i*3+2] = 1.0;
+    } else {
+      col[i*3] = 0.2; col[i*3+1] = 0.9; col[i*3+2] = 0.83;
+    }
+  }
+
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+  const mat = new THREE.PointsMaterial({
+    size: 0.018,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.85,
+    sizeAttenuation: true,
+    depthWrite: false,
+  });
+
+  return new THREE.Points(geo, mat);
+}
+
+const galaxy = createGalaxy();
+galaxy.rotation.x = 0.4;
+scene.add(galaxy);
+
+// ── FLOATING SHAPES ───────────────────────────────
+
+// Pink Icosahedron — right side
+const icoMesh = new THREE.Mesh(
+  new THREE.IcosahedronGeometry(0.8, 1),
+  new THREE.MeshStandardMaterial({ color:0xff6eb4, wireframe:true, transparent:true, opacity:0.35 })
+);
+icoMesh.position.set(3.5, 0.2, -1);
+scene.add(icoMesh);
+
+// Purple Torus Knot — left side
+const knotMesh = new THREE.Mesh(
+  new THREE.TorusKnotGeometry(0.5, 0.15, 120, 16),
+  new THREE.MeshStandardMaterial({ color:0xb06eff, wireframe:true, transparent:true, opacity:0.3 })
+);
+knotMesh.position.set(-3.5, 0, -1);
+scene.add(knotMesh);
+
+// Teal Octahedron — top right
+const octMesh = new THREE.Mesh(
+  new THREE.OctahedronGeometry(0.45),
+  new THREE.MeshStandardMaterial({ color:0x6effd4, wireframe:true, transparent:true, opacity:0.4 })
+);
+octMesh.position.set(1.8, 2.2, -2);
+scene.add(octMesh);
+
+// Small pink dodecahedron
+const dodMesh = new THREE.Mesh(
+  new THREE.DodecahedronGeometry(0.3),
+  new THREE.MeshStandardMaterial({ color:0xff6eb4, wireframe:true, transparent:true, opacity:0.35 })
+);
+dodMesh.position.set(-1.5, -2, -1.5);
+scene.add(dodMesh);
+
+// Rings — decorative
+const ring1 = new THREE.Mesh(
+  new THREE.TorusGeometry(1.2, 0.01, 8, 80),
+  new THREE.MeshBasicMaterial({ color:0xff6eb4, transparent:true, opacity:0.15 })
+);
+ring1.rotation.x = Math.PI / 3;
+ring1.position.set(3.5, 0.2, -1);
+scene.add(ring1);
+
+const ring2 = new THREE.Mesh(
+  new THREE.TorusGeometry(0.9, 0.008, 8, 80),
+  new THREE.MeshBasicMaterial({ color:0xb06eff, transparent:true, opacity:0.15 })
+);
+ring2.rotation.x = Math.PI / 2.5;
+ring2.rotation.z = Math.PI / 4;
+ring2.position.set(-3.5, 0, -1);
+scene.add(ring2);
+
+// ── LIGHTS ───────────────────────────────────────
+scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+
+const pinkLight = new THREE.PointLight(0xff6eb4, 3, 12);
+pinkLight.position.set(3, 2, 2);
+scene.add(pinkLight);
+
+const purpleLight = new THREE.PointLight(0xb06eff, 2.5, 12);
+purpleLight.position.set(-3, -1, 1);
+scene.add(purpleLight);
+
+const tealLight = new THREE.PointLight(0x6effd4, 1.5, 8);
+tealLight.position.set(0, -3, 2);
+scene.add(tealLight);
+
+// ── MOUSE ────────────────────────────────────────
+let tx = 0, ty = 0;
+document.addEventListener('mousemove', e => {
+  tx = (e.clientX / window.innerWidth - 0.5) * 1.2;
+  ty = -(e.clientY / window.innerHeight - 0.5) * 1.2;
+});
+
+// ── ANIMATE ──────────────────────────────────────
+const clock = new THREE.Clock();
+
+(function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  // Galaxy slow rotation
+  galaxy.rotation.y = t * 0.04;
+
+  // Floating bob
+  icoMesh.rotation.x = t * 0.3;
+  icoMesh.rotation.y = t * 0.22;
+  icoMesh.position.y = 0.2 + Math.sin(t * 0.7) * 0.18;
+
+  knotMesh.rotation.x = t * 0.25;
+  knotMesh.rotation.z = t * 0.35;
+  knotMesh.position.y = Math.sin(t * 0.6 + 1) * 0.2;
+
+  octMesh.rotation.x = t * 0.5;
+  octMesh.rotation.y = t * 0.38;
+  octMesh.position.y = 2.2 + Math.sin(t * 0.9) * 0.12;
+
+  dodMesh.rotation.y = t * 0.45;
+  dodMesh.rotation.z = t * 0.3;
+  dodMesh.position.y = -2 + Math.sin(t * 0.8 + 2) * 0.15;
+
+  ring1.rotation.y = t * 0.2;
+  ring1.position.y = 0.2 + Math.sin(t * 0.7) * 0.18;
+
+  ring2.rotation.y = t * 0.25;
+  ring2.position.y = Math.sin(t * 0.6 + 1) * 0.2;
+
+  // Breathing lights
+  pinkLight.intensity = 2.5 + Math.sin(t * 1.2) * 0.8;
+  purpleLight.intensity = 2 + Math.sin(t * 0.9 + 1) * 0.7;
+
+  // Camera follows mouse
+  camera.position.x += (tx - camera.position.x) * 0.04;
+  camera.position.y += (ty - camera.position.y) * 0.04;
+  camera.lookAt(scene.position);
+
+  renderer.render(scene, camera);
+})();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+window.addEventListener('scroll', () => {
+  galaxy.rotation.z = window.scrollY * 0.0003;
+  galaxy.position.y = window.scrollY * 0.0006;
+});
+</script>
+</body>
+</html>
