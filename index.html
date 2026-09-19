@@ -3,49 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Komila Zokirova — Qizil Qalpoqcha: Sehrli O'rmon (3D Portfolio)</title>
-  <meta name="description" content="Komila Zokirova — Frontend & Mobile Developer. Bruno Simon uslubidagi 3D interaktiv ertak portfoliysi.">
+  <title>Komila Zokirova — 3D Fairytale Adventure (Inspired by Bruno Simon)</title>
+  <meta name="description" content="Komila Zokirova — Frontend & Mobile Developer. Bruno Simon uslubidagi zamonaviy 3D Qizil Qalpoqcha o'yin-portfoliysi.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Outfit:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --ruby-red: #e63946;
-      --ruby-glow: rgba(230, 57, 70, 0.45);
-      --forest-dark: #0f1c13;
-      --fairy-gold: #ffb703;
-      --magic-teal: #52b788;
-      --parchment: #fdfbf7;
-      --parchment-border: #d4a373;
-      --wood-dark: #2b1e16;
-      --text-dark: #1b261e;
-      --text-light: #f4f1de;
+      --ruby: #e63946;
+      --ruby-dark: #b51726;
+      --ruby-glow: rgba(230, 57, 70, 0.4);
+      --gold: #ffb703;
+      --emerald: #2d6a4f;
+      --bg-dark: #121e17;
+      --glass-bg: rgba(18, 30, 23, 0.82);
+      --glass-border: rgba(255, 255, 255, 0.14);
+      --text-main: #f8f9fa;
+      --text-muted: #95a59c;
     }
     html, body {
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: var(--forest-dark);
-      font-family: 'Outfit', sans-serif;
-      color: var(--text-light);
+      background: var(--bg-dark);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-main);
       user-select: none;
       -webkit-user-select: none;
     }
 
-    /* 3D WebGL Canvas */
     #webgl-canvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       z-index: 1;
       display: block;
       outline: none;
     }
 
-    /* Top HUD / Navbar */
+    /* Top Glassmorphic HUD */
     .hud-top {
       position: fixed;
       top: 1.2rem;
@@ -57,216 +54,248 @@
       align-items: center;
       pointer-events: none;
     }
-    .hud-brand {
+    .hud-card {
       pointer-events: auto;
-      background: rgba(15, 28, 19, 0.85);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 0.6rem 1.2rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
       border-radius: 40px;
+      padding: 0.55rem 1.2rem;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      gap: 0.8rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     }
-    .brand-icon {
-      width: 28px;
-      height: 28px;
-      background: linear-gradient(135deg, var(--ruby-red), #d90429);
+    .brand-avatar {
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, var(--ruby), var(--ruby-dark));
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.95rem;
-      box-shadow: 0 0 15px var(--ruby-glow);
+      box-shadow: 0 0 12px var(--ruby-glow);
     }
-    .brand-title {
-      font-family: 'Cinzel Decorative', serif;
+    .brand-name {
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+    }
+    .brand-role {
+      font-size: 0.68rem;
+      background: rgba(82, 183, 136, 0.2);
+      color: #74c69d;
+      border: 1px solid rgba(82, 183, 136, 0.35);
+      padding: 0.2rem 0.55rem;
+      border-radius: 20px;
       font-weight: 700;
-      font-size: 1rem;
-      color: #fff;
       letter-spacing: 0.05em;
     }
-    .brand-badge {
-      font-size: 0.65rem;
-      background: rgba(82, 183, 136, 0.2);
-      color: var(--magic-teal);
-      border: 1px solid rgba(82, 183, 136, 0.4);
-      padding: 0.2rem 0.6rem;
-      border-radius: 20px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
 
-    .hud-actions {
+    .hud-right {
       pointer-events: auto;
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.75rem;
     }
-    .btn-cv-toggle {
-      background: linear-gradient(135deg, var(--fairy-gold), #fb8500);
-      color: #1a1505;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 0.82rem;
-      border: none;
-      padding: 0.65rem 1.2rem;
+
+    /* Collectible Apples Counter */
+    .apple-counter {
+      background: rgba(230, 57, 70, 0.18);
+      border: 1px solid rgba(230, 57, 70, 0.35);
+      padding: 0.45rem 0.9rem;
       border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 800;
+      font-size: 0.82rem;
+      color: #ffb4a2;
+    }
+
+    /* Sound Mute Button */
+    .sound-btn {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 4px 20px rgba(255, 183, 3, 0.35);
-      transition: all 0.25s ease;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: all 0.2s;
     }
-    .btn-cv-toggle:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 25px rgba(255, 183, 3, 0.55);
-    }
+    .sound-btn:hover { background: rgba(255, 255, 255, 0.15); }
 
     /* Language Switcher */
-    .lang-pills {
-      background: rgba(15, 28, 19, 0.85);
+    .lang-group {
+      background: var(--glass-bg);
       backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid var(--glass-border);
       border-radius: 30px;
       padding: 3px;
       display: flex;
       gap: 2px;
     }
-    .lang-item {
+    .lang-btn {
       background: transparent;
       border: none;
-      color: #889988;
+      color: var(--text-muted);
       font-size: 0.72rem;
       font-weight: 700;
-      padding: 0.38rem 0.75rem;
+      padding: 0.35rem 0.7rem;
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .lang-item:hover { color: #fff; }
-    .lang-item.active {
-      background: var(--ruby-red);
+    .lang-btn:hover { color: #fff; }
+    .lang-btn.active {
+      background: var(--ruby);
       color: #fff;
-      box-shadow: 0 0 10px var(--ruby-glow);
+      box-shadow: 0 0 12px var(--ruby-glow);
     }
 
-    /* Zone Compass / Location Banner */
-    .hud-zone {
-      position: fixed;
-      top: 5.2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 40;
-      background: rgba(15, 28, 19, 0.8);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(212, 163, 115, 0.35);
-      padding: 0.45rem 1.4rem;
+    /* Quick CV Drawer Button */
+    .btn-quick-cv {
+      background: linear-gradient(135deg, var(--gold), #fb8500);
+      color: #121810;
+      font-weight: 800;
+      font-size: 0.8rem;
+      border: none;
+      padding: 0.6rem 1.15rem;
       border-radius: 30px;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      font-size: 0.82rem;
-      color: #f4f1de;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      pointer-events: none;
-      transition: all 0.3s ease;
+      gap: 0.45rem;
+      box-shadow: 0 4px 18px rgba(255, 183, 3, 0.4);
+      transition: all 0.25s;
     }
-    .zone-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--fairy-gold);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--fairy-gold);
-      animation: pulse 1.8s infinite;
+    .btn-quick-cv:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(255, 183, 3, 0.6);
     }
 
-    /* Controls Guide (Bottom Center) */
-    .hud-controls-help {
+    /* Bottom Speedometer & Controls HUD */
+    .hud-bottom {
       position: fixed;
-      bottom: 1.6rem;
+      bottom: 1.5rem;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 40;
-      background: rgba(15, 28, 19, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 40px;
-      padding: 0.5rem 1.3rem;
+      z-index: 50;
       display: flex;
       align-items: center;
-      gap: 1rem;
-      font-size: 0.74rem;
-      color: #c0cfc2;
+      gap: 1.2rem;
       pointer-events: none;
-      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
     }
-    .key-badge {
-      display: inline-block;
+    .speed-gauge {
+      pointer-events: auto;
+      background: var(--glass-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+    .speed-bar-track {
+      width: 80px;
+      height: 6px;
       background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .speed-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #52b788, var(--gold), var(--ruby));
+      border-radius: 10px;
+      transition: width 0.08s ease-out;
+    }
+
+    .key-hints {
+      background: var(--glass-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--glass-border);
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .k-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.16);
       color: #fff;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
       font-family: 'Space Mono', monospace;
       font-weight: 700;
-      font-size: 0.7rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
       border: 1px solid rgba(255, 255, 255, 0.25);
     }
 
-    /* Action Interaction Prompt (Press E) */
-    .interaction-prompt {
+    /* Proximity Interaction Bubble (Bruno Simon style) */
+    .interact-bubble {
       position: fixed;
       bottom: 5.5rem;
       left: 50%;
       transform: translateX(-50%) scale(0.9);
       z-index: 60;
-      background: linear-gradient(135deg, var(--ruby-red), #d90429);
+      background: linear-gradient(135deg, var(--ruby), var(--ruby-dark));
       color: #fff;
-      padding: 0.7rem 1.6rem;
+      padding: 0.75rem 1.8rem;
       border-radius: 40px;
-      font-weight: 700;
-      font-size: 0.88rem;
+      font-weight: 800;
+      font-size: 0.9rem;
       display: flex;
       align-items: center;
       gap: 0.7rem;
-      box-shadow: 0 6px 30px var(--ruby-glow);
+      box-shadow: 0 10px 30px var(--ruby-glow);
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .interaction-prompt.visible {
+    .interact-bubble.active {
       opacity: 1;
       pointer-events: auto;
       transform: translateX(-50%) scale(1);
     }
-    .prompt-key {
+    .bubble-key {
       background: #fff;
-      color: var(--ruby-red);
-      width: 24px;
-      height: 24px;
+      color: var(--ruby-dark);
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'Space Mono', monospace;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 800;
     }
 
-    /* Mobile On-Screen Joystick */
+    /* Mobile Joystick */
     .mobile-controls {
       position: fixed;
       bottom: 2rem;
       left: 2rem;
-      z-index: 55;
+      z-index: 70;
       display: none;
     }
-    .joystick-base {
+    .joystick-pad {
       width: 120px;
       height: 120px;
       border-radius: 50%;
@@ -275,14 +304,13 @@
       position: relative;
       touch-action: none;
     }
-    .joystick-stick {
+    .joystick-knob {
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--ruby-red), #ff85a1);
+      background: linear-gradient(135deg, var(--ruby), #ff85a1);
       position: absolute;
-      top: 35px;
-      left: 35px;
+      top: 35px; left: 35px;
       box-shadow: 0 0 15px var(--ruby-glow);
       pointer-events: none;
       transition: transform 0.05s ease-out;
@@ -291,60 +319,55 @@
       position: fixed;
       bottom: 2.8rem;
       right: 2rem;
-      width: 65px;
-      height: 65px;
+      width: 68px;
+      height: 68px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--fairy-gold), #fb8500);
+      background: linear-gradient(135deg, var(--gold), #fb8500);
       border: 2px solid #fff;
-      color: #1a1505;
+      color: #121810;
       font-weight: 800;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 55;
+      z-index: 70;
       box-shadow: 0 4px 20px rgba(255, 183, 3, 0.4);
       cursor: pointer;
     }
 
-    /* Fairytale Modal & Storybook Overlay */
-    .fairytale-modal-overlay {
+    /* Modern 3D Project Modal */
+    .modal-backdrop {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(10, 18, 12, 0.8);
-      backdrop-filter: blur(10px);
+      background: rgba(10, 20, 14, 0.85);
+      backdrop-filter: blur(12px);
       z-index: 100;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 1.5rem;
     }
-    .fairytale-modal-overlay.active { display: flex; }
-    .storybook-modal {
-      background: #fdfbf7;
-      color: var(--text-dark);
-      border: 3px solid var(--parchment-border);
-      border-radius: 12px;
-      max-width: 640px;
+    .modal-backdrop.active { display: flex; }
+    .project-dialog {
+      background: #18281f;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      max-width: 620px;
       width: 100%;
       max-height: 85vh;
       overflow-y: auto;
-      padding: 2.5rem;
+      padding: 2.4rem;
       position: relative;
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
-      animation: modalSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      background-image: radial-gradient(#ece4db 1px, transparent 1px);
-      background-size: 20px 20px;
+      animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .modal-close-btn {
+    .dialog-close {
       position: absolute;
-      top: 1.2rem;
-      right: 1.2rem;
-      background: #eee3d5;
-      border: 1px solid var(--parchment-border);
-      color: var(--wood-dark);
-      width: 34px;
-      height: 34px;
+      top: 1.2rem; right: 1.2rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      width: 34px; height: 34px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -353,136 +376,126 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .modal-close-btn:hover {
-      background: var(--ruby-red);
-      color: #fff;
-    }
-    .modal-tag {
-      display: inline-block;
+    .dialog-close:hover { background: var(--ruby); }
+    .dialog-tag {
       font-size: 0.72rem;
       font-weight: 800;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--ruby-red);
-      margin-bottom: 0.6rem;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      display: inline-block;
     }
-    .storybook-modal h3 {
-      font-family: 'Cinzel Decorative', serif;
+    .project-dialog h3 {
       font-size: 1.6rem;
-      color: var(--wood-dark);
-      margin-bottom: 1rem;
-      line-height: 1.2;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.9rem;
+      letter-spacing: -0.02em;
     }
-    .storybook-modal p {
-      font-size: 0.95rem;
+    .project-dialog p {
+      font-size: 0.94rem;
       line-height: 1.8;
-      color: #4a554a;
+      color: #cad8ce;
       margin-bottom: 1.5rem;
     }
-    .modal-pills {
+    .tag-pills {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       margin-bottom: 2rem;
     }
-    .modal-pill {
-      background: #eee5d8;
-      border: 1px solid #d4c3b3;
-      padding: 0.3rem 0.75rem;
+    .pill {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 0.3rem 0.8rem;
       border-radius: 20px;
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       font-weight: 700;
-      color: var(--wood-dark);
+      color: #a8d5ba;
     }
-    .modal-actions {
+    .dialog-btns {
       display: flex;
-      gap: 1rem;
+      gap: 0.9rem;
       flex-wrap: wrap;
     }
-    .btn-fairytale {
-      padding: 0.75rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 0.85rem;
+    .btn-action {
+      padding: 0.75rem 1.6rem;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.86rem;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      transition: all 0.25s;
+      transition: all 0.2s;
       cursor: pointer;
+      border: none;
     }
-    .btn-fairytale-primary {
-      background: var(--ruby-red);
+    .btn-action-primary {
+      background: linear-gradient(135deg, var(--ruby), var(--ruby-dark));
       color: #fff;
-      border: 1px solid #c1121f;
-      box-shadow: 0 4px 15px var(--ruby-glow);
+      box-shadow: 0 4px 18px var(--ruby-glow);
     }
-    .btn-fairytale-primary:hover {
-      background: #d90429;
+    .btn-action-primary:hover {
       transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(230, 57, 70, 0.6);
     }
-    .btn-fairytale-outline {
-      background: #fff;
-      color: var(--wood-dark);
-      border: 1px solid var(--parchment-border);
+    .btn-action-outline {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
-    .btn-fairytale-outline:hover {
-      background: #f4ede4;
+    .btn-action-outline:hover {
+      background: rgba(255, 255, 255, 0.12);
       transform: translateY(-2px);
     }
 
     /* Contact Form Inside Modal */
-    .contact-form-group {
-      margin-bottom: 1.2rem;
-      text-align: left;
-    }
-    .contact-form-label {
+    .form-group { margin-bottom: 1.2rem; }
+    .form-label {
       display: block;
-      font-size: 0.75rem;
-      font-weight: 700;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--wood-dark);
+      color: #a0b2a5;
       margin-bottom: 0.4rem;
     }
-    .contact-form-input {
+    .form-input {
       width: 100%;
-      padding: 0.8rem 1rem;
-      background: #fff;
-      border: 1px solid var(--parchment-border);
-      border-radius: 6px;
-      font-family: 'Outfit', sans-serif;
+      padding: 0.85rem 1rem;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.9rem;
-      color: var(--text-dark);
+      color: #fff;
     }
-    .contact-form-input:focus {
+    .form-input:focus {
       outline: none;
-      border-color: var(--ruby-red);
-      box-shadow: 0 0 10px var(--ruby-glow);
+      border-color: var(--ruby);
+      box-shadow: 0 0 12px var(--ruby-glow);
     }
-    textarea.contact-form-input {
-      resize: vertical;
-      min-height: 100px;
-    }
+    textarea.form-input { resize: vertical; min-height: 100px; }
 
-    /* Quick CV Drawer / Slide-Over */
+    /* Quick CV Drawer */
     .cv-drawer {
       position: fixed;
       top: 0; right: 0; bottom: 0;
       width: 100%;
       max-width: 580px;
-      background: #122016;
-      border-left: 2px solid rgba(212, 163, 115, 0.4);
+      background: #14221a;
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
       z-index: 120;
       transform: translateX(100%);
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       padding: 2.5rem;
       overflow-y: auto;
-      box-shadow: -15px 0 50px rgba(0, 0, 0, 0.8);
+      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.7);
     }
-    .cv-drawer.open {
-      transform: translateX(0);
-    }
-    .cv-drawer-header {
+    .cv-drawer.open { transform: translateX(0); }
+    .cv-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -490,193 +503,176 @@
       padding-bottom: 1rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .cv-drawer-title {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1.4rem;
-      color: var(--fairy-gold);
-    }
-    .cv-section {
-      margin-bottom: 2.2rem;
-    }
-    .cv-section-title {
-      font-size: 0.8rem;
+    .cv-title { font-size: 1.4rem; font-weight: 800; color: var(--gold); }
+    .cv-sec-title {
+      font-size: 0.76rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--ruby-red);
-      margin-bottom: 1rem;
+      color: var(--ruby);
+      margin-bottom: 0.8rem;
       font-weight: 800;
     }
-    .cv-card {
+    .cv-box {
       background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
       padding: 1.2rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
     }
-    .cv-card h4 {
-      font-size: 1.1rem;
-      color: #fff;
-      margin-bottom: 0.4rem;
-    }
-    .cv-card p {
-      font-size: 0.85rem;
-      color: #b0c0b4;
-      line-height: 1.7;
-      margin-bottom: 0.8rem;
+    .cv-box h4 { font-size: 1.05rem; margin-bottom: 0.4rem; color: #fff; }
+    .cv-box p { font-size: 0.86rem; color: #a4b5a8; line-height: 1.7; margin-bottom: 0.8rem; }
+
+    @keyframes popIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
-    /* Animations */
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.4); opacity: 0.6; }
-    }
-    @keyframes modalSlide {
-      from { transform: translateY(30px) scale(0.95); opacity: 0; }
-      to { transform: translateY(0) scale(1); opacity: 1; }
-    }
-
-    /* Responsive */
     @media (max-width: 768px) {
       .hud-top { top: 0.8rem; left: 0.8rem; right: 0.8rem; }
-      .brand-title { font-size: 0.85rem; }
-      .brand-badge { display: none; }
-      .btn-cv-toggle span { display: none; }
-      .hud-controls-help { display: none; }
+      .brand-role { display: none; }
+      .key-hints { display: none; }
       .mobile-controls { display: block; }
       .mobile-jump-btn { display: flex; }
-      .storybook-modal { padding: 1.8rem; }
       .cv-drawer { max-width: 100%; }
+      .project-dialog { padding: 1.8rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- WebGL Three.js Canvas -->
+  <!-- 3D Canvas -->
   <canvas id="webgl-canvas"></canvas>
 
-  <!-- Top HUD Bar -->
+  <!-- Top Glass HUD -->
   <div class="hud-top">
-    <div class="hud-brand">
-      <div class="brand-icon">🍓</div>
-      <div class="brand-title">Komila Zokirova</div>
-      <div class="brand-badge" data-i18n="badge_role">Frontend & Mobile</div>
+    <div class="hud-card">
+      <div class="brand-avatar">🍓</div>
+      <div>
+        <div class="brand-name">Komila Zokirova</div>
+      </div>
+      <div class="brand-role" data-i18n="badge_role">Frontend & Mobile</div>
     </div>
 
-    <div class="hud-actions">
-      <!-- Language Selector -->
-      <div class="lang-pills">
-        <button class="lang-item active" data-lang="uz">UZ</button>
-        <button class="lang-item" data-lang="ru">RU</button>
-        <button class="lang-item" data-lang="en">EN</button>
+    <div class="hud-right">
+      <!-- Apple Collector Score -->
+      <div class="apple-counter">
+        <span>🍎</span>
+        <span id="appleCount">0</span>
+        <span style="font-size:0.68rem; color:rgba(255,255,255,0.6);">/ 10</span>
       </div>
 
-      <!-- Quick Resume Toggle -->
-      <button class="btn-cv-toggle" id="openDrawerBtn">
+      <!-- Sound Toggle -->
+      <button class="sound-btn" id="soundToggle" title="Toggle Sound">🔊</button>
+
+      <!-- Language Selector -->
+      <div class="lang-group">
+        <button class="lang-btn active" data-lang="uz">UZ</button>
+        <button class="lang-btn" data-lang="ru">RU</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+
+      <!-- Quick Resume Drawer -->
+      <button class="btn-quick-cv" id="openDrawerBtn">
         <span>📜</span>
-        <span data-i18n="btn_cv_drawer">Tezkor CV</span>
+        <span data-i18n="btn_cv">Tezkor CV</span>
       </button>
     </div>
   </div>
 
-  <!-- Current Zone Indicator -->
-  <div class="hud-zone" id="zoneBanner">
-    <div class="zone-dot"></div>
-    <span id="zoneText" data-i18n="zone_start">🌲 1-Zona: O'rmon Darvozasi (Boshlanish)</span>
+  <!-- Bottom Speedometer & Controls -->
+  <div class="hud-bottom">
+    <div class="speed-gauge">
+      <span data-i18n="lbl_speed">Tezlik</span>
+      <div class="speed-bar-track">
+        <div class="speed-bar-fill" id="speedBar"></div>
+      </div>
+    </div>
+
+    <div class="key-hints">
+      <span><span class="k-badge">W</span> <span class="k-badge">A</span> <span class="k-badge">S</span> <span class="k-badge">D</span> <span data-i18n="hint_drive">Yugurish</span></span>
+      <span>•</span>
+      <span><span class="k-badge">Space</span> <span data-i18n="hint_jump">Sakrash</span></span>
+      <span>•</span>
+      <span><span class="k-badge">E</span> <span data-i18n="hint_interact">Ko'rish</span></span>
+    </div>
   </div>
 
-  <!-- Keyboard Controls Help (Desktop) -->
-  <div class="hud-controls-help">
-    <span><span class="key-badge">W</span> <span class="key-badge">A</span> <span class="key-badge">S</span> <span class="key-badge">D</span> <span data-i18n="help_move">Yurish</span></span>
-    <span>•</span>
-    <span><span class="key-badge">Space</span> <span data-i18n="help_jump">Sakrash</span></span>
-    <span>•</span>
-    <span><span class="key-badge">E</span> <span data-i18n="help_interact">Ko'rish</span></span>
+  <!-- Action Prompt -->
+  <div class="interact-bubble" id="interactPrompt">
+    <div class="bubble-key">E</div>
+    <span id="bubbleText" data-i18n="prompt_open">Ochish uchun [E] ni bosing</span>
   </div>
 
-  <!-- Floating Interaction Prompt -->
-  <div class="interaction-prompt" id="actionPrompt">
-    <div class="prompt-key">E</div>
-    <span id="promptLabel" data-i18n="prompt_interact">Yaqinlashdingiz: Ko'rish</span>
-  </div>
-
-  <!-- Mobile On-Screen Joystick -->
-  <div class="mobile-controls" id="mobileJoystick">
-    <div class="joystick-base" id="joystickBase">
-      <div class="joystick-stick" id="joystickStick"></div>
+  <!-- Mobile Controls -->
+  <div class="mobile-controls" id="mobileControls">
+    <div class="joystick-pad" id="joystickPad">
+      <div class="joystick-knob" id="joystickKnob"></div>
     </div>
   </div>
   <button class="mobile-jump-btn" id="mobileJumpBtn">▲</button>
 
-  <!-- Fairytale Storybook Modal (Dynamic for Stations) -->
-  <div class="fairytale-modal-overlay" id="stationModal">
-    <div class="storybook-modal" id="modalInner">
-      <button class="modal-close-btn" id="modalCloseBtn">✕</button>
-      <div id="modalDynamicContent">
-        <!-- Injected via JavaScript -->
-      </div>
+  <!-- Dynamic 3D Project / Station Modal -->
+  <div class="modal-backdrop" id="stationModal">
+    <div class="project-dialog" id="dialogContainer">
+      <button class="dialog-close" id="dialogCloseBtn">✕</button>
+      <div id="dialogContent"></div>
     </div>
   </div>
 
-  <!-- Quick CV Slide-Over Drawer -->
+  <!-- Quick CV Drawer -->
   <div class="cv-drawer" id="cvDrawer">
-    <div class="cv-drawer-header">
-      <h3 class="cv-drawer-title" data-i18n="drawer_title">Komila Zokirova</h3>
-      <button class="modal-close-btn" id="closeDrawerBtn">✕</button>
+    <div class="cv-header">
+      <h3 class="cv-title">Komila Zokirova</h3>
+      <button class="dialog-close" id="closeDrawerBtn">✕</button>
     </div>
 
-    <div class="cv-section">
-      <div class="cv-section-title" data-i18n="drawer_about_title">// Men Haqimda</div>
-      <p style="font-size:0.9rem; color:#cadcd0; line-height:1.8;" data-i18n="drawer_about_text">
-        O'zbekistonda faoliyat yurituvchi ijodkor Frontend & Mobil dasturchiman. React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS hamda React Native (Expo) yordamida tezkor, ishonchli va chiroyli raqamli mahsulotlar yarataman.
+    <div style="margin-bottom: 2rem;">
+      <div class="cv-sec-title" data-i18n="cv_about_sec">// Men Haqimda</div>
+      <p style="font-size:0.92rem; line-height:1.8; color:#cadcd0;" data-i18n="cv_about_body">
+        Frontend & Mobil Dasturchi (O'zbekiston). React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS hamda React Native (Expo) yordamida zamonaviy, tezkor va estetik raqamli mahsulotlar yarataman.
       </p>
     </div>
 
-    <div class="cv-section">
-      <div class="cv-section-title" data-i18n="drawer_skills_title">// Texnologik Ko'nikmalar</div>
-      <div class="modal-pills">
-        <span class="modal-pill">React 19</span>
-        <span class="modal-pill">TypeScript</span>
-        <span class="modal-pill">React Native (Expo)</span>
-        <span class="modal-pill">Zustand</span>
-        <span class="modal-pill">TanStack React Query</span>
-        <span class="modal-pill">Tailwind CSS v4</span>
-        <span class="modal-pill">Three.js / WebGL</span>
-        <span class="modal-pill">Vite</span>
-        <span class="modal-pill">REST API / Axios</span>
-        <span class="modal-pill">Zod Validation</span>
-        <span class="modal-pill">Git & GitHub</span>
+    <div style="margin-bottom: 2rem;">
+      <div class="cv-sec-title" data-i18n="cv_skills_sec">// Texnologik Ko'nikmalar</div>
+      <div class="tag-pills">
+        <span class="pill">React 19</span>
+        <span class="pill">TypeScript</span>
+        <span class="pill">Zustand</span>
+        <span class="pill">TanStack Query</span>
+        <span class="pill">React Native (Expo)</span>
+        <span class="pill">Tailwind CSS v4</span>
+        <span class="pill">Three.js / WebGL</span>
+        <span class="pill">REST API / Axios</span>
+        <span class="pill">Zod</span>
+        <span class="pill">Git & GitHub</span>
       </div>
     </div>
 
-    <div class="cv-section">
-      <div class="cv-section-title" data-i18n="drawer_projects_title">// Asosiy Loyihalar</div>
+    <div style="margin-bottom: 2rem;">
+      <div class="cv-sec-title" data-i18n="cv_projects_sec">// Asosiy Loyihalar</div>
       
-      <div class="cv-card">
+      <div class="cv-box">
         <h4>Bog'cha CRM</h4>
-        <p data-i18n="p1_desc">Bolalar bog'chasi boshqaruv CRM tizimi (React 19, TypeScript, Zustand, Recharts, TanStack Query).</p>
-        <a href="https://github.com/komilazokirova" target="_blank" class="btn-fairytale btn-fairytale-primary" style="font-size:0.75rem; padding:0.45rem 1rem;">GitHub ↗</a>
+        <p data-i18n="p1_short">Bolalar bog'chalari uchun keng qamrovli boshqaruv platformasi (React 19, TypeScript, Zustand, Recharts).</p>
+        <a href="https://github.com/komilazokirova" target="_blank" class="btn-action btn-action-primary" style="font-size:0.75rem; padding:0.4rem 0.9rem;">GitHub Repo ↗</a>
       </div>
 
-      <div class="cv-card">
-        <h4>Yo'l-Yo'lakay Mobile App</h4>
-        <p data-i18n="p2_desc">Shaharlararo yo'nalishlar va yo'lovchilar mobil ilovasi (React Native, Expo, TypeScript).</p>
-        <a href="https://github.com/komilazokirova" target="_blank" class="btn-fairytale btn-fairytale-primary" style="font-size:0.75rem; padding:0.45rem 1rem;">GitHub ↗</a>
-      </div>
-
-      <div class="cv-card">
-        <h4>3D Fairytale Portfolio</h4>
-        <p data-i18n="p3_desc">Qizil Qalpoqcha mavzusidagi Three.js WebGL interaktiv fizika portfoliysi.</p>
+      <div class="cv-box">
+        <h4>Yo'l-Yo'lakay Mobile</h4>
+        <p data-i18n="p2_short">Shaharlararo yo'lovchilar mobil ilovasi (React Native, Expo, TypeScript).</p>
+        <a href="https://github.com/komilazokirova" target="_blank" class="btn-action btn-action-primary" style="font-size:0.75rem; padding:0.4rem 0.9rem;">GitHub Repo ↗</a>
       </div>
     </div>
 
-    <div class="cv-section">
-      <div class="cv-section-title" data-i18n="drawer_contact_title">// Bog'lanish</div>
-      <p style="font-size:0.85rem; color:#b0c0b4; margin-bottom:1rem;">
-        Telegram: <a href="https://t.me/Komila2608" target="_blank" style="color:var(--fairy-gold);">@Komila2608</a><br>
-        Email: <a href="mailto:zokirovakomila500@gmail.com" style="color:var(--fairy-gold);">zokirovakomila500@gmail.com</a>
+    <div>
+      <div class="cv-sec-title" data-i18n="cv_contact_sec">// Aloqa</div>
+      <p style="font-size:0.88rem; color:#b0c0b4; margin-bottom:1.2rem;">
+        Telegram: <a href="https://t.me/Komila2608" target="_blank" style="color:var(--gold);">@Komila2608</a><br>
+        Email: <a href="mailto:zokirovakomila500@gmail.com" style="color:var(--gold);">zokirovakomila500@gmail.com</a>
       </p>
-      <a href="https://t.me/Komila2608?text=Salom%20Komila!%20Rezyumengizni%20kordim" target="_blank" class="btn-fairytale btn-fairytale-primary" style="width:100%; justify-content:center;">
-        Telegramda yozish ✈
+      <a href="https://t.me/Komila2608" target="_blank" class="btn-action btn-action-primary" style="width:100%; justify-content:center;">
+        Telegramda Bog'lanish ✈
       </a>
     </div>
   </div>
@@ -686,146 +682,125 @@
 
   <script>
     /* =========================================================================
-       1. MULTI-LANGUAGE (i18n) DICTIONARY (UZ, RU, EN)
+       1. MULTI-LANGUAGE (i18n) DICTIONARY
        ========================================================================= */
     const translations = {
       uz: {
         badge_role: "Frontend & Mobil",
-        btn_cv_drawer: "Tezkor CV",
-        help_move: "Yurish",
-        help_jump: "Sakrash",
-        help_interact: "Ko'rish",
-        prompt_interact: "Yaqinlashdingiz: Ko'rish [E]",
+        btn_cv: "Tezkor CV",
+        lbl_speed: "Tezlik",
+        hint_drive: "Yugurish",
+        hint_jump: "Sakrash",
+        hint_interact: "Ko'rish",
+        prompt_open: "Ochish uchun [E] ni bosing",
 
-        zone_start: "🌲 1-Zona: O'rmon Darvozasi (Boshlanish)",
-        zone_skills: "🍄 2-Zona: Sehrli Ko'nikmalar Bog'chasi",
-        zone_projects: "🏰 3-Zona: Loyihalar Vodiyasi",
-        zone_grandma: "🏡 4-Zona: Buvijonning Shinam Uychasi (Aloqa)",
+        cv_about_sec: "// Men Haqimda",
+        cv_about_body: "Frontend & Mobil Dasturchi (O'zbekiston). React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS hamda React Native (Expo) yordamida zamonaviy, tezkor va estetik raqamli mahsulotlar yarataman.",
+        cv_skills_sec: "// Texnologik Ko'nikmalar",
+        cv_projects_sec: "// Asosiy Loyihalar",
+        cv_contact_sec: "// Aloqa",
 
-        drawer_title: "Komila Zokirova",
-        drawer_about_title: "// Men Haqimda",
-        drawer_about_text: "O'zbekistonda faoliyat yurituvchi ijodkor Frontend & Mobil dasturchiman. React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS hamda React Native (Expo) yordamida tezkor, ishonchli va chiroyli raqamli mahsulotlar yarataman.",
-        drawer_skills_title: "// Texnologik Ko'nikmalar",
-        drawer_projects_title: "// Asosiy Loyihalar",
-        drawer_contact_title: "// Bog'lanish",
+        p1_short: "Bolalar bog'chalari uchun keng qamrovli boshqaruv platformasi (React 19, TypeScript, Zustand, Recharts).",
+        p2_short: "Shaharlararo yo'lovchilar mobil ilovasi (React Native, Expo, TypeScript).",
 
-        p1_desc: "Bolalar bog'chasi boshqaruv CRM tizimi (React 19, TypeScript, Zustand, Recharts, TanStack Query).",
-        p2_desc: "Shaharlararo yo'nalishlar va yo'lovchilar mobil ilovasi (React Native, Expo, TypeScript).",
-        p3_desc: "Qizil Qalpoqcha mavzusidagi Three.js WebGL interaktiv fizika portfoliysi.",
+        // Station Details
+        st_gate_tag: "O'rmon Darvozasi",
+        st_gate_title: "Xush kelibsiz! Komila Zokirova",
+        st_gate_desc: "Bruno Simon uslubidagi zamonaviy 3D interaktiv portfolioga xush kelibsiz! Qizil Qalpoqcha bilan o'rmon yo'lagi bo'ylab yuguring, poldagi ulkan 3D yozuvlarni, bowling keglilari va fizika qutilarini urib yiqiting, tramplindan sakrang va amaliy loyihalarim bilan tanishing!",
 
-        // Modal Station Contents
-        station_gate_title: "Xush kelibsiz! O'rmon Darvozasi",
-        station_gate_tag: "Boshlang'ich Nuqta",
-        station_gate_text: "Salom! Men <strong>Komila Zokirova</strong> — Frontend va Mobil dasturchiman. Siz bilan birga Bruno Simon uslubidagi ushbu sehrli ertak olamida sayr qilamiz! Oldinda sizni ko'nikmalar bog'i, amaliy loyihalarim va buvijonning shinam uychasi (aloqa) kutmoqda. Qizil Qalpoqchani boshqaring va o'rmonni kashf eting!",
-        station_gate_btn: "Sayohatni davom ettirish →",
+        st_skills_tag: "Ko'nikmalar Maydonchasi",
+        st_skills_title: "Texnologik Arsenal",
+        st_skills_desc: "Bu yerda men amalda qo'llaydigan asosiy texnologiyalar jamlangan: React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS v4 va React Native. Qutilarni urib yiqitishingiz mumkin!",
 
-        station_skills_title: "Sehrli Ko'nikmalar Maydonchasi",
-        station_skills_tag: "Texnologiyalar To'plami",
-        station_skills_text: "Bu maydonchada mening asosiy amaliy qurollarim jamlangan. Qizil Qalpoqcha bilan kubiklarga urilib, ularni to'kishingiz mumkin! Har bir texnologiya amaliy loyihalarda sinalgan:",
-        
-        station_p1_title: "Bog'cha CRM (Bolalar Bog'chasi Tizimi)",
-        station_p1_tag: "Asosiy Katta Loyiha",
-        station_p1_text: "Bolalar bog'chalari uchun to'liq boshqaruv CRM tizimi. Bolalar davomati, to'lovlar statistikasi, xodimlar va guruhlarni boshqarish uchun qulay interfeys hamda Recharts grafiklari mavjud.",
+        st_p1_tag: "Flagman Loyiha",
+        st_p1_title: "Bog'cha CRM (Kindergarten Platform)",
+        st_p1_desc: "Bolalar bog'chalari uchun to'liq boshqaruv tizimi. Bolalar davomati, to'lovlar monitoringi, xodimlar va guruhlarni boshqarish uchun qulay interfeys hamda Recharts grafiklari bilan ta'minlangan.",
 
-        station_p2_title: "Yo'l-Yo'lakay Mobil Ilovasi",
-        station_p2_tag: "React Native & Expo",
-        station_p2_text: "Shaharlararo qatnovlar va yo'lovchilar uchun qulay navigatsiya mobil ilovasi. Cross-platform React Native, Expo va TypeScript yordamida yaratilgan.",
+        st_p2_tag: "Mobil Ilova",
+        st_p2_title: "Yo'l-Yo'lakay (Navigation & Rides)",
+        st_p2_desc: "Shaharlararo yo'lovchilar va haydovchilar uchun qulay mobil navigatsiya ilovasi. Cross-platform React Native, Expo va TypeScript yordamida qurilgan.",
 
-        station_grandma_title: "Buvijonning Uychasi — Xat Yozish",
-        station_grandma_tag: "Aloqa & Hamkorlik",
-        station_grandma_text: "O'rmon oxiridagi buvijonning uychasiga xush kelibsiz! Men bilan yangi loyihalar yoki ish takliflari bo'yicha bog'lanish uchun xat qoldiring. Xabar to'g'ridan-to'g'ri Telegramimga yetib boradi:"
+        st_grandma_tag: "Buvijon Uychasi",
+        st_grandma_title: "Bog'lanish va Hamkorlik",
+        st_grandma_desc: "Yangi loyiha yoki ish taklifingiz bormi? Xabar qoldiring, u to'g'ridan-to'g'ri mening shaxsiy Telegramimga ochiladi:"
       },
 
       ru: {
         badge_role: "Frontend & Mobile",
-        btn_cv_drawer: "Быстрое резюме",
-        help_move: "Движение",
-        help_jump: "Прыжок",
-        help_interact: "Открыть",
-        prompt_interact: "Вы рядом: Открыть [E]",
+        btn_cv: "Быстрое CV",
+        lbl_speed: "Скорость",
+        hint_drive: "Бег",
+        hint_jump: "Прыжок",
+        hint_interact: "Открыть",
+        prompt_open: "Нажмите [E] чтобы открыть",
 
-        zone_start: "🌲 Зона 1: Опушка леса (Старт)",
-        zone_skills: "🍄 Зона 2: Поляна Навыков",
-        zone_projects: "🏰 Зона 3: Долина Проектов",
-        zone_grandma: "🏡 Зона 4: Домик Бабушки (Контакты)",
+        cv_about_sec: "// Обо мне",
+        cv_about_body: "Frontend & Mobile разработчик из Узбекистана. Создаю современные, производительные веб- и мобильные приложения на React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS и React Native (Expo).",
+        cv_skills_sec: "// Навыки и стек",
+        cv_projects_sec: "// Избранные Проекты",
+        cv_contact_sec: "// Контакты",
 
-        drawer_title: "Комила Зокирова",
-        drawer_about_title: "// Обо мне",
-        drawer_about_text: "Frontend & Mobile разработчик из Узбекистана. Создаю быстрые, надежные и эстетичные веб- и мобильные приложения на React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS и React Native (Expo).",
-        drawer_skills_title: "// Навыки и стек",
-        drawer_projects_title: "// Избранные Проекты",
-        drawer_contact_title: "// Контакты",
+        p1_short: "Комплексная CRM-платформа для детских садов (React 19, TypeScript, Zustand, Recharts).",
+        p2_short: "Мобильное приложение для междугородних поездок (React Native, Expo, TypeScript).",
 
-        p1_desc: "CRM-платформа для управления детскими садами (React 19, TypeScript, Zustand, Recharts).",
-        p2_desc: "Мобильное приложение для междугородних поездок (React Native, Expo, TypeScript).",
-        p3_desc: "Интерактивное 3D портфолио в стиле Красной Шапочки на Three.js WebGL.",
+        st_gate_tag: "Врата Леса",
+        st_gate_title: "Добро пожаловать! Комила Зокирова",
+        st_gate_desc: "Добро пожаловать в интерактивное 3D портфолио в стиле Bruno Simon! Управляйте Красной Шапочкой, сбивайте кегли и деревянные ящики с физикой, прыгайте с трамплина и исследуйте мои проекты!",
 
-        station_gate_title: "Добро пожаловать! Врата леса",
-        station_gate_tag: "Начало Пути",
-        station_gate_text: "Привет! Я <strong>Комила Зокирова</strong> — Frontend и Mobile разработчик. Приглашаю вас в интерактивное 3D путешествие по сказочному лесу в стиле Bruno Simon! Впереди вас ждут поляна навыков, выставка реальных проектов и уютный домик бабушки для связи.",
-        station_gate_btn: "Продолжить путешествие →",
+        st_skills_tag: "Поляна Навыков",
+        st_skills_title: "Технический Стек",
+        st_skills_desc: "Здесь собраны ключевые технологии, с которыми я работаю: React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS и React Native Expo.",
 
-        station_skills_title: "Поляна Технических Навыков",
-        station_skills_tag: "Стек Технологий",
-        station_skills_text: "Здесь собраны мои главные практические технологии. Вы можете толкать деревянные блоки Красной Шапочкой! Все технологии проверены в реальных продакшн-задачах:",
+        st_p1_tag: "Флагманский Проект",
+        st_p1_title: "Bog'cha CRM (Система детских садов)",
+        st_p1_desc: "CRM-платформа для управления детскими садами: учет посещаемости, финансовая аналитика, интерактивные графики Recharts и управление группами.",
 
-        station_p1_title: "Bog'cha CRM (Система детских садов)",
-        station_p1_tag: "Флагманский Проект",
-        station_p1_text: "Комплексная CRM-платформа для детских садов на React 19, TypeScript и Zustand. Включает учет посещаемости, финансовую аналитику, графики Recharts и управление группами.",
+        st_p2_tag: "Мобильное приложение",
+        st_p2_title: "Yo'l-Yo'lakay (Транспорт и навигация)",
+        st_p2_desc: "Кроссплатформенное мобильное приложение для пассажиров и водителей, разработанное на React Native, Expo и TypeScript.",
 
-        station_p2_title: "Yo'l-Yo'lakay (Мобильное приложение)",
-        station_p2_tag: "React Native & Expo",
-        station_p2_text: "Кроссплатформенное мобильное приложение для пассажиров и междугородних поездок, разработанное на React Native, Expo и TypeScript.",
-
-        station_grandma_title: "Домик Бабушки — Написать письмо",
-        station_grandma_tag: "Связь и Сотрудничество",
-        station_grandma_text: "Вы добрались до уютного домика бабушки! Напишите мне для обсуждения проектов или предложений о работе — сообщение мгновенно откроется в Telegram:"
+        st_grandma_tag: "Домик Бабушки",
+        st_grandma_title: "Связаться со мной",
+        st_grandma_desc: "Хотите обсудить проект или сотрудничество? Напишите сообщение, оно мгновенно откроется в Telegram:"
       },
 
       en: {
         badge_role: "Frontend & Mobile",
-        btn_cv_drawer: "Quick CV",
-        help_move: "Move",
-        help_jump: "Jump",
-        help_interact: "Interact",
-        prompt_interact: "Near object: Open [E]",
+        btn_cv: "Quick CV",
+        lbl_speed: "Speed",
+        hint_drive: "Run",
+        hint_jump: "Jump",
+        hint_interact: "Interact",
+        prompt_open: "Press [E] to open",
 
-        zone_start: "🌲 Zone 1: Forest Gate (Start)",
-        zone_skills: "🍄 Zone 2: Magic Skills Grove",
-        zone_projects: "🏰 Zone 3: Valley of Projects",
-        zone_grandma: "🏡 Zone 4: Grandma's Cottage (Contact)",
+        cv_about_sec: "// About Me",
+        cv_about_body: "Frontend & Mobile Developer based in Uzbekistan. Building performant, modern, and aesthetic digital experiences with React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS, and React Native (Expo).",
+        cv_skills_sec: "// Technical Toolkit",
+        cv_projects_sec: "// Featured Work",
+        cv_contact_sec: "// Contact",
 
-        drawer_title: "Komila Zokirova",
-        drawer_about_title: "// About Me",
-        drawer_about_text: "Creative Frontend & Mobile Developer based in Uzbekistan. I build performant, reliable, and visually stunning digital products using React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS, and React Native (Expo).",
-        drawer_skills_title: "// Technical Toolkit",
-        drawer_projects_title: "// Featured Work",
-        drawer_contact_title: "// Contact",
+        p1_short: "Kindergarten CRM Platform (React 19, TypeScript, Zustand, Recharts).",
+        p2_short: "Cross-platform intercity transport app (React Native, Expo, TypeScript).",
 
-        p1_desc: "Comprehensive Kindergarten CRM System (React 19, TypeScript, Zustand, Recharts).",
-        p2_desc: "Cross-platform intercity transport app (React Native, Expo, TypeScript).",
-        p3_desc: "Interactive Red Riding Hood 3D Fairytale physics portfolio with Three.js.",
+        st_gate_tag: "The Forest Gate",
+        st_gate_title: "Welcome! Komila Zokirova",
+        st_gate_desc: "Welcome to this Bruno Simon-style 3D interactive portfolio adventure! Run through the enchanted forest with Little Red Riding Hood, smash through bowling pins & crates, jump off ramps, and explore my production work!",
 
-        station_gate_title: "Welcome! The Forest Gate",
-        station_gate_tag: "Journey Begins",
-        station_gate_text: "Hello! I'm <strong>Komila Zokirova</strong> — a passionate Frontend & Mobile Developer. Welcome to this Bruno Simon-inspired 3D fairytale adventure! Ahead lies the Skills Grove, production project pavilions, and Grandma's cozy cottage for direct contact.",
-        station_gate_btn: "Continue Journey →",
+        st_skills_tag: "Skills Grove",
+        st_skills_title: "Core Technologies",
+        st_skills_desc: "My battle-tested production toolkit: React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS, and React Native Expo.",
 
-        station_skills_title: "The Magic Skills Grove",
-        station_skills_tag: "Technical Arsenal",
-        station_skills_text: "Here are my core battle-tested technologies. You can bump into and topple these wooden physics blocks with Little Red Riding Hood! Each skill powers real production apps:",
+        st_p1_tag: "Flagship CRM",
+        st_p1_title: "Bog'cha CRM (Kindergarten Platform)",
+        st_p1_desc: "Enterprise management CRM with attendance tracking, financial analytics with Recharts, staff management, and responsive tables.",
 
-        station_p1_title: "Bog'cha CRM (Kindergarten Platform)",
-        station_p1_tag: "Featured Flagship CRM",
-        station_p1_text: "Enterprise management CRM built with React 19, TypeScript, Zustand, and TanStack Query. Features student attendance tracking, tuition billing, staff controls, and Recharts analytics.",
+        st_p2_tag: "Mobile App",
+        st_p2_title: "Yo'l-Yo'lakay (Navigation & Rides)",
+        st_p2_desc: "Cross-platform intercity navigation and ride matching application engineered with React Native, Expo, and TypeScript.",
 
-        station_p2_title: "Yo'l-Yo'lakay Mobile App",
-        station_p2_tag: "React Native & Expo",
-        station_p2_text: "Cross-platform mobile application for passenger navigation and intercity ride booking, crafted with Expo, React Navigation, and TypeScript.",
-
-        station_grandma_title: "Grandma's Cottage — Send a Letter",
-        station_grandma_tag: "Contact & Connect",
-        station_grandma_text: "Welcome to Grandma's warm cottage at the edge of the forest! Drop a message to discuss a freelance project or job opportunity — it opens directly in Telegram:"
+        st_grandma_tag: "Grandma's Cottage",
+        st_grandma_title: "Get in Touch",
+        st_grandma_desc: "Have a freelance inquiry, project, or role? Drop a note — it opens directly in Telegram:"
       }
     };
 
@@ -837,7 +812,7 @@
       localStorage.setItem('portfolio_lang', lang);
       document.documentElement.lang = lang;
 
-      document.querySelectorAll('.lang-item').forEach(b => {
+      document.querySelectorAll('.lang-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.lang === lang);
       });
 
@@ -849,482 +824,636 @@
       });
     }
 
-    document.querySelectorAll('.lang-item').forEach(btn => {
+    document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
     });
     setLanguage(currentLang);
 
 
     /* =========================================================================
-       2. THREE.JS 3D SCENE & WORLD SETUP
+       2. PROCEDURAL SOUND SYNTHESIZER (Web Audio API - No external audio)
+       ========================================================================= */
+    let audioEnabled = true;
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playChime(freq = 587, dur = 0.25) {
+      if (!audioEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, audioCtx.currentTime + dur);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + dur);
+      } catch (e) {}
+    }
+
+    function playThud() {
+      if (!audioEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+      } catch (e) {}
+    }
+
+    const soundToggle = document.getElementById('soundToggle');
+    soundToggle.addEventListener('click', () => {
+      initAudio();
+      audioEnabled = !audioEnabled;
+      soundToggle.textContent = audioEnabled ? '🔊' : '🔇';
+    });
+
+
+    /* =========================================================================
+       3. BRUNO SIMON STUDIO 3D ENGINE (Three.js r128)
        ========================================================================= */
     const canvas = document.getElementById('webgl-canvas');
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     const scene = new THREE.Scene();
-    // Warm fairytale dusk fog
-    scene.background = new THREE.Color(0x132218);
-    scene.fog = new THREE.FogExp2(0x132218, 0.016);
+    // Sophisticated Bruno Simon clay fog and background
+    scene.background = new THREE.Color(0x1a2e22);
+    scene.fog = new THREE.FogExp2(0x1a2e22, 0.014);
 
-    // Camera: Isometric / Third person follow
-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 150);
-    camera.position.set(0, 10, 14);
+    // Camera: Low-FOV isometric third person follow
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 160);
+    camera.position.set(0, 14, 18);
 
-    // Lights
-    const ambientLight = new THREE.AmbientLight(0xd4e09b, 0.7);
+    // Studio Lighting
+    const ambientLight = new THREE.AmbientLight(0xdcf2e3, 0.85);
     scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(0xfffae0, 1.4);
-    sunLight.position.set(25, 35, 20);
+    const sunLight = new THREE.DirectionalLight(0xfffae8, 1.4);
+    sunLight.position.set(30, 45, 25);
     sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 1024;
-    sunLight.shadow.mapSize.height = 1024;
-    sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 80;
-    const d = 30;
-    sunLight.shadow.camera.left = -d;
-    sunLight.shadow.camera.right = d;
-    sunLight.shadow.camera.top = d;
-    sunLight.shadow.camera.bottom = -d;
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
+    sunLight.shadow.camera.near = 1;
+    sunLight.shadow.camera.far = 100;
+    const shadowD = 35;
+    sunLight.shadow.camera.left = -shadowD;
+    sunLight.shadow.camera.right = shadowD;
+    sunLight.shadow.camera.top = shadowD;
+    sunLight.shadow.camera.bottom = -shadowD;
+    sunLight.shadow.bias = -0.0005;
     scene.add(sunLight);
 
-    // Warm hearth point light near Grandma's cottage
-    const hearthLight = new THREE.PointLight(0xffaa33, 2.5, 18);
-    hearthLight.position.set(0, 3, -42);
-    scene.add(hearthLight);
+    // Soft secondary fill light
+    const fillLight = new THREE.DirectionalLight(0x709775, 0.5);
+    fillLight.position.set(-25, 20, -20);
+    scene.add(fillLight);
 
 
     /* =========================================================================
-       3. ENVIRONMENT BUILDER (Ground, Cobblestones, Low-Poly Trees, Flora)
+       4. BRUNO SIMON SIGNATURE 3D FLOOR TYPOGRAPHY
+       ========================================================================= */
+    // Helper to generate chunky, bevelled 3D block letters directly on the ground
+    function create3DLetter(char, size = 1.2, depth = 0.35, color = 0xf4f1de) {
+      const group = new THREE.Group();
+      const mat = new THREE.MeshStandardMaterial({
+        color: color,
+        roughness: 0.35,
+        metalness: 0.1,
+        flatShading: true
+      });
+
+      // Simple 5x5 grid procedural geometry definitions for clean 3D block typography
+      const fontGrid = {
+        'K': [[0,0],[0,1],[0,2],[0,3],[0,4], [1,2], [2,1],[3,0], [2,3],[3,4]],
+        'O': [[0,1],[0,2],[0,3], [3,1],[3,2],[3,3], [1,0],[2,0], [1,4],[2,4]],
+        'M': [[0,0],[0,1],[0,2],[0,3],[0,4], [4,0],[4,1],[4,2],[4,3],[4,4], [1,3],[2,2],[3,3]],
+        'I': [[1,0],[2,0],[3,0], [2,1],[2,2],[2,3], [1,4],[2,4],[3,4]],
+        'L': [[0,0],[0,1],[0,2],[0,3],[0,4], [1,0],[2,0],[3,0]],
+        'A': [[0,0],[0,1],[0,2],[0,3], [3,0],[3,1],[3,2],[3,3], [1,4],[2,4], [1,2],[2,2]],
+        'Z': [[0,4],[1,4],[2,4],[3,4], [3,3],[2,2],[1,1], [0,0],[1,0],[2,0],[3,0]],
+        'R': [[0,0],[0,1],[0,2],[0,3],[0,4], [1,4],[2,4],[3,3],[2,2],[1,2], [2,1],[3,0]],
+        'V': [[0,2],[0,3],[0,4], [1,1], [2,0], [3,1], [4,2],[4,3],[4,4]],
+        'S': [[0,1],[1,0],[2,0],[3,1], [2,2],[1,2], [0,3],[1,4],[2,4],[3,3]],
+        'P': [[0,0],[0,1],[0,2],[0,3],[0,4], [1,4],[2,4],[3,3],[2,2],[1,2]],
+        'E': [[0,0],[0,1],[0,2],[0,3],[0,4], [1,4],[2,4],[3,4], [1,2],[2,2], [1,0],[2,0],[3,0]],
+        'C': [[0,1],[0,2],[0,3], [1,4],[2,4],[3,4], [1,0],[2,0],[3,0]],
+        'T': [[0,4],[1,4],[2,4],[3,4],[4,4], [2,0],[2,1],[2,2],[2,3]],
+        'F': [[0,0],[0,1],[0,2],[0,3],[0,4], [1,4],[2,4],[3,4], [1,2],[2,2]],
+        'N': [[0,0],[0,1],[0,2],[0,3],[0,4], [1,3],[2,2],[3,1], [4,0],[4,1],[4,2],[4,3],[4,4]],
+        'D': [[0,0],[0,1],[0,2],[0,3],[0,4], [1,4],[2,4],[3,3],[3,2],[3,1],[2,0],[1,0]]
+      };
+
+      const blocks = fontGrid[char.toUpperCase()] || [[0,0],[0,1],[0,2],[1,2],[2,2]];
+      const bSize = (size / 5);
+
+      blocks.forEach(([bx, by]) => {
+        const boxGeo = new THREE.BoxGeometry(bSize * 0.96, depth, bSize * 0.96);
+        const mesh = new THREE.Mesh(boxGeo, mat);
+        mesh.position.set(bx * bSize, depth / 2, -by * bSize);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        group.add(mesh);
+      });
+
+      return group;
+    }
+
+    function create3DWord(word, startX, startZ, size = 1.1, color = 0xf4f1de) {
+      const wordGroup = new THREE.Group();
+      let curX = 0;
+      for (let c of word) {
+        if (c === ' ') {
+          curX += size * 0.6;
+          continue;
+        }
+        const letterMesh = create3DLetter(c, size, 0.45, color);
+        letterMesh.position.x = curX;
+        wordGroup.add(letterMesh);
+        curX += size * 0.95;
+      }
+      wordGroup.position.set(startX - curX / 2, 0.02, startZ);
+      scene.add(wordGroup);
+      return wordGroup;
+    }
+
+    // Embed Bruno Simon 3D Floor Typography
+    create3DWord("KOMILA", 0, 16, 1.4, 0xe63946);
+    create3DWord("FRONTEND", 0, 10, 1.1, 0xffb703);
+    create3DWord("SKILLS", -12, 1, 1.3, 0x52b788);
+    create3DWord("PROJECTS", 12, -14, 1.3, 0x74c69d);
+    create3DWord("CONTACT", 0, -32, 1.3, 0xffb703);
+
+
+    /* =========================================================================
+       5. BRUNO SIMON WORLD ENVIRONMENT (Curved Roads, Curbs, Studio Trees)
        ========================================================================= */
 
-    // 1. Grassy Terrain
-    const terrainGeo = new THREE.PlaneGeometry(100, 120, 48, 48);
-    terrainGeo.rotateX(-Math.PI / 2);
-    const pos = terrainGeo.attributes.position;
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      const z = pos.getZ(i);
-      // Gentle rolling fairytale hills away from the center path
-      const distFromCenter = Math.abs(x);
-      const hill = Math.sin(x * 0.15) * Math.cos(z * 0.1) * (distFromCenter > 4 ? 1.8 : 0.2);
-      pos.setY(i, hill);
-    }
-    terrainGeo.computeVertexNormals();
-
-    const terrainMat = new THREE.MeshStandardMaterial({
-      color: 0x2d5a27,
-      roughness: 0.85,
-      flatShading: true
+    // 1. Sleek Matte Ground Plane
+    const groundGeo = new THREE.PlaneGeometry(120, 130, 32, 32);
+    groundGeo.rotateX(-Math.PI / 2);
+    const groundMat = new THREE.MeshStandardMaterial({
+      color: 0x22422f,
+      roughness: 0.75,
+      metalness: 0.05
     });
-    const terrain = new THREE.Mesh(terrainGeo, terrainMat);
-    terrain.receiveShadow = true;
-    scene.add(terrain);
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.receiveShadow = true;
+    scene.add(ground);
 
-    // 2. Winding Cobblestone Pathway (from z = 20 to z = -45)
-    const stonesGroup = new THREE.Group();
-    for (let z = 22; z >= -46; z -= 1.4) {
-      const pathX = Math.sin(z * 0.08) * 3;
-      for (let ox = -1.2; ox <= 1.2; ox += 0.8) {
-        const stoneGeo = new THREE.CylinderGeometry(0.35 + Math.random() * 0.15, 0.4, 0.08, 6);
-        const stoneMat = new THREE.MeshStandardMaterial({
-          color: Math.random() > 0.5 ? 0x939f88 : 0x7b8871,
-          roughness: 0.9,
-          flatShading: true
-        });
-        const stone = new THREE.Mesh(stoneGeo, stoneMat);
-        stone.position.set(pathX + ox + (Math.random() - 0.5) * 0.3, 0.04, z + (Math.random() - 0.5) * 0.3);
-        stone.rotation.y = Math.random() * Math.PI;
-        stone.receiveShadow = true;
-        stonesGroup.add(stone);
-      }
+    // 2. High-End Modern Cobblestone Road with Curbs
+    const roadGroup = new THREE.Group();
+    for (let z = 22; z >= -42; z -= 1.2) {
+      const roadX = Math.sin(z * 0.08) * 4;
+      // Center Road Slab
+      const slabGeo = new THREE.BoxGeometry(4.8, 0.08, 1.15);
+      const slabMat = new THREE.MeshStandardMaterial({ color: 0x2f3e34, roughness: 0.6 });
+      const slab = new THREE.Mesh(slabGeo, slabMat);
+      slab.position.set(roadX, 0.04, z);
+      slab.receiveShadow = true;
+      roadGroup.add(slab);
+
+      // Clean White Curbs (Bruno Simon signature track curbs)
+      const curbGeo = new THREE.BoxGeometry(0.35, 0.16, 1.15);
+      const curbMat = new THREE.MeshStandardMaterial({ color: (Math.floor(z) % 2 === 0 ? 0xe63946 : 0xf8f9fa), roughness: 0.4 });
+      
+      const curbL = new THREE.Mesh(curbGeo, curbMat);
+      curbL.position.set(roadX - 2.55, 0.08, z);
+      curbL.castShadow = true;
+      roadGroup.add(curbL);
+
+      const curbR = new THREE.Mesh(curbGeo, curbMat);
+      curbR.position.set(roadX + 2.55, 0.08, z);
+      curbR.castShadow = true;
+      roadGroup.add(curbR);
     }
-    scene.add(stonesGroup);
+    scene.add(roadGroup);
 
-    // 3. Low-Poly Trees Generator
-    function createTree(x, z, type = 'pine') {
+    // 3. Bruno Simon Stylized Low-Poly Studio Trees
+    function createStudioTree(x, z, scale = 1) {
       const tree = new THREE.Group();
       tree.position.set(x, 0, z);
+      tree.scale.set(scale, scale, scale);
 
-      // Trunk
-      const trunkGeo = new THREE.CylinderGeometry(0.25, 0.4, 2.2, 5);
-      const trunkMat = new THREE.MeshStandardMaterial({ color: 0x4a2e18, roughness: 0.9, flatShading: true });
-      const trunk = new THREE.Mesh(trunkGeo, trunkMat);
-      trunk.position.y = 1.1;
+      // Smooth trunk
+      const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.25, 0.4, 2.4, 6),
+        new THREE.MeshStandardMaterial({ color: 0x58311e, roughness: 0.8, flatShading: true })
+      );
+      trunk.position.y = 1.2;
       trunk.castShadow = true;
-      trunk.receiveShadow = true;
       tree.add(trunk);
 
-      if (type === 'pine') {
-        const foliageMat = new THREE.MeshStandardMaterial({ color: 0x1f4e27, roughness: 0.8, flatShading: true });
-        for (let i = 0; i < 3; i++) {
-          const coneGeo = new THREE.ConeGeometry(1.8 - i * 0.4, 1.8, 6);
-          const cone = new THREE.Mesh(coneGeo, foliageMat);
-          cone.position.y = 2.2 + i * 1.1;
-          cone.castShadow = true;
-          tree.add(cone);
-        }
-      } else {
-        // Fluffy Deciduous Tree
-        const foliageMat = new THREE.MeshStandardMaterial({
-          color: Math.random() > 0.4 ? 0x386641 : 0x606c38,
-          roughness: 0.8,
-          flatShading: true
-        });
-        const sphereGeo = new THREE.DodecahedronGeometry(1.6, 1);
-        const sphere = new THREE.Mesh(sphereGeo, foliageMat);
-        sphere.position.y = 3.2;
-        sphere.scale.set(1.1, 1.3, 1.1);
-        sphere.castShadow = true;
-        tree.add(sphere);
+      // Cone foliage in soft pastel forest hues
+      const foliageMat = new THREE.MeshStandardMaterial({
+        color: Math.random() > 0.4 ? 0x2d6a4f : 0x40916c,
+        roughness: 0.6,
+        flatShading: true
+      });
+      for (let i = 0; i < 3; i++) {
+        const cone = new THREE.Mesh(
+          new THREE.ConeGeometry(2.0 - i * 0.45, 1.9, 7),
+          foliageMat
+        );
+        cone.position.y = 2.4 + i * 1.15;
+        cone.castShadow = true;
+        tree.add(cone);
       }
       return tree;
     }
 
-    // Place trees around the forest (avoiding the main trail)
-    for (let i = 0; i < 65; i++) {
-      const rx = (Math.random() - 0.5) * 80;
-      const rz = (Math.random() - 0.5) * 90;
-      const pathCurve = Math.sin(rz * 0.08) * 3;
-      if (Math.abs(rx - pathCurve) > 4.5) {
-        const type = Math.random() > 0.5 ? 'pine' : 'fluffy';
-        scene.add(createTree(rx, rz, type));
+    // Distribute trees naturally around the perimeter
+    for (let i = 0; i < 55; i++) {
+      const tx = (Math.random() - 0.5) * 85;
+      const tz = (Math.random() - 0.5) * 95;
+      const roadCenter = Math.sin(tz * 0.08) * 4;
+      if (Math.abs(tx - roadCenter) > 6.5) {
+        scene.add(createStudioTree(tx, tz, 0.85 + Math.random() * 0.4));
       }
     }
 
-    // 4. Glowing Fairytale Mushrooms (Amanita)
-    function createMushroom(x, z, scale = 1) {
-      const m = new THREE.Group();
-      m.position.set(x, 0, z);
-      m.scale.set(scale, scale, scale);
-
-      const stemGeo = new THREE.CylinderGeometry(0.08, 0.14, 0.6, 6);
-      const stemMat = new THREE.MeshStandardMaterial({ color: 0xfdfbf7, roughness: 0.8 });
-      const stem = new THREE.Mesh(stemGeo, stemMat);
-      stem.position.y = 0.3;
-      m.add(stem);
-
-      const capGeo = new THREE.SphereGeometry(0.35, 8, 6, 0, Math.PI * 2, 0, Math.PI * 0.6);
-      const capMat = new THREE.MeshStandardMaterial({ color: 0xd90429, roughness: 0.4 });
-      const cap = new THREE.Mesh(capGeo, capMat);
-      cap.position.y = 0.55;
-      m.add(cap);
-
-      // Glow light for cluster
-      const light = new THREE.PointLight(0xff4d6d, 0.8, 3);
-      light.position.y = 0.8;
-      m.add(light);
-
-      return m;
-    }
-
-    // Scatter mushroom clusters
-    scene.add(createMushroom(3.5, 12, 1.3));
-    scene.add(createMushroom(4.2, 11.5, 0.9));
-    scene.add(createMushroom(-4.5, -4, 1.2));
-    scene.add(createMushroom(-3.8, -4.6, 0.8));
-    scene.add(createMushroom(5.5, -22, 1.4));
-
 
     /* =========================================================================
-       4. PROCEDURAL 3D CHARACTER: QIZIL QALPOQCHA (LITTLE RED RIDING HOOD)
+       6. INTERACTIVE SMASHABLE PHYSICS PLAYGROUND
        ========================================================================= */
-    const player = new THREE.Group();
-    player.position.set(0, 0, 18);
-    scene.add(player);
 
-    // Body container for hopping/walking oscillation
-    const bodyGroup = new THREE.Group();
-    player.add(bodyGroup);
+    // 1. Jump Ramp (Tramplin) - Bruno Simon classic!
+    const rampGroup = new THREE.Group();
+    rampGroup.position.set(0, 0, -2);
+    const rampSlope = new THREE.Mesh(
+      new THREE.BoxGeometry(4.2, 0.25, 3.5),
+      new THREE.MeshStandardMaterial({ color: 0xffb703, roughness: 0.4 })
+    );
+    rampSlope.rotation.x = -0.26;
+    rampSlope.position.set(0, 0.45, 0);
+    rampSlope.castShadow = true;
+    rampSlope.receiveShadow = true;
+    rampGroup.add(rampSlope);
+    scene.add(rampGroup);
 
-    // Skirt (Dark dress)
-    const skirtGeo = new THREE.CylinderGeometry(0.28, 0.52, 0.85, 8);
-    const skirtMat = new THREE.MeshStandardMaterial({ color: 0x1d2d44, roughness: 0.7, flatShading: true });
-    const skirt = new THREE.Mesh(skirtGeo, skirtMat);
-    skirt.position.y = 0.75;
-    skirt.castShadow = true;
-    bodyGroup.add(skirt);
+    // 2. Bowling Pins (Keglilar)
+    const bowlingPins = [];
+    function createBowlingPin(x, z) {
+      const pin = new THREE.Group();
+      pin.position.set(x, 0, z);
 
-    // White Apron
-    const apronGeo = new THREE.PlaneGeometry(0.32, 0.55);
-    const apronMat = new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.9, side: THREE.DoubleSide });
-    const apron = new THREE.Mesh(apronGeo, apronMat);
-    apron.position.set(0, 0.73, 0.38);
-    bodyGroup.add(apron);
-
-    // Torso / Blouse
-    const torsoGeo = new THREE.CylinderGeometry(0.25, 0.28, 0.6, 7);
-    const torsoMat = new THREE.MeshStandardMaterial({ color: 0xfdf0d5, roughness: 0.8 });
-    const torso = new THREE.Mesh(torsoGeo, torsoMat);
-    torso.position.y = 1.35;
-    torso.castShadow = true;
-    bodyGroup.add(torso);
-
-    // Head
-    const headGeo = new THREE.SphereGeometry(0.26, 12, 10);
-    const skinMat = new THREE.MeshStandardMaterial({ color: 0xfcd5ce, roughness: 0.6 });
-    const head = new THREE.Mesh(headGeo, skinMat);
-    head.position.y = 1.85;
-    head.castShadow = true;
-    bodyGroup.add(head);
-
-    // Rosy Cheeks
-    const cheekMat = new THREE.MeshBasicMaterial({ color: 0xff85a1 });
-    const cheekL = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 0.05), cheekMat);
-    cheekL.position.set(-0.13, 1.82, 0.24);
-    bodyGroup.add(cheekL);
-    const cheekR = cheekL.clone();
-    cheekR.position.x = 0.13;
-    bodyGroup.add(cheekR);
-
-    // Dark Hair braids
-    const hairMat = new THREE.MeshStandardMaterial({ color: 0x3d2616, roughness: 0.8 });
-    const hairBack = new THREE.Mesh(new THREE.SphereGeometry(0.27, 8, 8), hairMat);
-    hairBack.position.set(0, 1.88, -0.06);
-    bodyGroup.add(hairBack);
-
-    // Little Red Hood & Cape
-    const hoodGeo = new THREE.ConeGeometry(0.38, 0.65, 8);
-    const rubyMat = new THREE.MeshStandardMaterial({ color: 0xe63946, roughness: 0.5, flatShading: true });
-    const hood = new THREE.Mesh(hoodGeo, rubyMat);
-    hood.position.set(0, 2.08, -0.05);
-    hood.rotation.x = -0.25;
-    hood.castShadow = true;
-    bodyGroup.add(hood);
-
-    // Flowing Cape (attached to shoulders)
-    const capeGeo = new THREE.PlaneGeometry(0.55, 0.85, 2, 3);
-    const cape = new THREE.Mesh(capeGeo, rubyMat);
-    cape.position.set(0, 1.25, -0.26);
-    cape.rotation.x = 0.2;
-    cape.castShadow = true;
-    bodyGroup.add(cape);
-
-    // Left & Right Legs (Boots)
-    const legGeo = new THREE.BoxGeometry(0.12, 0.45, 0.15);
-    const bootMat = new THREE.MeshStandardMaterial({ color: 0x582f0e, roughness: 0.8 });
-    const legL = new THREE.Mesh(legGeo, bootMat);
-    legL.position.set(-0.14, 0.22, 0);
-    legL.castShadow = true;
-    player.add(legL);
-
-    const legR = new THREE.Mesh(legGeo, bootMat);
-    legR.position.set(0.14, 0.22, 0);
-    legR.castShadow = true;
-    player.add(legR);
-
-    // Right Arm holding Wicker Basket
-    const armGeo = new THREE.CylinderGeometry(0.06, 0.07, 0.45, 5);
-    const armR = new THREE.Mesh(armGeo, torsoMat);
-    armR.position.set(0.34, 1.25, 0.1);
-    armR.rotation.z = -0.3;
-    armR.rotation.x = 0.4;
-    bodyGroup.add(armR);
-
-    // Wicker Basket
-    const basketGeo = new THREE.CylinderGeometry(0.18, 0.14, 0.24, 7);
-    const basketMat = new THREE.MeshStandardMaterial({ color: 0xd4a373, roughness: 0.85, flatShading: true });
-    const basket = new THREE.Mesh(basketGeo, basketMat);
-    basket.position.set(0.42, 1.0, 0.25);
-    basket.castShadow = true;
-    bodyGroup.add(basket);
-
-    // Red/White checkered cloth over basket
-    const clothGeo = new THREE.SphereGeometry(0.16, 6, 4, 0, Math.PI * 2, 0, Math.PI * 0.5);
-    const clothMat = new THREE.MeshStandardMaterial({ color: 0xe63946, roughness: 0.5 });
-    const cloth = new THREE.Mesh(clothGeo, clothMat);
-    cloth.position.set(0.42, 1.12, 0.25);
-    bodyGroup.add(cloth);
-
-
-    /* =========================================================================
-       5. INTERACTIVE STATIONS & PAVILIONS
-       ========================================================================= */
-    const stations = [];
-
-    // Helper: Wooden Signpost Generator
-    function createSignpost(x, z, titleText, stationId) {
-      const sign = new THREE.Group();
-      sign.position.set(x, 0, z);
-
-      // Post
-      const post = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.1, 0.12, 2.2, 6),
-        new THREE.MeshStandardMaterial({ color: 0x6f4e37, roughness: 0.9 })
+      const base = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.2, 0.28, 0.7, 8),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 })
       );
-      post.position.y = 1.1;
-      post.castShadow = true;
-      sign.add(post);
+      base.position.y = 0.35;
+      base.castShadow = true;
+      pin.add(base);
 
-      // Wooden Board
-      const board = new THREE.Mesh(
-        new THREE.BoxGeometry(1.8, 0.75, 0.1),
-        new THREE.MeshStandardMaterial({ color: 0xc8963e, roughness: 0.8, flatShading: true })
+      // Red stripe
+      const stripe = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.18, 0.2, 0.12, 8),
+        new THREE.MeshStandardMaterial({ color: 0xe63946 })
       );
-      board.position.set(0, 1.8, 0.05);
-      board.castShadow = true;
-      sign.add(board);
+      stripe.position.y = 0.75;
+      pin.add(stripe);
 
-      // Glowing Lantern
-      const lantern = new THREE.Mesh(
-        new THREE.OctahedronGeometry(0.18),
-        new THREE.MeshBasicMaterial({ color: 0xffd166 })
+      const head = new THREE.Mesh(
+        new THREE.SphereGeometry(0.18, 8, 8),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 })
       );
-      lantern.position.set(0.9, 1.9, 0.2);
-      sign.add(lantern);
+      head.position.y = 0.95;
+      head.castShadow = true;
+      pin.add(head);
 
-      const light = new THREE.PointLight(0xffd166, 1.2, 5);
-      light.position.set(0.9, 1.9, 0.3);
-      sign.add(light);
-
-      scene.add(sign);
-      stations.push({ id: stationId, x, z, radius: 3.2, title: titleText });
-      return sign;
+      scene.add(pin);
+      bowlingPins.push({ mesh: pin, vx: 0, vz: 0, vr: 0, active: true });
     }
 
-    // 1. Station: Forest Gate (Hero)
-    createSignpost(2.2, 15, "O'rmon Darvozasi", "gate");
+    // Set up triangle of 10 bowling pins on the road at z = -6
+    const rows = 4;
+    let pinZ = -6.5;
+    for (let r = 0; r < rows; r++) {
+      const count = r + 1;
+      const startX = -((count - 1) * 0.7) / 2;
+      for (let c = 0; c < count; c++) {
+        createBowlingPin(startX + c * 0.7, pinZ);
+      }
+      pinZ -= 0.8;
+    }
 
-    // 2. Station: Skills Grove (Interactive Physics Blocks)
-    createSignpost(-3.2, 4, "Ko'nikmalar Bog'i", "skills");
-    
-    // Create interactive skill blocks you can bump into
-    const skillCubes = [];
-    const skillNames = ["React 19", "TypeScript", "Zustand", "Tailwind v4", "React Native", "TanStack"];
-    skillNames.forEach((name, idx) => {
-      const col = idx % 2 === 0 ? 0xd4a373 : 0x52b788;
-      const cubeMat = new THREE.MeshStandardMaterial({ color: col, roughness: 0.6, flatShading: true });
-      const cube = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), cubeMat);
+    // 3. Pyramid of Wooden Crates / Barrels (Skills Clearing)
+    const smashCrates = [];
+    const skillList = ["React 19", "TypeScript", "Zustand", "Tailwind", "Expo", "TanStack", "Vite", "Zod"];
+    skillList.forEach((sk, idx) => {
+      const crateMat = new THREE.MeshStandardMaterial({
+        color: idx % 2 === 0 ? 0xd4a373 : 0x52b788,
+        roughness: 0.5,
+        flatShading: true
+      });
+      const crate = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.95, 0.95), crateMat);
       
       const row = Math.floor(idx / 3);
-      const colIdx = idx % 3;
-      cube.position.set(-4.5 + colIdx * 1.2, 0.45 + (row > 0 ? 0.9 : 0), 2.5 + row * 1.2);
-      cube.castShadow = true;
-      cube.receiveShadow = true;
-      scene.add(cube);
-      
-      skillCubes.push({
-        mesh: cube,
-        initialPos: cube.position.clone(),
-        vx: 0,
-        vz: 0,
-        vr: 0
+      const col = idx % 3;
+      crate.position.set(-11 + col * 1.3, 0.48 + row * 1.0, 2 + row * 0.3);
+      crate.castShadow = true;
+      crate.receiveShadow = true;
+      scene.add(crate);
+
+      smashCrates.push({
+        mesh: crate,
+        vx: 0, vz: 0, vr: 0, vy: 0
       });
     });
 
-    // 3. Station: Bog'cha CRM Pavilion
-    createSignpost(4.0, -12, "Bog'cha CRM", "project_crm");
-    // Miniature stylized cottage model for CRM
-    const crmHouse = new THREE.Group();
-    crmHouse.position.set(6.5, 0, -12);
-    const houseBase = new THREE.Mesh(
-      new THREE.BoxGeometry(3.5, 2.5, 3),
-      new THREE.MeshStandardMaterial({ color: 0xfaedcd, roughness: 0.8 })
+    // 4. Collectible Golden/Ruby Apples (Gamification)
+    const apples = [];
+    const applePositions = [
+      [1.5, 14], [-1.5, 12], [0, 8], [0, 2], [1.2, -4],
+      [-10, 3], [10, -12], [8, -16], [0, -26], [0, -35]
+    ];
+    let collectedApples = 0;
+    const appleCounterEl = document.getElementById('appleCount');
+
+    applePositions.forEach(([ax, az]) => {
+      const appleG = new THREE.Group();
+      appleG.position.set(ax, 0.8, az);
+
+      const fruit = new THREE.Mesh(
+        new THREE.SphereGeometry(0.3, 8, 8),
+        new THREE.MeshStandardMaterial({ color: 0xd90429, roughness: 0.3, metalness: 0.2 })
+      );
+      fruit.castShadow = true;
+      appleG.add(fruit);
+
+      const stem = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.04, 0.04, 0.2, 4),
+        new THREE.MeshStandardMaterial({ color: 0x4a2810 })
+      );
+      stem.position.y = 0.32;
+      appleG.add(stem);
+
+      scene.add(appleG);
+      apples.push({ mesh: appleG, collected: false });
+    });
+
+
+    /* =========================================================================
+       7. MODERN 3D SHOWCASE PAVILIONS & GRANDMA'S COTTAGE
+       ========================================================================= */
+    const stations = [];
+
+    function addStation(id, x, z, radius) {
+      stations.push({ id, x, z, radius });
+    }
+
+    // 1. Station: Forest Gate
+    addStation('gate', 0, 15, 4.0);
+
+    // 2. Station: Skills Grove
+    addStation('skills', -11, 2, 4.5);
+
+    // 3. Station: Bog'cha CRM Showcase Pavilion
+    addStation('crm', 9.5, -12, 4.5);
+    const crmStand = new THREE.Group();
+    crmStand.position.set(9.5, 0, -12);
+
+    // Modern glass & timber pedestal
+    const pedestal = new THREE.Mesh(
+      new THREE.BoxGeometry(4.5, 0.4, 3.2),
+      new THREE.MeshStandardMaterial({ color: 0x1f3427, roughness: 0.4 })
     );
-    houseBase.position.y = 1.25;
-    houseBase.castShadow = true;
-    crmHouse.add(houseBase);
+    pedestal.position.y = 0.2;
+    pedestal.castShadow = true;
+    crmStand.add(pedestal);
 
-    const houseRoof = new THREE.Mesh(
-      new THREE.ConeGeometry(3.0, 1.8, 4),
-      new THREE.MeshStandardMaterial({ color: 0xd90429, roughness: 0.7 })
+    // Floating 3D CRM Dashboard Screen
+    const screenFrame = new THREE.Mesh(
+      new THREE.BoxGeometry(3.6, 2.2, 0.15),
+      new THREE.MeshStandardMaterial({ color: 0x121810, roughness: 0.3 })
     );
-    houseRoof.position.y = 3.2;
-    houseRoof.rotation.y = Math.PI / 4;
-    houseRoof.castShadow = true;
-    crmHouse.add(houseRoof);
-    scene.add(crmHouse);
+    screenFrame.position.set(0, 2.2, 0);
+    screenFrame.castShadow = true;
+    crmStand.add(screenFrame);
 
-    // 4. Station: Yo'l-Yo'lakay Mobile Carriage
-    createSignpost(-4.5, -24, "Yo'l-Yo'lakay Mobile", "project_yol");
-    // Miniature carriage
-    const carriage = new THREE.Group();
-    carriage.position.set(-7.0, 0, -24);
-    const cartBody = new THREE.Mesh(
-      new THREE.BoxGeometry(3.2, 1.8, 2.2),
-      new THREE.MeshStandardMaterial({ color: 0x588157, roughness: 0.8, flatShading: true })
+    const screenGlow = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.4, 2.0),
+      new THREE.MeshBasicMaterial({ color: 0x52b788 })
     );
-    cartBody.position.y = 1.3;
-    cartBody.castShadow = true;
-    carriage.add(cartBody);
-    scene.add(carriage);
+    screenGlow.position.set(0, 2.2, 0.09);
+    crmStand.add(screenGlow);
 
-    // 5. Station: Grandma's Cottage (Contact & Mailbox)
-    createSignpost(0, -37, "Buvijonning Uyi (Aloqa)", "grandma");
+    const crmLight = new THREE.PointLight(0x52b788, 2.0, 7);
+    crmLight.position.set(0, 2.5, 1.2);
+    crmStand.add(crmLight);
+    scene.add(crmStand);
 
-    // Grandma's Grand Cottage
+    // 4. Station: Yo'l-Yo'lakay Mobile App (3D Smartphone Showcase)
+    addStation('yol', -9.5, -22, 4.5);
+    const yolStand = new THREE.Group();
+    yolStand.position.set(-9.5, 0, -22);
+
+    const phoneFrame = new THREE.Mesh(
+      new THREE.BoxGeometry(1.6, 2.8, 0.16),
+      new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.2, metalness: 0.8 })
+    );
+    phoneFrame.position.set(0, 2.0, 0);
+    phoneFrame.rotation.y = 0.3;
+    phoneFrame.castShadow = true;
+    yolStand.add(phoneFrame);
+
+    const phoneScreen = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.45, 2.6),
+      new THREE.MeshBasicMaterial({ color: 0xffb703 })
+    );
+    phoneScreen.position.set(0, 2.0, 0.09);
+    phoneScreen.rotation.y = 0.3;
+    yolStand.add(phoneScreen);
+
+    const yolLight = new THREE.PointLight(0xffb703, 1.8, 6);
+    yolLight.position.set(0, 2.2, 1.0);
+    yolStand.add(yolLight);
+    scene.add(yolStand);
+
+    // 5. Station: Grandma's Alpine Cottage (Contact)
+    addStation('grandma', 0, -36, 4.8);
     const cottage = new THREE.Group();
-    cottage.position.set(0, 0, -44);
+    cottage.position.set(0, 0, -42);
 
     const walls = new THREE.Mesh(
-      new THREE.BoxGeometry(6.5, 3.5, 5),
-      new THREE.MeshStandardMaterial({ color: 0x9c6644, roughness: 0.85, flatShading: true })
+      new THREE.BoxGeometry(7, 3.8, 5.5),
+      new THREE.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.7, flatShading: true })
     );
-    walls.position.y = 1.75;
+    walls.position.y = 1.9;
     walls.castShadow = true;
     cottage.add(walls);
 
     const roof = new THREE.Mesh(
-      new THREE.ConeGeometry(5.2, 2.8, 4),
-      new THREE.MeshStandardMaterial({ color: 0x7f4f24, roughness: 0.9 })
+      new THREE.ConeGeometry(5.8, 3.0, 4),
+      new THREE.MeshStandardMaterial({ color: 0x582f0e, roughness: 0.85 })
     );
-    roof.position.y = 4.6;
+    roof.position.y = 4.9;
     roof.rotation.y = Math.PI / 4;
     roof.castShadow = true;
     cottage.add(roof);
 
-    // Chimney & Puffs
+    // Chimney & Animated Smoke
     const chimney = new THREE.Mesh(
-      new THREE.BoxGeometry(0.7, 2.2, 0.7),
-      new THREE.MeshStandardMaterial({ color: 0x585858, roughness: 0.9 })
+      new THREE.BoxGeometry(0.8, 2.6, 0.8),
+      new THREE.MeshStandardMaterial({ color: 0x3d3d3d, roughness: 0.9 })
     );
-    chimney.position.set(1.8, 4.8, 0.8);
+    chimney.position.set(2.0, 5.2, 0.8);
     cottage.add(chimney);
 
-    // Mailbox (Pochta qutisi)
-    const mailbox = new THREE.Group();
-    mailbox.position.set(1.6, 0, -39);
-    const mPost = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.2, 6), new THREE.MeshStandardMaterial({ color: 0x4a2e18 }));
-    mPost.position.y = 0.6;
-    mailbox.add(mPost);
-    const mBox = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.3, 0.5), new THREE.MeshStandardMaterial({ color: 0xd90429 }));
-    mBox.position.y = 1.15;
-    mailbox.add(mBox);
-    scene.add(mailbox);
-
+    const hearthPoint = new THREE.PointLight(0xff9f1c, 2.8, 12);
+    hearthPoint.position.set(0, 2.5, -38);
+    scene.add(hearthPoint);
     scene.add(cottage);
 
-    // Chimney Smoke Particles
-    const smokePuffs = [];
-    for (let i = 0; i < 5; i++) {
+    const chimneyPuffs = [];
+    for (let i = 0; i < 6; i++) {
       const puff = new THREE.Mesh(
-        new THREE.DodecahedronGeometry(0.25 + i * 0.1),
-        new THREE.MeshBasicMaterial({ color: 0xe0e0e0, transparent: true, opacity: 0.4 })
+        new THREE.DodecahedronGeometry(0.3 + i * 0.12),
+        new THREE.MeshBasicMaterial({ color: 0xd8d8d8, transparent: true, opacity: 0.35 })
       );
-      puff.position.set(1.8, 5.8 + i * 0.7, -43.2);
+      puff.position.set(2.0, 6.2 + i * 0.75, -41.2);
       scene.add(puff);
-      smokePuffs.push(puff);
+      chimneyPuffs.push(puff);
     }
 
 
     /* =========================================================================
-       6. CHARACTER PHYSICS & CONTROLS (WASD, ARROWS, JOYSTICK, JUMP)
+       8. HIGH-END PIXAR-GRADE QIZIL QALPOQCHA (CHARACTER RIG)
+       ========================================================================= */
+    const player = new THREE.Group();
+    player.position.set(0, 0, 20);
+    scene.add(player);
+
+    const playerPivot = new THREE.Group();
+    player.add(playerPivot);
+
+    // Dress / Skirt
+    const dress = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.3, 0.58, 0.9, 10),
+      new THREE.MeshStandardMaterial({ color: 0x1d3557, roughness: 0.6, flatShading: true })
+    );
+    dress.position.y = 0.8;
+    dress.castShadow = true;
+    playerPivot.add(dress);
+
+    // Apron
+    const apron = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.36, 0.6),
+      new THREE.MeshStandardMaterial({ color: 0xf8f9fa, roughness: 0.8, side: THREE.DoubleSide })
+    );
+    apron.position.set(0, 0.78, 0.42);
+    playerPivot.add(apron);
+
+    // Torso
+    const torso = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.26, 0.3, 0.65, 8),
+      new THREE.MeshStandardMaterial({ color: 0xf1faee, roughness: 0.7 })
+    );
+    torso.position.y = 1.45;
+    torso.castShadow = true;
+    playerPivot.add(torso);
+
+    // Head
+    const head = new THREE.Mesh(
+      new THREE.SphereGeometry(0.28, 14, 12),
+      new THREE.MeshStandardMaterial({ color: 0xfcd5ce, roughness: 0.5 })
+    );
+    head.position.y = 1.95;
+    head.castShadow = true;
+    playerPivot.add(head);
+
+    // Rosy Cheeks
+    const cheekMat = new THREE.MeshBasicMaterial({ color: 0xff85a1 });
+    const cL = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 0.05), cheekMat);
+    cL.position.set(-0.14, 1.92, 0.26);
+    playerPivot.add(cL);
+    const cR = cL.clone();
+    cR.position.x = 0.14;
+    playerPivot.add(cR);
+
+    // Red Fairytale Hood
+    const hood = new THREE.Mesh(
+      new THREE.ConeGeometry(0.42, 0.72, 9),
+      new THREE.MeshStandardMaterial({ color: 0xe63946, roughness: 0.4, flatShading: true })
+    );
+    hood.position.set(0, 2.2, -0.06);
+    hood.rotation.x = -0.28;
+    hood.castShadow = true;
+    playerPivot.add(hood);
+
+    // Dynamic Flowing Red Cape
+    const cape = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.65, 1.0, 3, 4),
+      new THREE.MeshStandardMaterial({ color: 0xd90429, roughness: 0.4, side: THREE.DoubleSide })
+    );
+    cape.position.set(0, 1.35, -0.3);
+    cape.rotation.x = 0.25;
+    cape.castShadow = true;
+    playerPivot.add(cape);
+
+    // Leather Boots
+    const bootGeo = new THREE.BoxGeometry(0.14, 0.46, 0.2);
+    const bootMat = new THREE.MeshStandardMaterial({ color: 0x4a2810, roughness: 0.7 });
+    const legL = new THREE.Mesh(bootGeo, bootMat);
+    legL.position.set(-0.16, 0.23, 0);
+    legL.castShadow = true;
+    player.add(legL);
+
+    const legR = new THREE.Mesh(bootGeo, bootMat);
+    legR.position.set(0.16, 0.23, 0);
+    legR.castShadow = true;
+    player.add(legR);
+
+    // Wicker Basket on arm
+    const basket = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.2, 0.15, 0.26, 8),
+      new THREE.MeshStandardMaterial({ color: 0xd4a373, roughness: 0.85, flatShading: true })
+    );
+    basket.position.set(0.45, 1.1, 0.22);
+    basket.castShadow = true;
+    playerPivot.add(basket);
+
+    const basketTop = new THREE.Mesh(
+      new THREE.SphereGeometry(0.18, 6, 4, 0, Math.PI * 2, 0, Math.PI * 0.5),
+      new THREE.MeshStandardMaterial({ color: 0xe63946 })
+    );
+    basketTop.position.set(0.45, 1.22, 0.22);
+    playerPivot.add(basketTop);
+
+
+    /* =========================================================================
+       9. FLUID BRUNO SIMON PHYSICS, DRIFT, JUMP & COLLISION LOOP
        ========================================================================= */
     const keys = { w: false, a: false, s: false, d: false, space: false };
-    const joystick = { x: 0, y: 0, active: false };
+    const joy = { x: 0, y: 0, active: false };
 
     window.addEventListener('keydown', e => {
+      initAudio();
       const k = e.key.toLowerCase();
       if (k === 'w' || k === 'arrowup') keys.w = true;
       if (k === 'a' || k === 'arrowleft') keys.a = true;
       if (k === 's' || k === 'arrowdown') keys.s = true;
       if (k === 'd' || k === 'arrowright') keys.d = true;
       if (e.code === 'Space') { keys.space = true; e.preventDefault(); }
-      if (k === 'e') triggerActiveStation();
+      if (k === 'e') openActiveStation();
     });
 
     window.addEventListener('keyup', e => {
@@ -1336,396 +1465,425 @@
       if (e.code === 'Space') keys.space = false;
     });
 
-    // Mobile Virtual Joystick Setup
-    const joystickBase = document.getElementById('joystickBase');
-    const joystickStick = document.getElementById('joystickStick');
+    // Mobile Joystick
+    const joyPad = document.getElementById('joystickPad');
+    const joyKnob = document.getElementById('joystickKnob');
     const mobileJumpBtn = document.getElementById('mobileJumpBtn');
 
-    if (joystickBase) {
-      let touchId = null;
-      let startX = 0, startY = 0;
-
-      joystickBase.addEventListener('touchstart', e => {
+    if (joyPad) {
+      let touchId = null, sX = 0, sY = 0;
+      joyPad.addEventListener('touchstart', e => {
+        initAudio();
         const t = e.changedTouches[0];
         touchId = t.identifier;
-        const rect = joystickBase.getBoundingClientRect();
-        startX = rect.left + rect.width / 2;
-        startY = rect.top + rect.height / 2;
-        joystick.active = true;
+        const rect = joyPad.getBoundingClientRect();
+        sX = rect.left + rect.width / 2;
+        sY = rect.top + rect.height / 2;
+        joy.active = true;
       }, { passive: false });
 
       window.addEventListener('touchmove', e => {
-        if (!joystick.active) return;
+        if (!joy.active) return;
         for (let i = 0; i < e.changedTouches.length; i++) {
           const t = e.changedTouches[i];
           if (t.identifier === touchId) {
-            let dx = t.clientX - startX;
-            let dy = t.clientY - startY;
+            let dx = t.clientX - sX;
+            let dy = t.clientY - sY;
             const dist = Math.hypot(dx, dy);
             const maxR = 40;
-            if (dist > maxR) {
-              dx = (dx / dist) * maxR;
-              dy = (dy / dist) * maxR;
-            }
-            joystickStick.style.transform = `translate(${dx}px, ${dy}px)`;
-            joystick.x = dx / maxR;
-            joystick.y = dy / maxR;
+            if (dist > maxR) { dx = (dx / dist) * maxR; dy = (dy / dist) * maxR; }
+            joyKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+            joy.x = dx / maxR;
+            joy.y = dy / maxR;
           }
         }
       }, { passive: false });
 
-      const stopJoystick = () => {
-        joystick.active = false;
-        joystick.x = 0;
-        joystick.y = 0;
-        joystickStick.style.transform = `translate(0px, 0px)`;
+      const endJoy = () => {
+        joy.active = false;
+        joy.x = 0; joy.y = 0;
+        joyKnob.style.transform = 'translate(0px, 0px)';
       };
-      window.addEventListener('touchend', stopJoystick);
-      window.addEventListener('touchcancel', stopJoystick);
+      window.addEventListener('touchend', endJoy);
+      window.addEventListener('touchcancel', endJoy);
     }
-
     if (mobileJumpBtn) {
-      mobileJumpBtn.addEventListener('touchstart', () => { keys.space = true; });
+      mobileJumpBtn.addEventListener('touchstart', () => { initAudio(); keys.space = true; });
       mobileJumpBtn.addEventListener('touchend', () => { keys.space = false; });
     }
 
-    // Movement Variables
-    let vx = 0, vz = 0, vy = 0;
-    let targetRotation = 0;
+    // Dynamic Physics Variables
+    let posX = 0, posZ = 20, posY = 0;
+    let velX = 0, velZ = 0, velY = 0;
+    let currentRotation = 0, targetRotation = 0;
     let isGrounded = true;
-    let walkTimer = 0;
+    let runTimer = 0;
+    let bankAngle = 0;
 
-    // Active Station Trigger
-    let activeStation = null;
-    const actionPrompt = document.getElementById('actionPrompt');
-    actionPrompt.addEventListener('click', triggerActiveStation);
+    // Station Proximity
+    let nearbyStation = null;
+    const interactPrompt = document.getElementById('interactPrompt');
+    interactPrompt.addEventListener('click', openActiveStation);
 
 
     /* =========================================================================
-       7. STATION DIALOGS & MODAL INJECTION
+       10. DIALOG & INTERACTION HANDLERS
        ========================================================================= */
     const stationModal = document.getElementById('stationModal');
-    const modalInner = document.getElementById('modalInner');
-    const modalContent = document.getElementById('modalDynamicContent');
-    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const dialogContent = document.getElementById('dialogContent');
+    const dialogCloseBtn = document.getElementById('dialogCloseBtn');
 
-    modalCloseBtn.addEventListener('click', () => {
-      stationModal.classList.remove('active');
-    });
+    dialogCloseBtn.addEventListener('click', () => stationModal.classList.remove('active'));
     stationModal.addEventListener('click', e => {
       if (e.target === stationModal) stationModal.classList.remove('active');
     });
 
-    function triggerActiveStation() {
-      if (!activeStation) return;
+    function openActiveStation() {
+      if (!nearbyStation) return;
+      playChime(659, 0.3);
       const lang = currentLang;
       let html = '';
 
-      if (activeStation.id === 'gate') {
+      if (nearbyStation.id === 'gate') {
         html = `
-          <span class="modal-tag">${translations[lang].station_gate_tag}</span>
-          <h3>${translations[lang].station_gate_title}</h3>
-          <p>${translations[lang].station_gate_text}</p>
-          <div class="modal-actions">
-            <button class="btn-fairytale btn-fairytale-primary" onclick="document.getElementById('stationModal').classList.remove('active')">
-              ${translations[lang].station_gate_btn}
+          <span class="dialog-tag">${translations[lang].st_gate_tag}</span>
+          <h3>${translations[lang].st_gate_title}</h3>
+          <p>${translations[lang].st_gate_desc}</p>
+          <div class="dialog-btns">
+            <button class="btn-action btn-action-primary" onclick="document.getElementById('stationModal').classList.remove('active')">
+              Sayohatni davom ettirish →
             </button>
-            <button class="btn-fairytale btn-fairytale-outline" onclick="openQuickCV()">
-              📜 ${translations[lang].btn_cv_drawer}
-            </button>
-          </div>
-        `;
-      } else if (activeStation.id === 'skills') {
-        html = `
-          <span class="modal-tag">${translations[lang].station_skills_tag}</span>
-          <h3>${translations[lang].station_skills_title}</h3>
-          <p>${translations[lang].station_skills_text}</p>
-          <div class="modal-pills">
-            <span class="modal-pill">React 19</span>
-            <span class="modal-pill">TypeScript</span>
-            <span class="modal-pill">Zustand</span>
-            <span class="modal-pill">TanStack Query</span>
-            <span class="modal-pill">Tailwind CSS v4</span>
-            <span class="modal-pill">React Native (Expo)</span>
-            <span class="modal-pill">REST API / Axios</span>
-            <span class="modal-pill">Three.js / WebGL</span>
-            <span class="modal-pill">Zod Validation</span>
-            <span class="modal-pill">Vite</span>
-          </div>
-          <div class="modal-actions">
-            <button class="btn-fairytale btn-fairytale-primary" onclick="document.getElementById('stationModal').classList.remove('active')">
-              Davom etish →
+            <button class="btn-action btn-action-outline" onclick="openCVDrawer()">
+              📜 ${translations[lang].btn_cv}
             </button>
           </div>
         `;
-      } else if (activeStation.id === 'project_crm') {
+      } else if (nearbyStation.id === 'skills') {
         html = `
-          <span class="modal-tag">${translations[lang].station_p1_tag}</span>
-          <h3>${translations[lang].station_p1_title}</h3>
-          <p>${translations[lang].station_p1_text}</p>
-          <div class="modal-pills">
-            <span class="modal-pill">React 19</span>
-            <span class="modal-pill">TypeScript</span>
-            <span class="modal-pill">Zustand</span>
-            <span class="modal-pill">TanStack Query</span>
-            <span class="modal-pill">Tailwind CSS v4</span>
-            <span class="modal-pill">Recharts</span>
+          <span class="dialog-tag">${translations[lang].st_skills_tag}</span>
+          <h3>${translations[lang].st_skills_title}</h3>
+          <p>${translations[lang].st_skills_desc}</p>
+          <div class="tag-pills">
+            <span class="pill">React 19</span>
+            <span class="pill">TypeScript</span>
+            <span class="pill">Zustand</span>
+            <span class="pill">TanStack Query</span>
+            <span class="pill">Tailwind CSS v4</span>
+            <span class="pill">React Native Expo</span>
+            <span class="pill">Three.js / WebGL</span>
+            <span class="pill">REST API / Axios</span>
+            <span class="pill">Zod</span>
+            <span class="pill">Vite</span>
           </div>
-          <div class="modal-actions">
-            <a href="https://github.com/komilazokirova" target="_blank" class="btn-fairytale btn-fairytale-primary">
+          <div class="dialog-btns">
+            <button class="btn-action btn-action-primary" onclick="document.getElementById('stationModal').classList.remove('active')">
+              O'rmonga qaytish →
+            </button>
+          </div>
+        `;
+      } else if (nearbyStation.id === 'crm') {
+        html = `
+          <span class="dialog-tag">${translations[lang].st_p1_tag}</span>
+          <h3>${translations[lang].st_p1_title}</h3>
+          <p>${translations[lang].st_p1_desc}</p>
+          <div class="tag-pills">
+            <span class="pill">React 19</span>
+            <span class="pill">TypeScript</span>
+            <span class="pill">Zustand</span>
+            <span class="pill">TanStack Query</span>
+            <span class="pill">Tailwind CSS</span>
+            <span class="pill">Recharts</span>
+          </div>
+          <div class="dialog-btns">
+            <a href="https://github.com/komilazokirova" target="_blank" class="btn-action btn-action-primary">
               GitHub Repozitoriy ↗
             </a>
-            <a href="https://t.me/Komila2608" target="_blank" class="btn-fairytale btn-fairytale-outline">
-              Demo So'rash ✉
+            <a href="https://t.me/Komila2608" target="_blank" class="btn-action btn-action-outline">
+              Demo Ko'rish ✉
             </a>
           </div>
         `;
-      } else if (activeStation.id === 'project_yol') {
+      } else if (nearbyStation.id === 'yol') {
         html = `
-          <span class="modal-tag">${translations[lang].station_p2_tag}</span>
-          <h3>${translations[lang].station_p2_title}</h3>
-          <p>${translations[lang].station_p2_text}</p>
-          <div class="modal-pills">
-            <span class="modal-pill">React Native</span>
-            <span class="modal-pill">Expo</span>
-            <span class="modal-pill">TypeScript</span>
-            <span class="modal-pill">React Navigation</span>
+          <span class="dialog-tag">${translations[lang].st_p2_tag}</span>
+          <h3>${translations[lang].st_p2_title}</h3>
+          <p>${translations[lang].st_p2_desc}</p>
+          <div class="tag-pills">
+            <span class="pill">React Native</span>
+            <span class="pill">Expo</span>
+            <span class="pill">TypeScript</span>
+            <span class="pill">React Navigation</span>
           </div>
-          <div class="modal-actions">
-            <a href="https://github.com/komilazokirova" target="_blank" class="btn-fairytale btn-fairytale-primary">
+          <div class="dialog-btns">
+            <a href="https://github.com/komilazokirova" target="_blank" class="btn-action btn-action-primary">
               GitHub Repozitoriy ↗
             </a>
           </div>
         `;
-      } else if (activeStation.id === 'grandma') {
+      } else if (nearbyStation.id === 'grandma') {
         html = `
-          <span class="modal-tag">${translations[lang].station_grandma_tag}</span>
-          <h3>${translations[lang].station_grandma_title}</h3>
-          <p>${translations[lang].station_grandma_text}</p>
-          <form id="grandmaContactForm">
-            <div class="contact-form-group">
-              <label class="contact-form-label">Ismingiz</label>
-              <input type="text" id="gName" class="contact-form-input" placeholder="Komila" required>
+          <span class="dialog-tag">${translations[lang].st_grandma_tag}</span>
+          <h3>${translations[lang].st_grandma_title}</h3>
+          <p>${translations[lang].st_grandma_desc}</p>
+          <form id="contactGrandmaForm">
+            <div class="form-group">
+              <label class="form-label">Ismingiz</label>
+              <input type="text" id="cName" class="form-input" placeholder="Komila" required>
             </div>
-            <div class="contact-form-group">
-              <label class="contact-form-label">Telegram yoki Email</label>
-              <input type="text" id="gContact" class="contact-form-input" placeholder="@username" required>
+            <div class="form-group">
+              <label class="form-label">Telegram / Email</label>
+              <input type="text" id="cContact" class="form-input" placeholder="@username yoki pochta" required>
             </div>
-            <div class="contact-form-group">
-              <label class="contact-form-label">Xabaringiz</label>
-              <textarea id="gMsg" class="contact-form-input" placeholder="Salom! Siz bilan yangi loyihani muhokama qilmoqchi edim..." required></textarea>
+            <div class="form-group">
+              <label class="form-label">Xabaringiz</label>
+              <textarea id="cMessage" class="form-input" placeholder="Salom! Siz bilan loyiha haqida gaplashmoqchi edim..." required></textarea>
             </div>
-            <button type="submit" class="btn-fairytale btn-fairytale-primary" style="width:100%; justify-content:center;">
+            <button type="submit" class="btn-action btn-action-primary" style="width:100%; justify-content:center;">
               Telegramga Xat Yuborish ✈
             </button>
           </form>
         `;
       }
 
-      modalContent.innerHTML = html;
+      dialogContent.innerHTML = html;
       stationModal.classList.add('active');
 
-      // Contact form submit listener if Grandma's cottage
-      const gForm = document.getElementById('grandmaContactForm');
-      if (gForm) {
-        gForm.addEventListener('submit', e => {
+      const cForm = document.getElementById('contactGrandmaForm');
+      if (cForm) {
+        cForm.addEventListener('submit', e => {
           e.preventDefault();
-          const name = document.getElementById('gName').value.trim();
-          const contact = document.getElementById('gContact').value.trim();
-          const msg = document.getElementById('gMsg').value.trim();
-          const text = encodeURIComponent(`Salom Komila! Ertak portfoliangiz orqali xat:\n\n👤 Ism: ${name}\n📞 Aloqa: ${contact}\n💬 Xabar: ${msg}`);
+          const n = document.getElementById('cName').value.trim();
+          const c = document.getElementById('cContact').value.trim();
+          const m = document.getElementById('cMessage').value.trim();
+          const text = encodeURIComponent(`Salom Komila! 3D O'yin portfoliangiz orqali xabar:\n\n👤 Ism: ${n}\n📞 Kontakt: ${c}\n💬 Xabar: ${m}`);
           window.open(`https://t.me/Komila2608?text=${text}`, '_blank');
         });
       }
     }
 
-
-    /* =========================================================================
-       8. QUICK CV DRAWER HANDLERS
-       ========================================================================= */
+    // Quick CV Drawer Controls
     const cvDrawer = document.getElementById('cvDrawer');
     const openDrawerBtn = document.getElementById('openDrawerBtn');
     const closeDrawerBtn = document.getElementById('closeDrawerBtn');
 
-    function openQuickCV() {
+    function openCVDrawer() {
       stationModal.classList.remove('active');
       cvDrawer.classList.add('open');
     }
-    openDrawerBtn.addEventListener('click', openQuickCV);
+    openDrawerBtn.addEventListener('click', openCVDrawer);
     closeDrawerBtn.addEventListener('click', () => cvDrawer.classList.remove('open'));
 
 
     /* =========================================================================
-       9. MAIN ANIMATION LOOP & PHYSICS UPDATE
+       11. REAL-TIME ANIMATION & GAME PHYSICS LOOP (60 FPS)
        ========================================================================= */
     const clock = new THREE.Clock();
+    const speedBar = document.getElementById('speedBar');
 
     function animate() {
       requestAnimationFrame(animate);
       const delta = Math.min(clock.getDelta(), 0.05);
       const time = clock.getElapsedTime();
 
-      // Determine Movement Inputs
-      let inputX = 0, inputZ = 0;
-      if (keys.w) inputZ -= 1;
-      if (keys.s) inputZ += 1;
-      if (keys.a) inputX -= 1;
-      if (keys.d) inputX += 1;
+      // Read Inputs
+      let inX = 0, inZ = 0;
+      if (keys.w) inZ -= 1;
+      if (keys.s) inZ += 1;
+      if (keys.a) inX -= 1;
+      if (keys.d) inX += 1;
 
-      if (joystick.active) {
-        inputX = joystick.x;
-        inputZ = joystick.y;
+      if (joy.active) {
+        inX = joy.x;
+        inZ = joy.y;
       }
 
-      const isMoving = Math.hypot(inputX, inputZ) > 0.15;
+      const moveMag = Math.hypot(inX, inZ);
+      const maxSpeed = 10.5;
 
-      // Acceleration & Velocity
-      const speed = 7.5;
-      if (isMoving) {
-        const angle = Math.atan2(inputX, inputZ);
-        targetRotation = angle;
-        vx = Math.sin(angle) * speed;
-        vz = Math.cos(angle) * speed;
+      // Acceleration & Friction
+      if (moveMag > 0.15) {
+        targetRotation = Math.atan2(inX, inZ);
+        const acc = 28 * delta;
+        velX += Math.sin(targetRotation) * acc;
+        velZ += Math.cos(targetRotation) * acc;
+
+        // Cap max velocity
+        const curSpd = Math.hypot(velX, velZ);
+        if (curSpd > maxSpeed) {
+          velX = (velX / curSpd) * maxSpeed;
+          velZ = (velZ / curSpd) * maxSpeed;
+        }
       } else {
-        vx *= 0.82;
-        vz *= 0.82;
+        velX *= 0.88;
+        velZ *= 0.88;
       }
 
-      // Jumping & Gravity
-      if (keys.space && isGrounded) {
-        vy = 6.2;
+      // Ramp Jump Trigger (Bruno Simon Airtime!)
+      const distToRamp = Math.hypot(posX - rampGroup.position.x, posZ - rampGroup.position.z);
+      if (distToRamp < 1.8 && isGrounded && velZ < -2) {
+        velY = 9.5;
         isGrounded = false;
+        playChime(880, 0.35);
       }
-      vy -= 18 * delta; // Gravity
-      player.position.y += vy * delta;
 
-      if (player.position.y <= 0) {
-        player.position.y = 0;
-        vy = 0;
+      // Jump Key
+      if (keys.space && isGrounded) {
+        velY = 8.2;
+        isGrounded = false;
+        playChime(784, 0.2);
+      }
+
+      // Gravity
+      velY -= 22 * delta;
+      posY += velY * delta;
+
+      if (posY <= 0) {
+        posY = 0;
+        velY = 0;
         isGrounded = true;
       }
 
-      // Apply Position
-      player.position.x += vx * delta;
-      player.position.z += vz * delta;
+      // Update Player Position
+      posX += velX * delta;
+      posZ += velZ * delta;
 
-      // Bound boundaries
-      player.position.x = Math.max(-38, Math.min(38, player.position.x));
-      player.position.z = Math.max(-48, Math.min(24, player.position.z));
+      // Forest Bounds
+      posX = Math.max(-38, Math.min(38, posX));
+      posZ = Math.max(-46, Math.min(24, posZ));
 
-      // Character Rotation Lerp
-      let diff = targetRotation - player.rotation.y;
-      while (diff < -Math.PI) diff += Math.PI * 2;
-      while (diff > Math.PI) diff -= Math.PI * 2;
-      player.rotation.y += diff * 12 * delta;
+      player.position.set(posX, posY, posZ);
 
-      // Walking Animation (Cape wave, legs swing, body bobbing)
-      if (isMoving && isGrounded) {
-        walkTimer += delta * 12;
-        bodyGroup.position.y = Math.abs(Math.sin(walkTimer)) * 0.12;
-        legL.rotation.x = Math.sin(walkTimer) * 0.7;
-        legR.rotation.x = -Math.sin(walkTimer) * 0.7;
-        cape.rotation.x = 0.2 + Math.abs(Math.sin(walkTimer * 0.8)) * 0.45;
+      // Rotation & Banking Tilt into Turns
+      let rotDiff = targetRotation - currentRotation;
+      while (rotDiff < -Math.PI) rotDiff += Math.PI * 2;
+      while (rotDiff > Math.PI) rotDiff -= Math.PI * 2;
+      currentRotation += rotDiff * 14 * delta;
+      player.rotation.y = currentRotation;
+
+      // Bank lean
+      const currentSpeed = Math.hypot(velX, velZ);
+      bankAngle += (rotDiff * (currentSpeed / maxSpeed) * 0.4 - bankAngle) * 0.15;
+      playerPivot.rotation.z = -bankAngle;
+
+      // Update Speedometer UI
+      speedBar.style.width = `${Math.min(100, (currentSpeed / maxSpeed) * 100)}%`;
+
+      // Character Running & Cape Flutter Animation
+      if (currentSpeed > 0.4 && isGrounded) {
+        runTimer += delta * (currentSpeed * 2.2);
+        playerPivot.position.y = Math.abs(Math.sin(runTimer)) * 0.16;
+        legL.rotation.x = Math.sin(runTimer) * 0.85;
+        legR.rotation.x = -Math.sin(runTimer) * 0.85;
+        cape.rotation.x = 0.25 + (currentSpeed / maxSpeed) * 0.65;
       } else if (!isGrounded) {
-        // Jump pose
-        legL.rotation.x = -0.3;
-        legR.rotation.x = 0.3;
-        cape.rotation.x = 0.6;
+        playerPivot.position.y = 0;
+        legL.rotation.x = -0.35;
+        legR.rotation.x = 0.35;
+        cape.rotation.x = 0.8;
       } else {
-        // Idle breathing
-        walkTimer = 0;
-        bodyGroup.position.y = Math.sin(time * 2.5) * 0.03;
+        runTimer = 0;
+        playerPivot.position.y = Math.sin(time * 2.5) * 0.04;
         legL.rotation.x *= 0.8;
         legR.rotation.x *= 0.8;
-        cape.rotation.x = 0.18 + Math.sin(time * 2) * 0.06;
+        cape.rotation.x = 0.2 + Math.sin(time * 2) * 0.05;
       }
 
-      // Smooth Camera Follow
-      const targetCamX = player.position.x;
-      const targetCamY = player.position.y + 7.5;
-      const targetCamZ = player.position.z + 10.5;
+      // Smooth Bruno Simon Camera Tracking (Damped follow)
+      const targetCamX = posX;
+      const targetCamY = posY + 9.5;
+      const targetCamZ = posZ + 14.0;
 
-      camera.position.x += (targetCamX - camera.position.x) * 0.08;
-      camera.position.y += (targetCamY - camera.position.y) * 0.08;
-      camera.position.z += (targetCamZ - camera.position.z) * 0.08;
-      camera.lookAt(player.position.x, player.position.y + 1.2, player.position.z);
+      camera.position.x += (targetCamX - camera.position.x) * 0.09;
+      camera.position.y += (targetCamY - camera.position.y) * 0.09;
+      camera.position.z += (targetCamZ - camera.position.z) * 0.09;
+      camera.lookAt(posX, posY + 1.2, posZ);
 
-      // Interactive Station Distance Check
-      let closestStation = null;
-      let minDistance = 999;
-
-      stations.forEach(st => {
-        const dist = Math.hypot(player.position.x - st.x, player.position.z - st.z);
-        if (dist < st.radius && dist < minDistance) {
-          closestStation = st;
-          minDistance = dist;
+      // Collectible Apples Check
+      apples.forEach(a => {
+        if (!a.collected) {
+          a.mesh.rotation.y = time * 2;
+          a.mesh.position.y = 0.8 + Math.sin(time * 3) * 0.15;
+          const d = Math.hypot(posX - a.mesh.position.x, posZ - a.mesh.position.z);
+          if (d < 1.3) {
+            a.collected = true;
+            scene.remove(a.mesh);
+            collectedApples++;
+            appleCounterEl.textContent = collectedApples;
+            playChime(987, 0.25);
+          }
         }
       });
 
-      activeStation = closestStation;
-      if (activeStation) {
-        actionPrompt.classList.add('visible');
-      } else {
-        actionPrompt.classList.remove('visible');
-      }
-
-      // Update Zone Banner Text based on player Z position
-      const pz = player.position.z;
-      const zoneTextEl = document.getElementById('zoneText');
-      const lang = currentLang;
-
-      if (pz > 8) {
-        zoneTextEl.innerHTML = translations[lang].zone_start;
-      } else if (pz <= 8 && pz > -8) {
-        zoneTextEl.innerHTML = translations[lang].zone_skills;
-      } else if (pz <= -8 && pz > -30) {
-        zoneTextEl.innerHTML = translations[lang].zone_projects;
-      } else {
-        zoneTextEl.innerHTML = translations[lang].zone_grandma;
-      }
-
-      // Topple Skill Blocks when player bumps into them
-      skillCubes.forEach(item => {
-        const dx = player.position.x - item.mesh.position.x;
-        const dz = player.position.z - item.mesh.position.z;
+      // Bowling Pins Physics Smash
+      bowlingPins.forEach(p => {
+        const dx = posX - p.mesh.position.x;
+        const dz = posZ - p.mesh.position.z;
         const d = Math.hypot(dx, dz);
-        if (d < 1.1) {
-          // Impulse
-          item.vx -= (dx / (d + 0.001)) * 3;
-          item.vz -= (dz / (d + 0.001)) * 3;
-          item.vr += (Math.random() - 0.5) * 5;
+        if (d < 0.9 && currentSpeed > 1.5) {
+          p.vx -= (dx / (d + 0.01)) * currentSpeed * 0.9;
+          p.vz -= (dz / (d + 0.01)) * currentSpeed * 0.9;
+          p.vr += (Math.random() - 0.5) * 8;
+          playThud();
         }
-        // Friction & damping
-        item.mesh.position.x += item.vx * delta;
-        item.mesh.position.z += item.vz * delta;
-        item.mesh.rotation.y += item.vr * delta;
-        item.mesh.rotation.x += item.vr * delta * 0.5;
-        item.vx *= 0.9;
-        item.vz *= 0.9;
-        item.vr *= 0.92;
+        p.mesh.position.x += p.vx * delta;
+        p.mesh.position.z += p.vz * delta;
+        p.mesh.rotation.z += p.vr * delta;
+        p.mesh.rotation.x += p.vr * delta * 0.7;
+        p.vx *= 0.92;
+        p.vz *= 0.92;
+        p.vr *= 0.9;
       });
+
+      // Wooden Crates Physics Smash
+      smashCrates.forEach(c => {
+        const dx = posX - c.mesh.position.x;
+        const dz = posZ - c.mesh.position.z;
+        const d = Math.hypot(dx, dz);
+        if (d < 1.2 && currentSpeed > 2.0) {
+          c.vx -= (dx / (d + 0.01)) * currentSpeed * 0.8;
+          c.vz -= (dz / (d + 0.01)) * currentSpeed * 0.8;
+          c.vr += (Math.random() - 0.5) * 6;
+          playThud();
+        }
+        c.mesh.position.x += c.vx * delta;
+        c.mesh.position.z += c.vz * delta;
+        c.mesh.rotation.y += c.vr * delta;
+        c.vx *= 0.88;
+        c.vz *= 0.88;
+        c.vr *= 0.88;
+      });
+
+      // Station Proximity Check
+      let closest = null, minDist = 999;
+      stations.forEach(s => {
+        const dist = Math.hypot(posX - s.x, posZ - s.z);
+        if (dist < s.radius && dist < minDist) {
+          closest = s;
+          minDist = dist;
+        }
+      });
+      nearbyStation = closest;
+      interactPrompt.classList.toggle('active', !!nearbyStation);
 
       // Chimney Smoke Animation
-      smokePuffs.forEach((puff, idx) => {
-        puff.position.y += 0.8 * delta;
-        puff.position.x += Math.sin(time + idx) * 0.1 * delta;
-        if (puff.position.y > 8.5) {
-          puff.position.y = 5.8;
-          puff.position.x = 1.8;
+      chimneyPuffs.forEach((puff, idx) => {
+        puff.position.y += 0.9 * delta;
+        puff.position.x += Math.sin(time + idx) * 0.15 * delta;
+        if (puff.position.y > 9.0) {
+          puff.position.y = 6.2;
+          puff.position.x = 2.0;
         }
       });
 
       renderer.render(scene, camera);
     }
 
-    // Window Resize Handler
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Kick off animation loop
     animate();
   </script>
 </body>
