@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Komila Zokirova — Frontend & Mobile Developer</title>
-  <meta name="description" content="Komila Zokirova — Frontend & Mobile Developer. React, TypeScript, React Native, Three.js va zamonaviy veb-texnologiyalar.">
+  <title>Komila Zokirova — Frontend Developer</title>
+  <meta name="description" content="Komila Zokirova — Frontend Developer. React 19, TypeScript, Zustand, Three.js va zamonaviy veb-texnologiyalar.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -438,7 +438,7 @@
     }
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 2rem;
     }
     .project-card {
@@ -498,11 +498,6 @@
       background: rgba(110, 255, 212, 0.12);
       color: var(--accent3);
       border-color: rgba(110, 255, 212, 0.3);
-    }
-    .badge-mobile {
-      background: rgba(176, 110, 255, 0.12);
-      color: var(--accent2);
-      border-color: rgba(176, 110, 255, 0.3);
     }
 
     .project-card h3 {
@@ -763,7 +758,6 @@
       nav { padding: 1.2rem 2rem; }
       .nav-links { display: none; }
       .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .projects-grid { grid-template-columns: 1fr; }
       .contact-wrapper { grid-template-columns: 1fr; gap: 3rem; }
       .hero-stats { gap: 1.8rem; }
     }
@@ -817,7 +811,7 @@
     <div class="container">
       <div class="hero-badge">
         <span class="status-ping"></span>
-        <span data-i18n="hero_badge">// Frontend & Mobile Developer — Uzbekistan</span>
+        <span data-i18n="hero_badge">// Frontend Developer — Uzbekistan</span>
       </div>
       
       <h1>
@@ -827,7 +821,7 @@
       </h1>
 
       <p class="hero-desc" data-i18n="hero_desc">
-        I craft user-friendly, responsive, and visually compelling web & mobile interfaces. Specialized in React, TypeScript, and modern frontend ecosystems. Open to exciting collaborations and projects.
+        I craft user-friendly, responsive, and visually compelling web interfaces. Specialized in React, TypeScript, and modern frontend ecosystems. Open to exciting collaborations and projects.
       </p>
 
       <div class="hero-btns">
@@ -875,13 +869,13 @@
         <div>
           <h2 data-i18n="about_title">Who<br>am I?</h2>
           <div class="about-text" id="aboutText">
-            <p data-i18n="about_p1">I'm <strong>Komila Zokirova</strong>, a creative frontend and mobile developer based in <strong>Uzbekistan</strong>. I build high-performance, user-friendly digital products that combine clean code with elegant design.</p>
-            <p data-i18n="about_p2">My daily toolkit includes <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong>, and <strong>React Native (Expo)</strong> for mobile applications. I pay close attention to component architecture, performance, and seamless user experiences.</p>
+            <p data-i18n="about_p1">I'm <strong>Komila Zokirova</strong>, a creative frontend developer based in <strong>Uzbekistan</strong>. I build high-performance, user-friendly digital products that combine clean code with elegant design.</p>
+            <p data-i18n="about_p2">My daily toolkit includes <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong>, and modern JavaScript. I pay close attention to component architecture, performance, and seamless user experiences.</p>
             <p data-i18n="about_p3">I am continuously exploring modern frontend trends, 3D web experiences (Three.js), and actively contributing to projects that solve real problems.</p>
           </div>
           <div class="goal-card">
             <span data-i18n="goal_label">// My Goal:</span><br>
-            <span data-i18n="goal_text">To engineer fast, accessible, and delightful web & mobile applications that make a real difference and empower users worldwide.</span>
+            <span data-i18n="goal_text">To engineer fast, accessible, and delightful web applications that make a real difference and empower users worldwide.</span>
           </div>
         </div>
 
@@ -902,7 +896,6 @@
             <div class="skill-group-label" data-i18n="skill_frameworks">frameworks & libraries</div>
             <div class="skills-pills">
               <span class="pill pill-react">React 19</span>
-              <span class="pill pill-react">React Native (Expo)</span>
               <span class="pill pill-state">TanStack React Query</span>
               <span class="pill pill-core">Bootstrap 5</span>
             </div>
@@ -943,7 +936,11 @@
     </div>
   </section>
 
-  <!-- PROJECTS SECTION -->
+  <!-- ========================================================================= -->
+  <!-- 🛠 LOYIHALAR BO'LIMI (KOMILA UCHUN O'ZGARTIRISH VA QO'SHISH JUDA OSON)    -->
+  <!-- Istalgan loyihani o'zgartirish, o'chirish yoki yangi kartani qo'shish     -->
+  <!-- quyidagi .project-card bloklari orqali amalga oshiriladi:                 -->
+  <!-- ========================================================================= -->
   <section id="projects">
     <div class="container">
       <div class="projects-header">
@@ -953,7 +950,7 @@
       </div>
 
       <div class="projects-grid">
-        <!-- Project 1: Bog'cha CRM -->
+        <!-- 1-Loyiha: Bog'cha CRM -->
         <div class="project-card">
           <div>
             <div class="card-top">
@@ -983,40 +980,11 @@
           </div>
         </div>
 
-        <!-- Project 2: Yo'l-Yo'lakay Mobile App -->
+        <!-- 2-Loyiha: 3D Galaxy Portfolio -->
         <div class="project-card">
           <div>
             <div class="card-top">
               <span class="project-num">002</span>
-              <span class="wip-badge badge-mobile" data-i18n="badge_mobile">Mobile App</span>
-            </div>
-            <h3 data-i18n="p2_title">Yo'l-Yo'lakay (Navigation & Rides)</h3>
-            <p data-i18n="p2_desc">
-              Cross-platform mobile application for intercity travel and passenger navigation. Engineered using React Native and Expo with TypeScript, offering clean navigation flows and reactive mobile UI.
-            </p>
-            <div class="tags">
-              <span class="tag">React Native</span>
-              <span class="tag">Expo</span>
-              <span class="tag">TypeScript</span>
-              <span class="tag">React Navigation</span>
-              <span class="tag">Mobile UX</span>
-            </div>
-          </div>
-          <div class="project-links">
-            <a href="https://github.com/komilazokirova" target="_blank" class="card-link card-link-primary">
-              <span>GitHub Repo</span> <span>↗</span>
-            </a>
-            <a href="https://t.me/Komila2608" target="_blank" class="card-link card-link-secondary" data-i18n="link_details">
-              <span>Overview</span> <span>ℹ</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Project 3: 3D Galaxy Portfolio -->
-        <div class="project-card">
-          <div>
-            <div class="card-top">
-              <span class="project-num">003</span>
               <span class="wip-badge" data-i18n="badge_creative">Creative 3D</span>
             </div>
             <h3 data-i18n="p3_title">Interactive 3D Portfolio</h3>
@@ -1041,11 +1009,11 @@
           </div>
         </div>
 
-        <!-- Project 4: UI & State Components -->
+        <!-- 3-Loyiha: UI & State Components -->
         <div class="project-card">
           <div>
             <div class="card-top">
-              <span class="project-num">004</span>
+              <span class="project-num">003</span>
               <span class="wip-badge" data-i18n="badge_tools">Frontend Kit</span>
             </div>
             <h3 data-i18n="p4_title">React UI Kit & Theme Utilities</h3>
@@ -1069,6 +1037,8 @@
             </a>
           </div>
         </div>
+
+        <!-- 👉 YANGI LOYIHA QO'SHISH UCHUN SHU YERGA YANA BIR .project-card QO'SHISHINGIZ MUMKIN -->
       </div>
     </div>
   </section>
@@ -1148,7 +1118,7 @@
       <button class="modal-close" id="closeModal">✕</button>
       <h3 style="font-family:'Syne',sans-serif; font-size:1.4rem; margin-bottom:0.8rem; color:var(--accent);" data-i18n="cv_modal_title">Curriculum Vitae (CV)</h3>
       <p style="font-size:0.85rem; color:var(--muted); line-height:1.7; margin-bottom:1.5rem;" data-i18n="cv_modal_desc">
-        Komila Zokirova — Frontend & Mobile Developer. Rezyumening so'nggi yangilangan PDF versiyasini yuklab oling yoki Telegram orqali so'rang:
+        Komila Zokirova — Frontend Developer. Rezyumening so'nggi yangilangan PDF versiyasini yuklab oling yoki Telegram orqali so'rang:
       </p>
       <div style="display:flex; gap:1rem; flex-wrap:wrap;">
         <a href="https://t.me/Komila2608?text=Salom%20Komila!%20Menga%20rezyumengizni%20(CV)%20yubora%20olasizmi?" target="_blank" class="btn btn-primary" style="flex:1; justify-content:center;">
@@ -1163,7 +1133,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <span data-i18n="footer_copy">© 2026 Komila Zokirova — Frontend & Mobile Developer</span>
+    <span data-i18n="footer_copy">© 2026 Komila Zokirova — Frontend Developer</span>
     <div class="footer-links">
       <a href="https://github.com/komilazokirova" target="_blank">GitHub</a>
       <a href="https://t.me/Komila2608" target="_blank">Telegram</a>
@@ -1175,9 +1145,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <script>
-    /* ==========================================================
+    /* =========================================================================
        1. MULTI-LANGUAGE (i18n) DICTIONARY (UZ, RU, EN)
-       ========================================================== */
+       Bu yerda matnlarni istalgan paytda o'zgartirishingiz mumkin:
+       ========================================================================= */
     const translations = {
       uz: {
         nav_about: "haqimda",
@@ -1185,9 +1156,9 @@
         nav_projects: "loyihalar",
         nav_contact: "aloqa",
 
-        hero_badge: "// Frontend & Mobil Dasturchi — O'zbekiston",
+        hero_badge: "// Frontend Dasturchi — O'zbekiston",
         hero_hi: "Salom, men",
-        hero_desc: "Zamonaviy, tez va qulay veb hamda mobil interfeyslarni yarataman. React, TypeScript va zamonaviy frontend ekotizimida sifatli dasturiy mahsulotlar yaratishga ixtisoslashganman.",
+        hero_desc: "Zamonaviy, tez va qulay veb-interfeyslarni yarataman. React 19, TypeScript va zamonaviy frontend ekotizimida sifatli dasturiy mahsulotlar yaratishga ixtisoslashganman.",
         btn_projects: "Loyihalarim",
         btn_cv: "CV Yuklab olish",
         btn_contact: "Bog'lanish",
@@ -1199,11 +1170,11 @@
 
         section_01: "// 01 — men haqimda",
         about_title: "Men<br>haqimda",
-        about_p1: "Men <strong>Komila Zokirova</strong> — O'zbekistonda faoliyat yurituvchi ijodkor <strong>Frontend va Mobil dasturchiman</strong>. Toza kod, qulay arxitektura va chiroyli dizayn uyg'unlashgan raqamli mahsulotlarni yaratishga intilaman.",
-        about_p2: "Asosiy texnologik to'plamim: <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong> hamda mobil ilovalar uchun <strong>React Native (Expo)</strong>. Har bir detalga, foydalanuvchi qulayligi (UX) va sahifa tezligiga alohida e'tibor qarataman.",
+        about_p1: "Men <strong>Komila Zokirova</strong> — O'zbekistonda faoliyat yurituvchi ijodkor <strong>Frontend dasturchiman</strong>. Toza kod, qulay arxitektura va chiroyli dizayn uyg'unlashgan raqamli mahsulotlarni yaratishga intilaman.",
+        about_p2: "Asosiy texnologik to'plamim: <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong> hamda zamonaviy JavaScript. Har bir detalga, foydalanuvchi qulayligi (UX) va sahifa tezligiga alohida e'tibor qarataman.",
         about_p3: "Doimiy ravishda yangi texnologiyalarni, interaktiv 3D tajribalarni (Three.js) o'rganaman va real muammolarga yechim bo'ladigan loyihalarda ishtirok etishdan mamnunman.",
         goal_label: "// Asosiy maqsadim:",
-        goal_text: "Foydalanuvchilarga qulaylik va zavq ulashuvchi, tez ishlaydigan va ishonchli veb hamda mobil ilovalarni yaratish orqali xalqaro darajadagi yetuk mutaxassis bo'lish.",
+        goal_text: "Foydalanuvchilarga qulaylik va zavq ulashuvchi, tez ishlaydigan va ishonchli veb-ilovalarni yaratish orqali xalqaro darajadagi yetuk mutaxassis bo'lish.",
 
         skills_title: "Texnologik Ko'nikmalar",
         skill_core: "asosiy texnologiyalar",
@@ -1217,15 +1188,11 @@
         projects_subtitle: "Real mijozlar, bizneslar va amaliy tajriba asosida yaratilgan dasturiy yechimlar.",
 
         badge_featured: "Asosiy CRM",
-        badge_mobile: "Mobil Ilova",
         badge_creative: "Interaktiv 3D",
         badge_tools: "UI Komponentlar",
 
         p1_title: "Bog'cha CRM (Bolalar Bog'chasi Tizimi)",
         p1_desc: "Bolalar bog'chalari uchun to'liq boshqaruv CRM platformasi. React 19, TypeScript va Zustand asosida qurilgan. Bolalar davomati, to'lovlar tahlili, guruhlar va xodimlarni boshqarish uchun qulay interfeys va Recharts grafiklari mavjud.",
-
-        p2_title: "Yo'l-Yo'lakay (Mobil Yo'nalish Ilovasi)",
-        p2_desc: "Shaharlararo qatnovlar va yo'lovchilar uchun qulay navigatsiya mobil ilovasi. React Native va Expo (TypeScript) vositasida yaratilgan, tezkor buyurtma va silliq sahifalararo harakatlanish bilan ta'minlangan.",
 
         p3_title: "Interaktiv 3D Galaktika Portfoliom",
         p3_desc: "Siz hozir ko'rib turgan interaktiv 3D portfolio. Three.js zarrachalar galaktikasi, neon kursor fizikasi, 3 tilda to'liq ishlash (UZ, RU, EN) va moslashuvchan qorong'i dizayn.",
@@ -1234,7 +1201,6 @@
         p4_desc: "Qayta ishlatiluvchi UI komponentlar to'plami, kalkulyatorlar, qorong'i/yorug' rejim tizimlari va zamonaviy dashboard vidjetlari.",
 
         link_demo: "Demo ko'rish",
-        link_details: "Tafsilotlar",
         link_current: "Joriy Sahifa",
 
         section_03: "// 03 — aloqa",
@@ -1247,11 +1213,11 @@
         form_submit: "Telegram orqali yuborish →",
 
         cv_modal_title: "Rezyume (CV)",
-        cv_modal_desc: "Komila Zokirova — Frontend va Mobil Dasturchi. Rezyumeni PDF formatda olish uchun Telegram yoki Email orqali murojaat qilishingiz mumkin:",
+        cv_modal_desc: "Komila Zokirova — Frontend Dasturchi. Rezyumeni PDF formatda olish uchun Telegram yoki Email orqali murojaat qilishingiz mumkin:",
         cv_request_tg: "Telegramda so'rash",
         cv_request_email: "Email orqali so'rash",
 
-        footer_copy: "© 2026 Komila Zokirova — Frontend & Mobile Developer"
+        footer_copy: "© 2026 Komila Zokirova — Frontend Developer"
       },
 
       ru: {
@@ -1260,9 +1226,9 @@
         nav_projects: "проекты",
         nav_contact: "контакты",
 
-        hero_badge: "// Frontend & Mobile Разработчик — Узбекистан",
+        hero_badge: "// Frontend Разработчик — Узбекистан",
         hero_hi: "Привет, я",
-        hero_desc: "Создаю современные, отзывчивые и визуально привлекательные веб- и мобильные интерфейсы. Специализируюсь на React, TypeScript и передовой фронтенд-разработке.",
+        hero_desc: "Создаю современные, отзывчивые и визуально привлекательные веб-интерфейсы. Специализируюсь на React 19, TypeScript и передовой фронтенд-разработке.",
         btn_projects: "Мои проекты",
         btn_cv: "Скачать резюме",
         btn_contact: "Связаться",
@@ -1274,11 +1240,11 @@
 
         section_01: "// 01 — обо мне",
         about_title: "Кто я<br>такая?",
-        about_p1: "Я <strong>Комила Зокирова</strong> — увлеченный <strong>Frontend и Mobile разработчик</strong> из Узбекистана. Мой фокус — создание высокопроизводительных, удобных и эстетичных цифровых продуктов.",
-        about_p2: "Мой ежедневный стек включает: <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong>, а также <strong>React Native (Expo)</strong> для мобильной разработки. Большое внимание уделяю архитектуре компонентов, скорости и удобству пользователей.",
+        about_p1: "Я <strong>Комила Зокирова</strong> — увлеченный <strong>Frontend разработчик</strong> из Узбекистана. Мой фокус — создание высокопроизводительных, удобных и эстетичных цифровых продуктов.",
+        about_p2: "Мой ежедневный стек включает: <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong>. Большое внимание уделяю архитектуре компонентов, скорости и удобству пользователей.",
         about_p3: "Постоянно исследую новые фронтенд-тренды, интерактивный 3D-веб (Three.js) и люблю участвовать в проектах, решающих реальные практические задачи.",
         goal_label: "// Моя цель:",
-        goal_text: "Создавать быстрые, интуитивные и надежные веб- и мобильные сервисы, приносящие реальную пользу пользователям и развиваться до уровня ведущего инженера.",
+        goal_text: "Создавать быстрые, интуитивные и надежные веб-сервисы, приносящие реальную пользу пользователям и развиваться до уровня ведущего инженера.",
 
         skills_title: "Технические Навыки",
         skill_core: "базовые технологии",
@@ -1292,15 +1258,11 @@
         projects_subtitle: "Готовые решения, CRM-системы и творческие эксперименты.",
 
         badge_featured: "Основной CRM",
-        badge_mobile: "Мобильное приложение",
         badge_creative: "Интерактивный 3D",
         badge_tools: "UI Компоненты",
 
         p1_title: "Bog'cha CRM (Система для детских садов)",
         p1_desc: "Комплексная CRM-платформа для детских садов на React 19, TypeScript и Zustand. Включает учет посещаемости, финансовую аналитику, управление персоналом, группами и интерактивные графики Recharts.",
-
-        p2_title: "Yo'l-Yo'lakay (Транспорт и навигация)",
-        p2_desc: "Кроссплатформенное мобильное приложение для междугородних поездок и пассажиров на React Native и Expo (TypeScript) с плавной навигацией и удобным мобильным UI.",
 
         p3_title: "Интерактивное 3D Портфолио",
         p3_desc: "Сайт, который вы сейчас просматриваете. Галактика частиц на Three.js, физика неонового курсора, мультиязычность (UZ, RU, EN) и современный тёмный дизайн.",
@@ -1309,7 +1271,6 @@
         p4_desc: "Модульная библиотека интерактивных UI-компонентов, калькуляторов, система переключения темной/светлой темы и виджеты панели аналитики.",
 
         link_demo: "Смотреть демо",
-        link_details: "Подробнее",
         link_current: "Текущая страница",
 
         section_03: "// 03 — контакты",
@@ -1322,11 +1283,11 @@
         form_submit: "Отправить в Telegram →",
 
         cv_modal_title: "Резюме (CV)",
-        cv_modal_desc: "Комила Зокирова — Frontend & Mobile Разработчик. Чтобы запросить актуальную PDF-версию резюме, напишите мне напрямую в Telegram или на почту:",
+        cv_modal_desc: "Комила Зокирова — Frontend Разработчик. Чтобы запросить актуальную PDF-версию резюме, напишите мне напрямую в Telegram или на почту:",
         cv_request_tg: "Запросить в Telegram",
         cv_request_email: "Запросить по Email",
 
-        footer_copy: "© 2026 Комила Зокирова — Frontend & Mobile Developer"
+        footer_copy: "© 2026 Комила Зокирова — Frontend Developer"
       },
 
       en: {
@@ -1335,9 +1296,9 @@
         nav_projects: "projects",
         nav_contact: "contact",
 
-        hero_badge: "// Frontend & Mobile Developer — Uzbekistan",
+        hero_badge: "// Frontend Developer — Uzbekistan",
         hero_hi: "Hi, I'm",
-        hero_desc: "I craft user-friendly, responsive, and visually compelling web & mobile interfaces. Specialized in React, TypeScript, and modern frontend ecosystems. Open to exciting collaborations and projects.",
+        hero_desc: "I craft user-friendly, responsive, and visually compelling web interfaces. Specialized in React 19, TypeScript, and modern frontend ecosystems. Open to exciting collaborations and projects.",
         btn_projects: "View my work",
         btn_cv: "Download CV",
         btn_contact: "Get in touch",
@@ -1349,11 +1310,11 @@
 
         section_01: "// 01 — about me",
         about_title: "Who<br>am I?",
-        about_p1: "I'm <strong>Komila Zokirova</strong>, a creative frontend and mobile developer based in <strong>Uzbekistan</strong>. I build high-performance, user-friendly digital products that combine clean code with elegant design.",
-        about_p2: "My daily toolkit includes <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong>, and <strong>React Native (Expo)</strong> for mobile applications. I pay close attention to component architecture, performance, and seamless user experiences.",
+        about_p1: "I'm <strong>Komila Zokirova</strong>, a creative frontend developer based in <strong>Uzbekistan</strong>. I build high-performance, user-friendly digital products that combine clean code with elegant design.",
+        about_p2: "My daily toolkit includes <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong>. I pay close attention to component architecture, performance, and seamless user experiences.",
         about_p3: "I am continuously exploring modern frontend trends, 3D web experiences (Three.js), and actively contributing to projects that solve real problems.",
         goal_label: "// My Goal:",
-        goal_text: "To engineer fast, accessible, and delightful web & mobile applications that make a real difference and empower users worldwide.",
+        goal_text: "To engineer fast, accessible, and delightful web applications that make a real difference and empower users worldwide.",
 
         skills_title: "Technical Skills",
         skill_core: "core technologies",
@@ -1367,15 +1328,11 @@
         projects_subtitle: "Production-ready applications, real client solutions, and creative experiments.",
 
         badge_featured: "Featured CRM",
-        badge_mobile: "Mobile App",
         badge_creative: "Creative 3D",
         badge_tools: "Frontend Kit",
 
         p1_title: "Bog'cha CRM (Kindergarten Platform)",
         p1_desc: "A comprehensive Kindergarten Management CRM system. Built with React 19, TypeScript, and Zustand. Features student attendance tracking, tuition billing, staff management, and interactive analytics with Recharts.",
-
-        p2_title: "Yo'l-Yo'lakay (Navigation & Rides)",
-        p2_desc: "Cross-platform mobile application for intercity travel and passenger navigation. Engineered using React Native and Expo with TypeScript, offering clean navigation flows and reactive mobile UI.",
 
         p3_title: "Interactive 3D Portfolio",
         p3_desc: "The creative portfolio you're experiencing right now. Powered by Three.js particle galaxies, custom cursor physics, multi-language switching (UZ, RU, EN), and responsive dark aesthetics.",
@@ -1384,7 +1341,6 @@
         p4_desc: "Modular collection of interactive components, calculators, dynamic dark/light theme systems, and state-driven dashboard widgets built using modern React hooks and Tailwind CSS.",
 
         link_demo: "Live Demo",
-        link_details: "Overview",
         link_current: "Current Page",
 
         section_03: "// 03 — contact",
@@ -1397,11 +1353,11 @@
         form_submit: "Send via Telegram →",
 
         cv_modal_title: "Curriculum Vitae (CV)",
-        cv_modal_desc: "Komila Zokirova — Frontend & Mobile Developer. To request the latest updated PDF version of my resume, feel free to reach out directly:",
+        cv_modal_desc: "Komila Zokirova — Frontend Developer. To request the latest updated PDF version of my resume, feel free to reach out directly:",
         cv_request_tg: "Request via Telegram",
         cv_request_email: "Request via Email",
 
-        footer_copy: "© 2026 Komila Zokirova — Frontend & Mobile Developer"
+        footer_copy: "© 2026 Komila Zokirova — Frontend Developer"
       }
     };
 
