@@ -2,1052 +2,1362 @@
 <html lang="uz">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Komila Zokirova — 3D Ertaklar O'rmoni & Frontend Portfolio</title>
-  <meta name="description" content="Komila Zokirova — Frontend Dasturchi. Qizil Qalpoqchaning 3D Ertaklar O'rmoni interaktiv avtomobil portfoliosi va zamonaviy veb-texnologiyalar.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Komila Zokirova — Frontend Developer</title>
+  <meta name="description" content="Komila Zokirova — Frontend Developer. React 19, TypeScript, Zustand, Three.js va zamonaviy veb-texnologiyalar.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    
     :root {
-      --bg: #0b0c16;
-      --card-bg: rgba(22, 24, 42, 0.85);
-      --accent: #ff4d6d;
-      --accent-gold: #ffb703;
-      --accent-green: #52b788;
-      --accent-blue: #4cc9f0;
-      --text: #f8f9fa;
-      --muted: #a0a4b8;
-      --border: rgba(255, 255, 255, 0.12);
-      --border-accent: rgba(255, 77, 109, 0.45);
-      --font-body: 'Plus Jakarta Sans', sans-serif;
-      --font-mono: 'Space Mono', monospace;
-      --font-title: 'Syne', sans-serif;
+      --bg: #07070f;
+      --accent: #ff6eb4;
+      --accent2: #b06eff;
+      --accent3: #6effd4;
+      --text: #f0f0f8;
+      --muted: #8c8ca8;
+      --card-bg: rgba(255, 255, 255, 0.035);
+      --card-hover: rgba(255, 255, 255, 0.065);
+      --border: rgba(255, 255, 255, 0.09);
+      --border-accent: rgba(255, 110, 180, 0.35);
     }
-
-    html, body {
-      width: 100%;
-      height: 100%;
+    html { scroll-behavior: smooth; }
+    body {
       background: var(--bg);
       color: var(--text);
-      font-family: var(--font-body);
+      font-family: 'Space Mono', monospace;
       overflow-x: hidden;
-      scroll-behavior: smooth;
+      cursor: none;
+      line-height: 1.6;
     }
 
-    /* ==========================================================================
-       TOP NAVIGATION BAR & GAME HEADER
-       ========================================================================== */
-    .top-nav {
+    /* Custom Cursor */
+    #cursor {
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
       position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
       top: 0;
       left: 0;
-      width: 100%;
-      z-index: 1000;
-      background: rgba(11, 12, 22, 0.85);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      transition: transform 0.05s ease-out;
+    }
+    #cursor-ring {
+      width: 38px;
+      height: 38px;
+      border: 1.5px solid rgba(255, 110, 180, 0.6);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transition: width 0.2s, height 0.2s, border-color 0.2s, transform 0.12s ease-out;
+      top: 0;
+      left: 0;
+      transform: translate(-14px, -14px);
+    }
+
+    #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3.5rem;
       border-bottom: 1px solid var(--border);
-      padding: 0.75rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(7, 7, 15, 0.75);
+      transition: all 0.3s ease;
     }
-
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-family: var(--font-title);
-      font-size: 1.15rem;
+    .logo {
+      font-family: 'Syne', sans-serif;
       font-weight: 800;
-      color: var(--text);
-      text-decoration: none;
-      letter-spacing: -0.5px;
-    }
-
-    .brand-badge {
-      font-size: 0.68rem;
-      font-family: var(--font-mono);
-      background: linear-gradient(135deg, #ff4d6d, #b5179e);
-      color: #fff;
-      padding: 0.2rem 0.55rem;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    /* Mode Switcher Button */
-    .btn-mode-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: linear-gradient(135deg, rgba(255, 77, 109, 0.2), rgba(181, 23, 158, 0.25));
-      border: 1px solid var(--accent);
-      color: #fff;
-      padding: 0.45rem 0.95rem;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      text-decoration: none;
-    }
-    .btn-mode-toggle:hover {
-      background: var(--accent);
-      box-shadow: 0 0 16px rgba(255, 77, 109, 0.5);
-      transform: translateY(-1px);
-    }
-
-    /* Apple Score Chip */
-    .chip-score {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      background: rgba(255, 183, 3, 0.15);
-      border: 1px solid rgba(255, 183, 3, 0.4);
-      color: #ffd166;
-      padding: 0.35rem 0.75rem;
-      border-radius: 999px;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    /* Audio Mute Button */
-    .btn-icon {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border);
-      color: var(--text);
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-    }
-    .btn-icon:hover {
-      background: rgba(255, 255, 255, 0.16);
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Language Switcher */
-    .lang-group {
-      display: flex;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2px;
-    }
-    .lang-item {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .lang-item.active {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    /* ==========================================================================
-       3D GAME VIEWPORT & CANVASES
-       ========================================================================== */
-    #game-container {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-      background: #111420;
-    }
-
-    #gameCanvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-      outline: none;
-    }
-
-    /* In-Game HUD Overlays */
-    .game-hud {
-      position: absolute;
-      top: 4.8rem;
-      left: 1.5rem;
-      right: 1.5rem;
-      pointer-events: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      z-index: 100;
-    }
-
-    /* Zone Notification Banner */
-    .zone-banner {
-      background: rgba(16, 18, 32, 0.9);
-      border: 1px solid var(--accent);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 77, 109, 0.3);
-      backdrop-filter: blur(12px);
-      padding: 0.85rem 1.4rem;
-      border-radius: 12px;
-      max-width: 440px;
-      pointer-events: auto;
-      transform: translateY(-20px);
-      opacity: 0;
-      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .zone-banner.visible {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    .zone-title {
-      font-family: var(--font-title);
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.25rem;
-    }
-    .zone-desc {
-      font-size: 0.84rem;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    /* Speedometer & Gear HUD */
-    .speedo-hud {
-      position: absolute;
-      bottom: 2rem;
-      right: 2rem;
-      background: rgba(16, 18, 32, 0.85);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 1rem 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      pointer-events: none;
-      z-index: 100;
-    }
-    .speed-val {
-      font-family: var(--font-mono);
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1;
-    }
-    .speed-unit {
-      font-size: 0.7rem;
+      font-size: 1.25rem;
       color: var(--accent);
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-top: 2px;
-    }
-    .speed-bar-container {
-      width: 80px;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 0.4rem;
-    }
-    .speed-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #52b788, #ffb703, #ff4d6d);
-      transition: width 0.1s linear;
-    }
-
-    /* Controls Guide Tooltip */
-    .controls-hint {
-      position: absolute;
-      bottom: 2rem;
-      left: 2rem;
-      background: rgba(16, 18, 32, 0.85);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-      border-radius: 14px;
-      padding: 0.85rem 1.25rem;
-      font-size: 0.82rem;
-      color: var(--muted);
-      pointer-events: auto;
-      z-index: 100;
-      max-width: 380px;
-    }
-    .controls-keys {
+      letter-spacing: -0.02em;
+      text-decoration: none;
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      margin-top: 0.45rem;
-      flex-wrap: wrap;
     }
-    .key-badge {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      padding: 0.2rem 0.45rem;
-      border-radius: 4px;
-      font-weight: 700;
+    .logo-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent3);
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 10px var(--accent3);
+      animation: pulse 2s infinite;
     }
 
-    /* Interactive Project / Info Modal */
-    .game-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(10px);
-      z-index: 2000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-    .game-modal.active {
+    .nav-center {
       display: flex;
+      align-items: center;
+      gap: 2.2rem;
     }
-    .modal-card {
-      background: #151829;
-      border: 1px solid var(--border-accent);
-      border-radius: 20px;
-      padding: 2rem;
-      max-width: 520px;
-      width: 100%;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 77, 109, 0.3);
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
       position: relative;
-      animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    @keyframes modalPop {
-      0% { transform: scale(0.85); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .modal-close {
+    .nav-links a::after {
+      content: '';
       position: absolute;
-      top: 1.25rem;
-      right: 1.25rem;
-      background: rgba(255, 255, 255, 0.1);
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Language Switcher */
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .lang-btn {
+      background: transparent;
       border: none;
-      color: #fff;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.35rem 0.7rem;
+      border-radius: 20px;
       cursor: pointer;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.25s ease;
+      letter-spacing: 0.05em;
     }
-    .modal-close:hover {
-      background: var(--accent);
-    }
-
-    /* Mobile Controls (Touch Joysticks/Buttons) */
-    .mobile-controls {
-      display: none;
-      position: absolute;
-      bottom: 1.5rem;
-      left: 1.5rem;
-      right: 1.5rem;
-      justify-content: space-between;
-      align-items: flex-end;
-      z-index: 150;
-      pointer-events: none;
-    }
-    .touch-btn {
-      width: 66px;
-      height: 66px;
-      border-radius: 50%;
-      background: rgba(20, 22, 38, 0.85);
-      border: 2px solid rgba(255, 255, 255, 0.25);
-      color: #fff;
-      font-size: 1.3rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: auto;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-      backdrop-filter: blur(8px);
-    }
-    .touch-btn:active, .touch-btn.active {
-      background: var(--accent);
-      border-color: #fff;
-      transform: scale(0.92);
-    }
-    .d-pad-horizontal {
-      display: flex;
-      gap: 1rem;
-    }
-    .pedals-vertical {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-    .btn-gas {
-      background: rgba(82, 183, 136, 0.25);
-      border-color: #52b788;
-      color: #52b788;
-    }
-    .btn-gas:active, .btn-gas.active {
-      background: #52b788;
-      color: #fff;
-    }
-    .btn-brake {
-      background: rgba(255, 77, 109, 0.25);
-      border-color: #ff4d6d;
-      color: #ff4d6d;
-    }
-    .btn-brake:active, .btn-brake.active {
-      background: #ff4d6d;
-      color: #fff;
+    .lang-btn:hover { color: var(--text); }
+    .lang-btn.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #07070f;
+      box-shadow: 0 0 12px rgba(255, 110, 180, 0.4);
     }
 
-    @media (max-width: 900px) {
-      .mobile-controls { display: flex; }
-      .controls-hint { display: none; }
-      .speedo-hud { bottom: auto; top: 4.8rem; right: 1rem; padding: 0.6rem 0.9rem; }
-      .speed-val { font-size: 1.5rem; }
-    }
-
-    /* ==========================================================================
-       CLASSIC PORTFOLIO SECTION (TOGGLEABLE)
-       ========================================================================== */
-    #classic-portfolio {
-      display: none;
-      background: #07070f;
-      padding: 6rem 1.5rem 4rem;
-      min-height: 100vh;
+    /* Sections */
+    section {
       position: relative;
       z-index: 10;
-    }
-    #classic-portfolio.visible {
-      display: block;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .section-tag {
-      font-family: var(--font-mono);
-      font-size: 0.82rem;
-      color: var(--accent);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 0.75rem;
-      display: inline-block;
-    }
-
-    .section-title {
-      font-family: var(--font-title);
-      font-size: clamp(2rem, 4.5vw, 3.2rem);
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 1.5rem;
-      letter-spacing: -1px;
-      line-height: 1.15;
-    }
-
-    /* Hero in classic mode */
-    .classic-hero {
-      padding: 4rem 0 5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .hero-h1 {
-      font-family: var(--font-title);
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 800;
-      line-height: 1.08;
-      margin-bottom: 1.5rem;
-    }
-    .text-pink { color: var(--accent); }
-    .text-gold { color: var(--accent-gold); }
-    .hero-lead {
-      font-size: 1.15rem;
-      color: var(--muted);
-      max-width: 650px;
-      line-height: 1.65;
-      margin-bottom: 2rem;
-    }
-    .hero-btn-row {
+      min-height: 100vh;
       display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
+      align-items: center;
+      padding: 7rem 0;
     }
-    .btn-main {
-      padding: 0.75rem 1.75rem;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.92rem;
-      text-decoration: none;
+    .container {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh;
+      padding-top: 100px;
+    }
+    .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(255, 110, 180, 0.1);
+      border: 1px solid rgba(255, 110, 180, 0.25);
+      padding: 0.45rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+    .hero-badge .status-ping {
+      width: 7px;
+      height: 7px;
+      background: var(--accent3);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent3);
+    }
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 6.5vw, 6rem);
+      font-weight: 800;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+    h1 .pink { color: var(--accent); text-shadow: 0 0 25px rgba(255, 110, 180, 0.3); }
+    h1 .purple { color: var(--accent2); font-style: italic; text-shadow: 0 0 25px rgba(176, 110, 255, 0.3); }
+    .hero-desc {
+      max-width: 580px;
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+    .btn {
+      padding: 0.85rem 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
       cursor: pointer;
-      transition: all 0.25s;
+      border: none;
+      font-weight: 700;
     }
     .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      border: 1px solid var(--accent);
+      background: linear-gradient(135deg, var(--accent), #ff8fd6);
+      color: #07070f;
+      box-shadow: 0 4px 20px rgba(255, 110, 180, 0.35);
     }
     .btn-primary:hover {
-      box-shadow: 0 0 25px rgba(255, 77, 109, 0.6);
-      transform: translateY(-2px);
+      background: #ffa8dc;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(255, 110, 180, 0.5);
     }
     .btn-outline {
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
+      background: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--border);
+      color: var(--text);
     }
     .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.3);
+      border-color: var(--accent2);
+      color: var(--accent2);
+      transform: translateY(-3px);
+      background: rgba(176, 110, 255, 0.08);
+      box-shadow: 0 4px 18px rgba(176, 110, 255, 0.2);
+    }
+    .btn-cv {
+      border: 1px solid var(--border-accent);
+      color: var(--accent);
+      background: rgba(255, 110, 180, 0.05);
+    }
+    .btn-cv:hover {
+      background: rgba(255, 110, 180, 0.15);
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 20px rgba(255, 110, 180, 0.25);
     }
 
-    /* Skills Grid */
-    .skills-block {
-      padding: 5rem 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .skills-grid {
+    /* Stats Strip */
+    .hero-stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.25rem;
-      margin-top: 2rem;
+      grid-template-columns: repeat(3, auto);
+      gap: 3rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+      max-width: 600px;
+      opacity: 0;
+      animation: fadeUp 0.8s 1s forwards;
     }
-    .skill-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      transition: all 0.25s ease;
+    .stat-item h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      color: var(--text);
+      font-weight: 800;
     }
-    .skill-card:hover {
-      border-color: var(--accent);
-      background: rgba(255, 77, 109, 0.04);
-      transform: translateY(-3px);
-    }
-    .skill-card-cat {
-      font-family: var(--font-mono);
+    .stat-item h4 span { color: var(--accent3); }
+    .stat-item p {
       font-size: 0.72rem;
-      color: var(--accent-gold);
+      color: var(--muted);
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 0.75rem;
+      margin-top: 0.2rem;
     }
-    .skill-pills {
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      animation: bounce 2.2s infinite;
+      text-decoration: none;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 38px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+
+    /* ABOUT */
+    #about { background: rgba(0, 0, 0, 0.25); }
+    .section-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: block;
+    }
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 2.2rem;
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 4.5rem;
+      align-items: start;
+    }
+    .about-text {
+      font-size: 0.92rem;
+      line-height: 1.95;
+      color: var(--muted);
+    }
+    .about-text p + p { margin-top: 1.2rem; }
+    .about-text strong { color: var(--text); font-weight: 700; }
+    .goal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1.25rem 1.5rem;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #c0c0d8;
+      line-height: 1.8;
+      backdrop-filter: blur(8px);
+    }
+    .goal-card span { color: var(--accent); font-weight: 700; }
+
+    /* SKILLS */
+    .skills-section h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+    .skill-group { margin-bottom: 1.6rem; }
+    .skill-group-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
       gap: 0.5rem;
     }
-    .skill-pill {
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.3rem 0.65rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 600;
+    .skill-group-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
     }
+    .skills-pills { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+    .pill {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 0.4rem 0.95rem;
+      border-radius: 4px;
+      letter-spacing: 0.04em;
+      transition: all 0.2s ease;
+      cursor: default;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .pill:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    .pill-core   { background: rgba(255, 110, 180, 0.12); color: #ff8fd6; border: 1px solid rgba(255, 110, 180, 0.28); }
+    .pill-react  { background: rgba(97, 218, 251, 0.12); color: #61dafb; border: 1px solid rgba(97, 218, 251, 0.3); }
+    .pill-ts     { background: rgba(49, 120, 198, 0.15); color: #6bb0ff; border: 1px solid rgba(49, 120, 198, 0.35); }
+    .pill-state  { background: rgba(176, 110, 255, 0.12); color: #c48cff; border: 1px solid rgba(176, 110, 255, 0.3); }
+    .pill-style  { background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.28); }
+    .pill-tools  { background: rgba(110, 255, 212, 0.12); color: #6effd4; border: 1px solid rgba(110, 255, 212, 0.28); }
 
-    /* Projects Grid */
-    .projects-block {
-      padding: 5rem 0;
-      border-bottom: 1px solid var(--border);
+    /* PROJECTS */
+    #projects { padding-top: 5rem; }
+    .projects-header { margin-bottom: 3.5rem; }
+    .projects-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      border-left: 2px solid var(--accent2);
+      padding-left: 1rem;
+      max-width: 650px;
+      margin-top: 0.5rem;
     }
     .projects-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+      gap: 2rem;
     }
-    .p-card {
-      background: rgba(255, 255, 255, 0.035);
+    .project-card {
+      background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.75rem;
+      border-radius: 8px;
+      padding: 2.2rem;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
-    .p-card:hover {
-      border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.055);
-      transform: translateY(-4px);
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
     }
-    .p-num {
-      font-family: var(--font-mono);
-      color: var(--accent-gold);
-      font-size: 0.8rem;
+    .project-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-6px);
+      background: var(--card-hover);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    }
+    .project-card:hover::before { transform: scaleX(1); }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+    .project-num {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+    }
+    .wip-badge {
+      font-size: 0.65rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      background: rgba(255, 110, 180, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(255, 110, 180, 0.3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       font-weight: 700;
     }
-    .p-title {
-      font-family: var(--font-title);
-      font-size: 1.35rem;
-      margin: 0.6rem 0 0.8rem;
-      color: #fff;
-    }
-    .p-desc {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.55;
-      margin-bottom: 1.25rem;
-    }
-    .p-links {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 1rem;
+    .badge-featured {
+      background: rgba(110, 255, 212, 0.12);
+      color: var(--accent3);
+      border-color: rgba(110, 255, 212, 0.3);
     }
 
-    /* Contact Section */
-    .contact-block {
-      padding: 5rem 0;
+    .project-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: var(--text);
     }
-    .contact-grid {
+    .project-card p {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1.6rem;
+    }
+    .tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.8rem;
+    }
+    .tag {
+      font-size: 0.68rem;
+      padding: 0.22rem 0.65rem;
+      border-radius: 3px;
+      background: rgba(176, 110, 255, 0.08);
+      color: #d8b4fe;
+      border: 1px solid rgba(176, 110, 255, 0.2);
+    }
+    .project-links {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
+    .card-link {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 0.5rem 1.1rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .card-link-primary {
+      background: rgba(255, 110, 180, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(255, 110, 180, 0.3);
+    }
+    .card-link-primary:hover {
+      background: var(--accent);
+      color: #07070f;
+    }
+    .card-link-secondary {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .card-link-secondary:hover {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* CONTACT */
+    #contact { padding-top: 5rem; }
+    .contact-wrapper {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      margin-top: 2rem;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 4rem;
+      align-items: start;
     }
-    @media (max-width: 768px) {
-      .contact-grid { grid-template-columns: 1fr; }
+    .contact-info h2 { margin-bottom: 1.2rem; }
+    .contact-sub {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
     }
-    .form-input {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.05);
+    .contact-direct {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .direct-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .direct-item:hover { color: var(--accent); }
+    .direct-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 1rem;
+    }
+
+    .social-pills {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.74rem;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 0.6rem 1.1rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.02);
+      transition: all 0.2s;
+    }
+    .social-btn:hover {
+      color: var(--text);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      background: rgba(255, 110, 180, 0.08);
+    }
+
+    /* Contact Form */
+    .contact-form-card {
+      background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 0.85rem 1rem;
-      color: #fff;
-      font-family: inherit;
-      font-size: 0.92rem;
-      margin-bottom: 1rem;
+      padding: 2.5rem;
+      backdrop-filter: blur(12px);
     }
-    .form-input:focus {
+    .form-group { margin-bottom: 1.4rem; }
+    .form-label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      transition: all 0.25s;
+    }
+    .form-control:focus {
       outline: none;
       border-color: var(--accent);
-      background: rgba(255, 77, 109, 0.05);
+      box-shadow: 0 0 15px rgba(255, 110, 180, 0.25);
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .form-btn {
+      width: 100%;
+      padding: 0.95rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #07070f;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 4px 20px rgba(255, 110, 180, 0.3);
+    }
+    .form-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(255, 110, 180, 0.45);
+    }
+
+    /* CV Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: #0d0d1a;
+      border: 1px solid var(--border-accent);
+      border-radius: 8px;
+      max-width: 520px;
+      width: 100%;
+      padding: 2.2rem;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      animation: fadeUp 0.3s ease;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1.2rem; right: 1.2rem;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .modal-close:hover { color: var(--accent); }
+
+    /* Footer */
+    footer {
+      position: relative;
+      z-index: 10;
+      border-top: 1px solid var(--border);
+      padding: 2.2rem 3.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: rgba(7, 7, 15, 0.8);
+    }
+    .footer-links { display: flex; gap: 1.8rem; }
+    .footer-links a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
+
+    @media (max-width: 960px) {
+      nav { padding: 1.2rem 2rem; }
+      .nav-links { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .contact-wrapper { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-stats { gap: 1.8rem; }
+    }
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      #cursor, #cursor-ring { display: none; }
+      .container { padding: 0 1.5rem; }
+      nav { padding: 1rem 1.5rem; }
+      footer { flex-direction: column; gap: 1.2rem; text-align: center; }
+      .hero-btns { flex-direction: column; align-items: stretch; }
+      .btn { justify-content: center; }
+      .hero-stats { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ==========================================================================
-       TOP NAVIGATION
-       ========================================================================== -->
-  <header class="top-nav">
-    <a href="#hero" class="nav-brand">
-      <span>🧺 komila.dev</span>
-      <span class="brand-badge">3D FAIRYTALE</span>
+  <!-- Custom Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Three.js 3D Galaxy Canvas -->
+  <canvas id="canvas"></canvas>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="#hero" class="logo">
+      <span>komila.dev</span>
+      <span class="logo-dot"></span>
     </a>
 
-    <div class="nav-actions">
-      <!-- Apple Score Chip -->
-      <div class="chip-score" id="scoreChip">
-        <span>🍎</span> <span id="appleScoreText">0 / 12</span>
-      </div>
+    <div class="nav-center">
+      <ul class="nav-links">
+        <li><a href="#about" data-i18n="nav_about">about</a></li>
+        <li><a href="#skills-anchor" data-i18n="nav_skills">skills</a></li>
+        <li><a href="#projects" data-i18n="nav_projects">projects</a></li>
+        <li><a href="#contact" data-i18n="nav_contact">contact</a></li>
+      </ul>
 
-      <!-- Mode Toggle Button -->
-      <button class="btn-mode-toggle" id="modeToggleBtn">
-        <span id="modeIcon">📄</span> <span id="modeText">Klassik Portfolio</span>
-      </button>
-
-      <!-- Audio Mute Button -->
-      <button class="btn-icon" id="audioBtn" title="Ovozni yoqish / o'chirish">
-        <span id="audioIcon">🔊</span>
-      </button>
-
-      <!-- Reset Car Button -->
-      <button class="btn-icon" id="resetBtn" title="Mashinani startga qaytarish (R)">
-        🔄
-      </button>
-
-      <!-- Language Switcher -->
-      <div class="lang-group">
-        <button class="lang-item active" data-lang="uz">UZ</button>
-        <button class="lang-item" data-lang="ru">RU</button>
-        <button class="lang-item" data-lang="en">EN</button>
+      <!-- Language Selector -->
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="uz">UZ</button>
+        <button class="lang-btn" data-lang="ru">RU</button>
+        <button class="lang-btn" data-lang="en">EN</button>
       </div>
     </div>
-  </header>
+  </nav>
 
-
-  <!-- ==========================================================================
-       3D GAME VIEWPORT (BRUNO SIMON STYLE)
-       ========================================================================== -->
-  <div id="game-container">
-    <canvas id="gameCanvas"></canvas>
-
-    <!-- In-Game HUD -->
-    <div class="game-hud">
-      <!-- Dynamic Zone Notification Banner -->
-      <div class="zone-banner" id="zoneBanner">
-        <div class="zone-title" id="zoneTitle">🌲 Sehrli Ertaklar O'rmoni</div>
-        <div class="zone-desc" id="zoneDesc">Qizil Qalpoqchaning avtomobilini boshqaring va o'rmonni kashf qiling!</div>
-      </div>
-    </div>
-
-    <!-- Speedometer -->
-    <div class="speedo-hud">
-      <div>
-        <div class="speed-val" id="speedVal">0</div>
-        <div class="speed-unit">KM / H</div>
-        <div class="speed-bar-container">
-          <div class="speed-bar-fill" id="speedBar"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Controls Tooltip (Desktop) -->
-    <div class="controls-hint">
-      <div style="font-weight:700; color:#fff; margin-bottom:0.25rem;">🎮 Boshqaruv:</div>
-      <div>Mashinani haydash uchun klaviaturadan foydalaning:</div>
-      <div class="controls-keys">
-        <span class="key-badge">W / ↑</span> <span>Gaz</span>
-        <span class="key-badge">S / ↓</span> <span>Orqaga</span>
-        <span class="key-badge">A / D</span> <span>Rul</span>
-        <span class="key-badge">Space</span> <span>Drift</span>
-        <span class="key-badge">R</span> <span>Qayta boshlash</span>
-      </div>
-    </div>
-
-    <!-- Mobile Virtual Controls -->
-    <div class="mobile-controls">
-      <div class="d-pad-horizontal">
-        <button class="touch-btn" id="btnLeft">◀</button>
-        <button class="touch-btn" id="btnRight">▶</button>
-      </div>
-      <div class="pedals-vertical">
-        <button class="touch-btn btn-gas" id="btnGas">▲</button>
-        <button class="touch-btn btn-brake" id="btnBrake">▼</button>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ==========================================================================
-       INTERACTIVE MODAL (FOR COTTAGES, SKILLS, GRANDMA'S CABIN)
-       ========================================================================== -->
-  <div class="game-modal" id="gameModal">
-    <div class="modal-card">
-      <button class="modal-close" id="modalCloseBtn">✕</button>
-      <div id="modalContent">
-        <!-- Injected dynamically via JS -->
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ==========================================================================
-       CLASSIC PORTFOLIO SECTION (DIRECT ACCESS & RESUME VIEW)
-       ========================================================================== -->
-  <main id="classic-portfolio">
+  <!-- HERO SECTION -->
+  <section id="hero">
     <div class="container">
+      <div class="hero-badge">
+        <span class="status-ping"></span>
+        <span data-i18n="hero_badge">// Frontend Developer — Uzbekistan</span>
+      </div>
       
-      <!-- HERO -->
-      <section class="classic-hero" id="hero">
-        <span class="section-tag" data-i18n="hero_badge">// Frontend Dasturchi — O'zbekiston</span>
-        <h1 class="hero-h1">
-          <span data-i18n="hero_hi">Salom, men</span><br>
-          <span class="text-pink">Komila</span> <span class="text-gold">Zokirova</span>
-        </h1>
-        <p class="hero-lead" data-i18n="hero_desc">
-          Zamonaviy, tezkor va estetik jihatdan mukammal veb-interfeyslarni yarataman. React 19, TypeScript va zamonaviy frontend ekotizimida sifatli dasturiy yechimlarga ixtisoslashganman.
-        </p>
-        <div class="hero-btn-row">
-          <a href="#projects" class="btn-main btn-primary" data-i18n="btn_projects">Loyihalarim</a>
-          <button class="btn-main btn-outline" id="cvDownloadBtn" data-i18n="btn_cv">CV Yuklab olish</button>
-          <a href="#contact" class="btn-main btn-outline" data-i18n="btn_contact">Bog'lanish</a>
+      <h1>
+        <span data-i18n="hero_hi">Hi, I'm</span><br>
+        <span class="pink">Komila</span><br>
+        <span class="purple">Zokirova</span>
+      </h1>
+
+      <p class="hero-desc" data-i18n="hero_desc">
+        I craft user-friendly, responsive, and visually compelling web interfaces. Specialized in React, TypeScript, and modern frontend ecosystems. Open to exciting collaborations and projects.
+      </p>
+
+      <div class="hero-btns">
+        <a href="#projects" class="btn btn-primary">
+          <span data-i18n="btn_projects">View my work</span>
+          <span>↓</span>
+        </a>
+        <button class="btn btn-cv" id="cvBtn">
+          <span data-i18n="btn_cv">Download CV</span>
+          <span>📄</span>
+        </button>
+        <a href="#contact" class="btn btn-outline">
+          <span data-i18n="btn_contact">Get in touch</span>
+          <span>→</span>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <h4>3<span>+</span></h4>
+          <p data-i18n="stat_projects">Real Projects</p>
         </div>
-      </section>
+        <div class="stat-item">
+          <h4>10<span>+</span></h4>
+          <p data-i18n="stat_stack">Modern Techs</p>
+        </div>
+        <div class="stat-item">
+          <h4>100<span>%</span></h4>
+          <p data-i18n="stat_dedication">Dedication</p>
+        </div>
+      </div>
 
-      <!-- SKILLS -->
-      <section class="skills-block" id="skills-anchor">
-        <span class="section-tag">// 01 — ko'nikmalar</span>
-        <h2 class="section-title" data-i18n="skills_title">Texnologik Ko'nikmalar</h2>
-        
-        <div class="skills-grid">
-          <div class="skill-card">
-            <div class="skill-card-cat" data-i18n="skill_core">Core Technologies</div>
-            <div class="skill-pills">
-              <span class="skill-pill">HTML5</span>
-              <span class="skill-pill">CSS3</span>
-              <span class="skill-pill">JavaScript ES6+</span>
-              <span class="skill-pill">TypeScript</span>
-            </div>
+      <a href="#about" class="scroll-indicator">
+        <span data-i18n="scroll">scroll</span>
+        <div class="scroll-line"></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section id="about">
+    <div class="container">
+      <span class="section-tag" data-i18n="section_01">// 01 — about me</span>
+      <div class="about-grid">
+        <div>
+          <h2 data-i18n="about_title">Who<br>am I?</h2>
+          <div class="about-text" id="aboutText">
+            <p data-i18n="about_p1">I'm <strong>Komila Zokirova</strong>, a creative frontend developer based in <strong>Uzbekistan</strong>. I build high-performance, user-friendly digital products that combine clean code with elegant design.</p>
+            <p data-i18n="about_p2">My daily toolkit includes <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong>, and modern JavaScript. I pay close attention to component architecture, performance, and seamless user experiences.</p>
+            <p data-i18n="about_p3">I am continuously exploring modern frontend trends, 3D web experiences (Three.js), and actively contributing to projects that solve real problems.</p>
           </div>
-          <div class="skill-card">
-            <div class="skill-card-cat" data-i18n="skill_frameworks">Frameworks & Libraries</div>
-            <div class="skill-pills">
-              <span class="skill-pill">React 19</span>
-              <span class="skill-pill">TanStack Query</span>
-              <span class="skill-pill">Three.js</span>
-              <span class="skill-pill">Bootstrap 5</span>
-            </div>
-          </div>
-          <div class="skill-card">
-            <div class="skill-card-cat" data-i18n="skill_state">State & Architecture</div>
-            <div class="skill-pills">
-              <span class="skill-pill">Zustand</span>
-              <span class="skill-pill">Context API</span>
-              <span class="skill-pill">REST API / Axios</span>
-              <span class="skill-pill">Zod & React Hook Form</span>
-            </div>
-          </div>
-          <div class="skill-card">
-            <div class="skill-card-cat" data-i18n="skill_styling">Styling & Tools</div>
-            <div class="skill-pills">
-              <span class="skill-pill">Tailwind CSS v4</span>
-              <span class="skill-pill">SCSS / Sass</span>
-              <span class="skill-pill">Git & GitHub</span>
-              <span class="skill-pill">Vite</span>
-              <span class="skill-pill">Figma</span>
-            </div>
+          <div class="goal-card">
+            <span data-i18n="goal_label">// My Goal:</span><br>
+            <span data-i18n="goal_text">To engineer fast, accessible, and delightful web applications that make a real difference and empower users worldwide.</span>
           </div>
         </div>
-      </section>
 
-      <!-- PROJECTS -->
-      <section class="projects-block" id="projects">
-        <span class="section-tag">// 02 — loyihalar</span>
-        <h2 class="section-title" data-i18n="projects_title">Amaliy Loyihalarim</h2>
-
-        <div class="projects-grid">
-          <!-- 001: Bog'cha CRM -->
-          <div class="p-card">
-            <div>
-              <span class="p-num">001 // FEATURED CRM</span>
-              <h3 class="p-title" data-i18n="p1_title">Bog'cha CRM (Bolalar Bog'chasi Tizimi)</h3>
-              <p class="p-desc" data-i18n="p1_desc">
-                Bolalar bog'chalari uchun to'liq boshqaruv CRM platformasi. React 19, TypeScript va Zustand asosida qurilgan. Bolalar davomati, to'lovlar tahlili, guruhlar va xodimlarni boshqarish interfeysi va Recharts grafiklari mavjud.
-              </p>
-              <div class="skill-pills">
-                <span class="skill-pill">React 19</span>
-                <span class="skill-pill">TypeScript</span>
-                <span class="skill-pill">Zustand</span>
-                <span class="skill-pill">Recharts</span>
-              </div>
-            </div>
-            <div class="p-links">
-              <a href="https://github.com/komilazokirova/Bogcha.loyixa.jsx.9" target="_blank" class="btn-main btn-primary" style="font-size:0.82rem; padding:0.5rem 1rem;">GitHub Repo ↗</a>
-              <a href="https://t.me/Komila2608" target="_blank" class="btn-main btn-outline" style="font-size:0.82rem; padding:0.5rem 1rem;" data-i18n="link_demo">Demo ko'rish ▶</a>
+        <div class="skills-section" id="skills-anchor">
+          <h3 data-i18n="skills_title">Technical Skills</h3>
+          
+          <div class="skill-group">
+            <div class="skill-group-label" data-i18n="skill_core">core technologies</div>
+            <div class="skills-pills">
+              <span class="pill pill-core">HTML5 / Semantic UI</span>
+              <span class="pill pill-core">CSS3 / Modern CSS</span>
+              <span class="pill pill-core">JavaScript (ES6+)</span>
+              <span class="pill pill-ts">TypeScript</span>
             </div>
           </div>
 
-          <!-- 002: 3D Galaxy & Fairytale Portfolio -->
-          <div class="p-card">
-            <div>
-              <span class="p-num">002 // CREATIVE 3D</span>
-              <h3 class="p-title" data-i18n="p3_title">Interaktiv 3D Galaktika & Ertaklar O'rmoni</h3>
-              <p class="p-desc" data-i18n="p3_desc">
-                Bruno Simon uslubidagi 3D interaktiv avtomobil va galaktika portfoliosi. Three.js, arkada avtomobil fizikasi, zarrachalar simulyatsiyasi va 3 tilda ishlash tizimi.
-              </p>
-              <div class="skill-pills">
-                <span class="skill-pill">Three.js</span>
-                <span class="skill-pill">WebGL</span>
-                <span class="skill-pill">3D Physics</span>
-                <span class="skill-pill">Audio API</span>
-              </div>
-            </div>
-            <div class="p-links">
-              <a href="https://github.com/komilazokirova/komilazokirova.github.io" target="_blank" class="btn-main btn-primary" style="font-size:0.82rem; padding:0.5rem 1rem;">GitHub Repo ↗</a>
-              <a href="#game-container" onclick="switchToGame()" class="btn-main btn-outline" style="font-size:0.82rem; padding:0.5rem 1rem;">3D O'yinni o'ynash ★</a>
+          <div class="skill-group">
+            <div class="skill-group-label" data-i18n="skill_frameworks">frameworks & libraries</div>
+            <div class="skills-pills">
+              <span class="pill pill-react">React 19</span>
+              <span class="pill pill-state">TanStack React Query</span>
+              <span class="pill pill-core">Bootstrap 5</span>
             </div>
           </div>
 
-          <!-- 003: React UI Kit -->
-          <div class="p-card">
-            <div>
-              <span class="p-num">003 // FRONTEND KIT</span>
-              <h3 class="p-title" data-i18n="p4_title">React UI To'plami va Mavzular Tizimi</h3>
-              <p class="p-desc" data-i18n="p4_desc">
-                Qayta ishlatiluvchi UI komponentlar to'plami, interaktiv kalkulyatorlar, qorong'i/yorug' rejim tizimlari va zamonaviy dashboard vidjetlari.
-              </p>
-              <div class="skill-pills">
-                <span class="skill-pill">React</span>
-                <span class="skill-pill">TypeScript</span>
-                <span class="skill-pill">Tailwind CSS</span>
-                <span class="skill-pill">Hooks</span>
-              </div>
+          <div class="skill-group">
+            <div class="skill-group-label" data-i18n="skill_state">state & architecture</div>
+            <div class="skills-pills">
+              <span class="pill pill-state">Zustand</span>
+              <span class="pill pill-state">Context API</span>
+              <span class="pill pill-state">REST API / Axios</span>
+              <span class="pill pill-state">React Hook Form</span>
+              <span class="pill pill-state">Zod Validation</span>
             </div>
-            <div class="p-links">
-              <a href="https://github.com/komilazokirova" target="_blank" class="btn-main btn-primary" style="font-size:0.82rem; padding:0.5rem 1rem;">GitHub Repo ↗</a>
-              <a href="https://t.me/Komila2608" target="_blank" class="btn-main btn-outline" style="font-size:0.82rem; padding:0.5rem 1rem;">Murojaat ✉</a>
+          </div>
+
+          <div class="skill-group">
+            <div class="skill-group-label" data-i18n="skill_styling">styling & design</div>
+            <div class="skills-pills">
+              <span class="pill pill-style">Tailwind CSS v4</span>
+              <span class="pill pill-style">SCSS / Sass</span>
+              <span class="pill pill-style">Responsive Design</span>
+              <span class="pill pill-style">Three.js / WebGL</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <div class="skill-group-label" data-i18n="skill_tools">tools & workflow</div>
+            <div class="skills-pills">
+              <span class="pill pill-tools">Git & GitHub</span>
+              <span class="pill pill-tools">Vite</span>
+              <span class="pill pill-tools">Figma</span>
+              <span class="pill pill-tools">ESLint</span>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
-      <!-- CONTACT -->
-      <section class="contact-block" id="contact">
-        <span class="section-tag">// 03 — aloqa</span>
-        <h2 class="section-title" data-i18n="contact_title">Birgalikda ishlaymizmi?</h2>
+  <!-- ========================================================================= -->
+  <!-- 🛠 LOYIHALAR BO'LIMI (KOMILA UCHUN O'ZGARTIRISH VA QO'SHISH JUDA OSON)    -->
+  <!-- Istalgan loyihani o'zgartirish, o'chirish yoki yangi kartani qo'shish     -->
+  <!-- quyidagi .project-card bloklari orqali amalga oshiriladi:                 -->
+  <!-- ========================================================================= -->
+  <section id="projects">
+    <div class="container">
+      <div class="projects-header">
+        <span class="section-tag" data-i18n="section_02">// 02 — projects</span>
+        <h2 data-i18n="projects_title">Featured Work</h2>
+        <p class="projects-note" data-i18n="projects_subtitle">Production-ready applications, real client solutions, and creative experiments.</p>
+      </div>
 
-        <div class="contact-grid">
+      <div class="projects-grid">
+        <!-- 1-Loyiha: Bog'cha CRM -->
+        <div class="project-card">
           <div>
-            <p style="color:var(--muted); line-height:1.65; margin-bottom:1.5rem;" data-i18n="contact_sub">
-              Yangi loyihalar, ish takliflari yoki amaliy hamkorliklar bo'yicha bog'lanishingiz mumkin. Quyidagi formani to'ldirib, to'g'ridan-to'g'ri Telegramingizdan tayyor xabar yuborishingiz mumkin.
+            <div class="card-top">
+              <span class="project-num">001</span>
+              <span class="wip-badge badge-featured" data-i18n="badge_featured">Featured CRM</span>
+            </div>
+            <h3 data-i18n="p1_title">Bog'cha CRM (Kindergarten Platform)</h3>
+            <p data-i18n="p1_desc">
+              A comprehensive Kindergarten Management CRM system. Built with React 19, TypeScript, and Zustand. Features student attendance tracking, tuition billing, staff management, and interactive analytics with Recharts.
             </p>
-            <div style="display:flex; flex-direction:column; gap:0.85rem;">
-              <a href="https://t.me/Komila2608" target="_blank" class="btn-main btn-outline" style="justify-content:flex-start;">✈ Telegram: @Komila2608</a>
-              <a href="mailto:zokirovakomila500@gmail.com" class="btn-main btn-outline" style="justify-content:flex-start;">✉ Email: zokirovakomila500@gmail.com</a>
-              <a href="https://github.com/komilazokirova" target="_blank" class="btn-main btn-outline" style="justify-content:flex-start;">💻 GitHub: @komilazokirova</a>
-              <a href="https://www.linkedin.com/feed/" target="_blank" class="btn-main btn-outline" style="justify-content:flex-start;">💼 LinkedIn</a>
+            <div class="tags">
+              <span class="tag">React 19</span>
+              <span class="tag">TypeScript</span>
+              <span class="tag">Zustand</span>
+              <span class="tag">TanStack Query</span>
+              <span class="tag">Tailwind CSS</span>
+              <span class="tag">Recharts</span>
             </div>
           </div>
+          <div class="project-links">
+            <a href="https://github.com/komilazokirova/Bogcha.loyixa.jsx.9" target="_blank" class="card-link card-link-primary">
+              <span>GitHub Repo</span> <span>↗</span>
+            </a>
+            <a href="https://t.me/Komila2608" target="_blank" class="card-link card-link-secondary" data-i18n="link_demo">
+              <span>Live Demo</span> <span>▶</span>
+            </a>
+          </div>
+        </div>
 
+        <!-- 2-Loyiha: 3D Galaxy Portfolio -->
+        <div class="project-card">
+          <div>
+            <div class="card-top">
+              <span class="project-num">002</span>
+              <span class="wip-badge" data-i18n="badge_creative">Creative 3D</span>
+            </div>
+            <h3 data-i18n="p3_title">Interactive 3D Portfolio</h3>
+            <p data-i18n="p3_desc">
+              The creative portfolio you're experiencing right now. Powered by Three.js particle galaxies, custom cursor physics, multi-language switching (UZ, RU, EN), and responsive dark aesthetics.
+            </p>
+            <div class="tags">
+              <span class="tag">Three.js</span>
+              <span class="tag">WebGL</span>
+              <span class="tag">JavaScript</span>
+              <span class="tag">Space Mono</span>
+              <span class="tag">i18n</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/komilazokirova/komilazokirova.github.io" target="_blank" class="card-link card-link-primary">
+              <span>GitHub Repo</span> <span>↗</span>
+            </a>
+            <a href="#hero" class="card-link card-link-secondary" data-i18n="link_current">
+              <span>Current Page</span> <span>★</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3-Loyiha: UI & State Components -->
+        <div class="project-card">
+          <div>
+            <div class="card-top">
+              <span class="project-num">003</span>
+              <span class="wip-badge" data-i18n="badge_tools">Frontend Kit</span>
+            </div>
+            <h3 data-i18n="p4_title">React UI Kit & Theme Utilities</h3>
+            <p data-i18n="p4_desc">
+              Modular collection of interactive components, calculators, dynamic dark/light theme systems, and state-driven dashboard widgets built using modern React hooks and Tailwind CSS.
+            </p>
+            <div class="tags">
+              <span class="tag">React</span>
+              <span class="tag">TypeScript</span>
+              <span class="tag">Zustand</span>
+              <span class="tag">Dark / Light UI</span>
+              <span class="tag">Tailwind</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/komilazokirova" target="_blank" class="card-link card-link-primary">
+              <span>GitHub Repo</span> <span>↗</span>
+            </a>
+            <a href="https://t.me/Komila2608" target="_blank" class="card-link card-link-secondary" data-i18n="link_demo">
+              <span>Inquire</span> <span>✉</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 👉 YANGI LOYIHA QO'SHISH UCHUN SHU YERGA YANA BIR .project-card QO'SHISHINGIZ MUMKIN -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact">
+    <div class="container">
+      <span class="section-tag" data-i18n="section_03">// 03 — contact</span>
+      
+      <div class="contact-wrapper">
+        <div class="contact-info">
+          <h2 data-i18n="contact_title">Let's build<br>together!</h2>
+          <p class="contact-sub" data-i18n="contact_sub">
+            Have a project in mind, a freelance opportunity, or just want to connect? Send a message or reach out directly on any social channel.
+          </p>
+
+          <div class="contact-direct">
+            <a href="mailto:zokirovakomila500@gmail.com" class="direct-item">
+              <div class="direct-icon">✉</div>
+              <div>
+                <span style="font-size:0.68rem; text-transform:uppercase; color:var(--muted); display:block;">Email</span>
+                <span>zokirovakomila500@gmail.com</span>
+              </div>
+            </a>
+            <a href="https://t.me/Komila2608" target="_blank" class="direct-item">
+              <div class="direct-icon">✈</div>
+              <div>
+                <span style="font-size:0.68rem; text-transform:uppercase; color:var(--muted); display:block;">Telegram</span>
+                <span>@Komila2608</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="social-pills">
+            <a href="https://github.com/komilazokirova" target="_blank" class="social-btn">
+              <span>GitHub</span> ↗
+            </a>
+            <a href="https://t.me/Komila2608" target="_blank" class="social-btn">
+              <span>Telegram</span> ↗
+            </a>
+            <a href="https://www.linkedin.com/feed/" target="_blank" class="social-btn">
+              <span>LinkedIn</span> ↗
+            </a>
+            <a href="https://youtube.com/@KomilaZokirova-n2z" target="_blank" class="social-btn">
+              <span>YouTube</span> ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Direct Contact Form -->
+        <div class="contact-form-card">
           <form id="contactForm">
-            <input type="text" class="form-input" id="cName" placeholder="Ismingiz" required>
-            <input type="text" class="form-input" id="cContact" placeholder="Telegram username yoki telefon">
-            <textarea class="form-input" id="cMessage" rows="4" placeholder="Xabaringiz..." required></textarea>
-            <button type="submit" class="btn-main btn-primary" style="width:100%; justify-content:center;">Telegram orqali yuborish →</button>
+            <div class="form-group">
+              <label class="form-label" data-i18n="form_name">Your Name</label>
+              <input type="text" id="formName" class="form-control" placeholder="Komila" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="form_contact">Telegram / Email</label>
+              <input type="text" id="formContact" class="form-control" placeholder="@username or email" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="form_message">Message</label>
+              <textarea id="formMessage" class="form-control" placeholder="Hello! I would like to discuss a project..." required></textarea>
+            </div>
+            <button type="submit" class="form-btn" data-i18n="form_submit">
+              Send via Telegram →
+            </button>
           </form>
         </div>
-      </section>
-
-      <!-- FOOTER -->
-      <footer style="border-top:1px solid var(--border); padding:2rem 0; margin-top:4rem; text-align:center; color:var(--muted); font-size:0.85rem;">
-        © 2026 Komila Zokirova — Frontend Developer. Qizil Qalpoqchaning 3D Ertaklar O'rmoni.
-      </footer>
-
+      </div>
     </div>
-  </main>
+  </section>
 
+  <!-- CV MODAL -->
+  <div class="modal-overlay" id="cvModal">
+    <div class="modal-box">
+      <button class="modal-close" id="closeModal">✕</button>
+      <h3 style="font-family:'Syne',sans-serif; font-size:1.4rem; margin-bottom:0.8rem; color:var(--accent);" data-i18n="cv_modal_title">Curriculum Vitae (CV)</h3>
+      <p style="font-size:0.85rem; color:var(--muted); line-height:1.7; margin-bottom:1.5rem;" data-i18n="cv_modal_desc">
+        Komila Zokirova — Frontend Developer. Rezyumening so'nggi yangilangan PDF versiyasini yuklab oling yoki Telegram orqali so'rang:
+      </p>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <a href="https://t.me/Komila2608?text=Salom%20Komila!%20Menga%20rezyumengizni%20(CV)%20yubora%20olasizmi?" target="_blank" class="btn btn-primary" style="flex:1; justify-content:center;">
+          <span data-i18n="cv_request_tg">Telegramda so'rash</span>
+        </a>
+        <a href="mailto:zokirovakomila500@gmail.com?subject=CV%20Request%20-%20Komila%20Zokirova" class="btn btn-outline" style="flex:1; justify-content:center;">
+          <span data-i18n="cv_request_email">Email orqali</span>
+        </a>
+      </div>
+    </div>
+  </div>
 
-  <!-- ==========================================================================
-       THREE.JS LIBRARY
-       ========================================================================== -->
+  <!-- FOOTER -->
+  <footer>
+    <span data-i18n="footer_copy">© 2026 Komila Zokirova — Frontend Developer</span>
+    <div class="footer-links">
+      <a href="https://github.com/komilazokirova" target="_blank">GitHub</a>
+      <a href="https://t.me/Komila2608" target="_blank">Telegram</a>
+      <a href="mailto:zokirovakomila500@gmail.com">Email</a>
+    </div>
+  </footer>
+
+  <!-- Three.js (r128) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-  <!-- ==========================================================================
-       GAME ENGINE & APPLICATION SCRIPT
-       ========================================================================== -->
   <script>
-    /* ==========================================================================
-       1. I18N MULTI-LANGUAGE SYSTEM
-       ========================================================================== */
+    /* =========================================================================
+       1. MULTI-LANGUAGE (i18n) DICTIONARY (UZ, RU, EN)
+       Bu yerda matnlarni istalgan paytda o'zgartirishingiz mumkin:
+       ========================================================================= */
     const translations = {
       uz: {
+        nav_about: "haqimda",
+        nav_skills: "ko'nikmalar",
+        nav_projects: "loyihalar",
+        nav_contact: "aloqa",
+
         hero_badge: "// Frontend Dasturchi — O'zbekiston",
         hero_hi: "Salom, men",
-        hero_desc: "Zamonaviy, tezkor va estetik jihatdan mukammal veb-interfeyslarni yarataman. React 19, TypeScript va zamonaviy frontend ekotizimida sifatli dasturiy yechimlarga ixtisoslashganman.",
+        hero_desc: "Zamonaviy, tez va qulay veb-interfeyslarni yarataman. React 19, TypeScript va zamonaviy frontend ekotizimida sifatli dasturiy mahsulotlar yaratishga ixtisoslashganman.",
         btn_projects: "Loyihalarim",
         btn_cv: "CV Yuklab olish",
         btn_contact: "Bog'lanish",
+
+        stat_projects: "Real Loyihalar",
+        stat_stack: "Zamonaviy Texnologiyalar",
+        stat_dedication: "Sifat va Mas'uliyat",
+        scroll: "pastga",
+
+        section_01: "// 01 — men haqimda",
+        about_title: "Men<br>haqimda",
+        about_p1: "Men <strong>Komila Zokirova</strong> — O'zbekistonda faoliyat yurituvchi ijodkor <strong>Frontend dasturchiman</strong>. Toza kod, qulay arxitektura va chiroyli dizayn uyg'unlashgan raqamli mahsulotlarni yaratishga intilaman.",
+        about_p2: "Asosiy texnologik to'plamim: <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong> hamda zamonaviy JavaScript. Har bir detalga, foydalanuvchi qulayligi (UX) va sahifa tezligiga alohida e'tibor qarataman.",
+        about_p3: "Doimiy ravishda yangi texnologiyalarni, interaktiv 3D tajribalarni (Three.js) o'rganaman va real muammolarga yechim bo'ladigan loyihalarda ishtirok etishdan mamnunman.",
+        goal_label: "// Asosiy maqsadim:",
+        goal_text: "Foydalanuvchilarga qulaylik va zavq ulashuvchi, tez ishlaydigan va ishonchli veb-ilovalarni yaratish orqali xalqaro darajadagi yetuk mutaxassis bo'lish.",
+
         skills_title: "Texnologik Ko'nikmalar",
-        skill_core: "Asosiy Texnologiyalar",
-        skill_frameworks: "Freymvork va Kutubxonalar",
-        skill_state: "Holat Boshqaruvi va Arxitektura",
-        skill_styling: "Stillashtirish va Vositalar",
+        skill_core: "asosiy texnologiyalar",
+        skill_frameworks: "freymvork va kutubxonalar",
+        skill_state: "holat boshqaruvi va arxitektura",
+        skill_styling: "stillashtirish va dizayn",
+        skill_tools: "vositalar va ish jarayoni",
+
+        section_02: "// 02 — loyihalar",
         projects_title: "Amaliy Loyihalarim",
+        projects_subtitle: "Real mijozlar, bizneslar va amaliy tajriba asosida yaratilgan dasturiy yechimlar.",
+
+        badge_featured: "Asosiy CRM",
+        badge_creative: "Interaktiv 3D",
+        badge_tools: "UI Komponentlar",
+
         p1_title: "Bog'cha CRM (Bolalar Bog'chasi Tizimi)",
-        p1_desc: "Bolalar bog'chalari uchun to'liq boshqaruv CRM platformasi. React 19, TypeScript va Zustand asosida qurilgan. Bolalar davomati, to'lovlar tahlili, guruhlar va xodimlarni boshqarish interfeysi va Recharts grafiklari mavjud.",
-        p3_title: "Interaktiv 3D Galaktika & Ertaklar O'rmoni",
-        p3_desc: "Bruno Simon uslubidagi 3D interaktiv avtomobil va galaktika portfoliosi. Three.js, arkada avtomobil fizikasi, zarrachalar simulyatsiyasi va 3 tilda ishlash tizimi.",
+        p1_desc: "Bolalar bog'chalari uchun to'liq boshqaruv CRM platformasi. React 19, TypeScript va Zustand asosida qurilgan. Bolalar davomati, to'lovlar tahlili, guruhlar va xodimlarni boshqarish uchun qulay interfeys va Recharts grafiklari mavjud.",
+
+        p3_title: "Interaktiv 3D Galaktika Portfoliom",
+        p3_desc: "Siz hozir ko'rib turgan interaktiv 3D portfolio. Three.js zarrachalar galaktikasi, neon kursor fizikasi, 3 tilda to'liq ishlash (UZ, RU, EN) va moslashuvchan qorong'i dizayn.",
+
         p4_title: "React UI To'plami va Mavzular Tizimi",
-        p4_desc: "Qayta ishlatiluvchi UI komponentlar to'plami, interaktiv kalkulyatorlar, qorong'i/yorug' rejim tizimlari va zamonaviy dashboard vidjetlari.",
-        link_demo: "Demo ko'rish ▶",
-        contact_title: "Birgalikda ishlaymizmi?",
-        contact_sub: "Yangi loyihalar, ish takliflari yoki amaliy hamkorliklar bo'yicha bog'lanishingiz mumkin. Quyidagi formani to'ldirib, to'g'ridan-to'g'ri Telegramingizdan tayyor xabar yuborishingiz mumkin.",
-        zone_start_title: "🌲 Ertaklar O'rmoniga Xush Kelibsiz!",
-        zone_start_desc: "Qizil Qalpoqchaning mashinasini haydab, Komila Zokirovaning ko'nikmalari va loyihalarini kashf qiling!",
-        zone_skills_title: "🎳 Ko'nikmalar Maydonchasi",
-        zone_skills_desc: "Mashinani haydab, 3D kublarni urib yiqiting! Har bir kub yangi texnologiyani namoyon etadi.",
-        zone_projects_title: "🏡 Loyihalar Qishlog'i",
-        zone_projects_desc: "Uychalar oldiga to'xtang: Bog'cha CRM va boshqa real loyihalar demosini ko'rish mumkin.",
-        zone_grandma_title: "👵 Buvisining Shinam Kulbasi",
-        zone_grandma_desc: "Kulba oldidagi pochtagohga yaqinlashing va to'g'ridan-to'g'ri Telegramda bog'laning yoki CV yuklab oling!"
+        p4_desc: "Qayta ishlatiluvchi UI komponentlar to'plami, kalkulyatorlar, qorong'i/yorug' rejim tizimlari va zamonaviy dashboard vidjetlari.",
+
+        link_demo: "Demo ko'rish",
+        link_current: "Joriy Sahifa",
+
+        section_03: "// 03 — aloqa",
+        contact_title: "Birgalikda<br>ishlaymizmi?",
+        contact_sub: "Yangi loyiha, ish taklifi yoki qiziqarli g'oyalaringiz bo'lsa, to'g'ridan-to'g'ri bog'laning. Hamkorlik qilishdan hamisha mamnunman!",
+
+        form_name: "Ismingiz",
+        form_contact: "Telegram yoki Email",
+        form_message: "Xabaringiz",
+        form_submit: "Telegram orqali yuborish →",
+
+        cv_modal_title: "Rezyume (CV)",
+        cv_modal_desc: "Komila Zokirova — Frontend Dasturchi. Rezyumeni PDF formatda olish uchun Telegram yoki Email orqali murojaat qilishingiz mumkin:",
+        cv_request_tg: "Telegramda so'rash",
+        cv_request_email: "Email orqali so'rash",
+
+        footer_copy: "© 2026 Komila Zokirova — Frontend Developer"
       },
+
       ru: {
+        nav_about: "обо мне",
+        nav_skills: "навыки",
+        nav_projects: "проекты",
+        nav_contact: "контакты",
+
         hero_badge: "// Frontend Разработчик — Узбекистан",
         hero_hi: "Привет, я",
         hero_desc: "Создаю современные, отзывчивые и визуально привлекательные веб-интерфейсы. Специализируюсь на React 19, TypeScript и передовой фронтенд-разработке.",
         btn_projects: "Мои проекты",
-        btn_cv: "Скачать CV",
+        btn_cv: "Скачать резюме",
         btn_contact: "Связаться",
+
+        stat_projects: "Реальных проектов",
+        stat_stack: "Технологий в стеке",
+        stat_dedication: "Качество и фокус",
+        scroll: "вниз",
+
+        section_01: "// 01 — обо мне",
+        about_title: "Кто я<br>такая?",
+        about_p1: "Я <strong>Комила Зокирова</strong> — увлеченный <strong>Frontend разработчик</strong> из Узбекистана. Мой фокус — создание высокопроизводительных, удобных и эстетичных цифровых продуктов.",
+        about_p2: "Мой ежедневный стек включает: <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong>. Большое внимание уделяю архитектуре компонентов, скорости и удобству пользователей.",
+        about_p3: "Постоянно исследую новые фронтенд-тренды, интерактивный 3D-веб (Three.js) и люблю участвовать в проектах, решающих реальные практические задачи.",
+        goal_label: "// Моя цель:",
+        goal_text: "Создавать быстрые, интуитивные и надежные веб-сервисы, приносящие реальную пользу пользователям и развиваться до уровня ведущего инженера.",
+
         skills_title: "Технические Навыки",
-        skill_core: "Базовые Технологии",
-        skill_frameworks: "Фреймворки и Библиотеки",
-        skill_state: "Управление Состоянием",
-        skill_styling: "Стили и Инструменты",
+        skill_core: "базовые технологии",
+        skill_frameworks: "фреймворки и библиотеки",
+        skill_state: "архитектура и состояние",
+        skill_styling: "стилизация и дизайн",
+        skill_tools: "инструменты и воркфлоу",
+
+        section_02: "// 02 — проекты",
         projects_title: "Избранные Проекты",
+        projects_subtitle: "Готовые решения, CRM-системы и творческие эксперименты.",
+
+        badge_featured: "Основной CRM",
+        badge_creative: "Интерактивный 3D",
+        badge_tools: "UI Компоненты",
+
         p1_title: "Bog'cha CRM (Система для детских садов)",
-        p1_desc: "Комплексная CRM-платформа для детских садов на React 19, TypeScript и Zustand. Включает учет посещаемости, финансовую аналитику, управление персоналом и графики Recharts.",
-        p3_title: "Интерактивное 3D Портфолио & Лес Сказки",
-        p3_desc: "Интерактивный 3D-мир в стиле Бруно Симона. Физика автомобиля, динамические частицы Three.js и мультиязычность.",
+        p1_desc: "Комплексная CRM-платформа для детских садов на React 19, TypeScript и Zustand. Включает учет посещаемости, финансовую аналитику, управление персоналом, группами и интерактивные графики Recharts.",
+
+        p3_title: "Интерактивное 3D Портфолио",
+        p3_desc: "Сайт, который вы сейчас просматриваете. Галактика частиц на Three.js, физика неонового курсора, мультиязычность (UZ, RU, EN) и современный тёмный дизайн.",
+
         p4_title: "React UI Набор и Темы Оформления",
-        p4_desc: "Модульная библиотека интерактивных UI-компонентов, калькуляторов, система тем и виджеты панели аналитики.",
-        link_demo: "Смотреть демо ▶",
-        contact_title: "Давайте работать вместе!",
-        contact_sub: "Открыта для новых проектов и интересных предложений. Заполните форму, чтобы отправить готовое сообщение мне в Telegram.",
-        zone_start_title: "🌲 Добро пожаловать в Сказочный Лес!",
-        zone_start_desc: "Управляйте автомобилем Красной Шапочки и исследуйте проекты и навыки Комилы!",
-        zone_skills_title: "🎳 Площадка Навыков",
-        zone_skills_desc: "Сбивайте 3D-кубы с технологиями автомобилем! Каждый куб раскрывает стек Комилы.",
-        zone_projects_title: "🏡 Деревня Проектов",
-        zone_projects_desc: "Остановитесь у домиков, чтобы посмотреть живое демо Bog'cha CRM и исходный код.",
-        zone_grandma_title: "👵 Уютный Домик Бабушки",
-        zone_grandma_desc: "Подъезжайте к почтовому ящику, чтобы написать в Telegram или скачать актуальное резюме!"
+        p4_desc: "Модульная библиотека интерактивных UI-компонентов, калькуляторов, система переключения темной/светлой темы и виджеты панели аналитики.",
+
+        link_demo: "Смотреть демо",
+        link_current: "Текущая страница",
+
+        section_03: "// 03 — контакты",
+        contact_title: "Давайте работать<br>вместе!",
+        contact_sub: "Есть интересная идея, проект или предложение о работе? Напишите мне сообщение или свяжитесь через соцсети. Всегда открыта к сотрудничеству!",
+
+        form_name: "Ваше имя",
+        form_contact: "Telegram или Email",
+        form_message: "Сообщение",
+        form_submit: "Отправить в Telegram →",
+
+        cv_modal_title: "Резюме (CV)",
+        cv_modal_desc: "Комила Зокирова — Frontend Разработчик. Чтобы запросить актуальную PDF-версию резюме, напишите мне напрямую в Telegram или на почту:",
+        cv_request_tg: "Запросить в Telegram",
+        cv_request_email: "Запросить по Email",
+
+        footer_copy: "© 2026 Комила Зокирова — Frontend Developer"
       },
+
       en: {
+        nav_about: "about",
+        nav_skills: "skills",
+        nav_projects: "projects",
+        nav_contact: "contact",
+
         hero_badge: "// Frontend Developer — Uzbekistan",
         hero_hi: "Hi, I'm",
-        hero_desc: "I craft responsive, high-performance, and visually compelling web interfaces. Specialized in React 19, TypeScript, Zustand, and modern frontend architecture.",
-        btn_projects: "View Projects",
+        hero_desc: "I craft user-friendly, responsive, and visually compelling web interfaces. Specialized in React 19, TypeScript, and modern frontend ecosystems. Open to exciting collaborations and projects.",
+        btn_projects: "View my work",
         btn_cv: "Download CV",
-        btn_contact: "Get in Touch",
+        btn_contact: "Get in touch",
+
+        stat_projects: "Real Projects",
+        stat_stack: "Modern Techs",
+        stat_dedication: "Dedication",
+        scroll: "scroll",
+
+        section_01: "// 01 — about me",
+        about_title: "Who<br>am I?",
+        about_p1: "I'm <strong>Komila Zokirova</strong>, a creative frontend developer based in <strong>Uzbekistan</strong>. I build high-performance, user-friendly digital products that combine clean code with elegant design.",
+        about_p2: "My daily toolkit includes <strong>React 19, TypeScript, Zustand, TanStack Query, Tailwind CSS</strong>. I pay close attention to component architecture, performance, and seamless user experiences.",
+        about_p3: "I am continuously exploring modern frontend trends, 3D web experiences (Three.js), and actively contributing to projects that solve real problems.",
+        goal_label: "// My Goal:",
+        goal_text: "To engineer fast, accessible, and delightful web applications that make a real difference and empower users worldwide.",
+
         skills_title: "Technical Skills",
-        skill_core: "Core Technologies",
-        skill_frameworks: "Frameworks & Libraries",
-        skill_state: "State & Architecture",
-        skill_styling: "Styling & Tools",
-        projects_title: "Featured Projects",
+        skill_core: "core technologies",
+        skill_frameworks: "frameworks & libraries",
+        skill_state: "state & architecture",
+        skill_styling: "styling & design",
+        skill_tools: "tools & workflow",
+
+        section_02: "// 02 — projects",
+        projects_title: "Featured Work",
+        projects_subtitle: "Production-ready applications, real client solutions, and creative experiments.",
+
+        badge_featured: "Featured CRM",
+        badge_creative: "Creative 3D",
+        badge_tools: "Frontend Kit",
+
         p1_title: "Bog'cha CRM (Kindergarten Platform)",
-        p1_desc: "A comprehensive Kindergarten Management CRM system. Built with React 19, TypeScript, and Zustand. Features student attendance tracking, tuition billing, staff management, and Recharts analytics.",
-        p3_title: "Interactive 3D Galaxy & Fairytale Forest",
-        p3_desc: "Bruno Simon-style interactive 3D vehicle portfolio. Three.js engine, custom arcade driving physics, particles, and i18n support.",
+        p1_desc: "A comprehensive Kindergarten Management CRM system. Built with React 19, TypeScript, and Zustand. Features student attendance tracking, tuition billing, staff management, and interactive analytics with Recharts.",
+
+        p3_title: "Interactive 3D Portfolio",
+        p3_desc: "The creative portfolio you're experiencing right now. Powered by Three.js particle galaxies, custom cursor physics, multi-language switching (UZ, RU, EN), and responsive dark aesthetics.",
+
         p4_title: "React UI Kit & Theme Utilities",
-        p4_desc: "Modular collection of interactive components, calculators, dynamic theme systems, and state-driven dashboard widgets.",
-        link_demo: "Live Demo ▶",
-        contact_title: "Let's build together!",
-        contact_sub: "Have an exciting project, job opportunity, or collaboration in mind? Reach out directly via Telegram or email.",
-        zone_start_title: "🌲 Welcome to Fairytale Forest!",
-        zone_start_desc: "Drive Little Red Riding Hood's vintage roadster and explore Komila's skills and projects!",
-        zone_skills_title: "🎳 Skills Domino Field",
-        zone_skills_desc: "Crash into the 3D wooden tech blocks! Knocking them down reveals details about each skill.",
-        zone_projects_title: "🏡 Projects Village",
-        zone_projects_desc: "Park near the cottages to inspect live demos and source code for featured projects.",
-        zone_grandma_title: "👵 Grandma's Cozy Cabin",
-        zone_grandma_desc: "Pull up to the mailbox to send a direct Telegram message or download the latest CV!"
+        p4_desc: "Modular collection of interactive components, calculators, dynamic dark/light theme systems, and state-driven dashboard widgets built using modern React hooks and Tailwind CSS.",
+
+        link_demo: "Live Demo",
+        link_current: "Current Page",
+
+        section_03: "// 03 — contact",
+        contact_title: "Let's build<br>together!",
+        contact_sub: "Have a project in mind, a freelance opportunity, or just want to connect? Send a message or reach out directly on any social channel.",
+
+        form_name: "Your Name",
+        form_contact: "Telegram or Email",
+        form_message: "Message",
+        form_submit: "Send via Telegram →",
+
+        cv_modal_title: "Curriculum Vitae (CV)",
+        cv_modal_desc: "Komila Zokirova — Frontend Developer. To request the latest updated PDF version of my resume, feel free to reach out directly:",
+        cv_request_tg: "Request via Telegram",
+        cv_request_email: "Request via Email",
+
+        footer_copy: "© 2026 Komila Zokirova — Frontend Developer"
       }
     };
 
@@ -1059,7 +1369,7 @@
       localStorage.setItem('portfolio_lang', lang);
       document.documentElement.lang = lang;
 
-      document.querySelectorAll('.lang-item').forEach(btn => {
+      document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.lang === lang);
       });
 
@@ -1071,1275 +1381,252 @@
       });
     }
 
-    document.querySelectorAll('.lang-item').forEach(btn => {
-      btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setLanguage(btn.dataset.lang);
+      });
     });
 
+    setLanguage(currentLang);
 
-    /* ==========================================================================
-       2. PROCEDURAL WEB AUDIO SYNTHESIZER (NO EXTERNAL FILES REQUIRED)
-       ========================================================================== */
-    class SoundEngine {
-      constructor() {
-        this.ctx = null;
-        this.muted = localStorage.getItem('game_muted') === 'true';
-        this.engineOsc = null;
-        this.engineGain = null;
-        this.updateAudioIcon();
-      }
 
-      init() {
-        if (!this.ctx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          this.ctx = new AudioContext();
-          this.setupEngineSound();
-        }
-        if (this.ctx.state === 'suspended') {
-          this.ctx.resume();
-        }
-      }
+    /* ==========================================================
+       2. CV MODAL HANDLERS
+       ========================================================== */
+    const cvBtn = document.getElementById('cvBtn');
+    const cvModal = document.getElementById('cvModal');
+    const closeModal = document.getElementById('closeModal');
 
-      toggleMute() {
-        this.muted = !this.muted;
-        localStorage.setItem('game_muted', this.muted);
-        this.updateAudioIcon();
-        if (this.engineGain) {
-          this.engineGain.gain.value = this.muted ? 0 : 0.04;
-        }
-      }
-
-      updateAudioIcon() {
-        const icon = document.getElementById('audioIcon');
-        if (icon) icon.textContent = this.muted ? '🔇' : '🔊';
-      }
-
-      setupEngineSound() {
-        if (!this.ctx) return;
-        this.engineOsc = this.ctx.createOscillator();
-        this.engineGain = this.ctx.createGain();
-        this.engineFilter = this.ctx.createBiquadFilter();
-
-        this.engineOsc.type = 'sawtooth';
-        this.engineOsc.frequency.value = 48; // Base idle rumble
-
-        this.engineFilter.type = 'lowpass';
-        this.engineFilter.frequency.value = 180;
-
-        this.engineGain.gain.value = this.muted ? 0 : 0.035;
-
-        this.engineOsc.connect(this.engineFilter);
-        this.engineFilter.connect(this.engineGain);
-        this.engineGain.connect(this.ctx.destination);
-        this.engineOsc.start();
-      }
-
-      updateEngineSpeed(speedRatio) {
-        if (!this.engineOsc || this.muted) return;
-        const targetFreq = 48 + speedRatio * 95;
-        this.engineOsc.frequency.setTargetAtTime(targetFreq, this.ctx.currentTime, 0.08);
-        this.engineFilter.frequency.setTargetAtTime(180 + speedRatio * 450, this.ctx.currentTime, 0.08);
-      }
-
-      playBump() {
-        if (this.muted || !this.ctx) return;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(120, this.ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.15);
-        gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start();
-        osc.stop(this.ctx.currentTime + 0.15);
-      }
-
-      playAppleChime() {
-        if (this.muted || !this.ctx) return;
-        const now = this.ctx.currentTime;
-        [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0.12, now + i * 0.06);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.25);
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          osc.start(now + i * 0.06);
-          osc.stop(now + i * 0.06 + 0.25);
-        });
-      }
-
-      playSkid() {
-        if (this.muted || !this.ctx) return;
-        const bufferSize = this.ctx.sampleRate * 0.1;
-        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = Math.random() * 2 - 1;
-        }
-        const noise = this.ctx.createBufferSource();
-        noise.buffer = buffer;
-        const filter = this.ctx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.value = 1200;
-        const gain = this.ctx.createGain();
-        gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
-        noise.connect(filter);
-        filter.connect(gain);
-        gain.connect(this.ctx.destination);
-        noise.start();
-      }
+    if (cvBtn && cvModal && closeModal) {
+      cvBtn.addEventListener('click', () => { cvModal.classList.add('active'); });
+      closeModal.addEventListener('click', () => { cvModal.classList.remove('active'); });
+      cvModal.addEventListener('click', (e) => {
+        if (e.target === cvModal) cvModal.classList.remove('active');
+      });
     }
 
-    const soundEngine = new SoundEngine();
-    document.getElementById('audioBtn').addEventListener('click', () => {
-      soundEngine.init();
-      soundEngine.toggleMute();
-    });
+
+    /* ==========================================================
+       3. CONTACT FORM -> DIRECT TELEGRAM LINK
+       ========================================================== */
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('formName').value.trim();
+        const contact = document.getElementById('formContact').value.trim();
+        const message = document.getElementById('formMessage').value.trim();
+
+        if (!name || !message) return;
+
+        const text = encodeURIComponent(
+          `Salom Komila! Portfoliangiz orqali xabar:\n\n👤 Ism: ${name}\n📞 Kontakt: ${contact}\n💬 Xabar: ${message}`
+        );
+
+        window.open(`https://t.me/Komila2608?text=${text}`, '_blank');
+      });
+    }
 
 
-    /* ==========================================================================
-       3. 3D FAIRYTALE GRAPHICS & ARCADE DRIVING ENGINE
-       ========================================================================== */
-    const container = document.getElementById('game-container');
-    const canvas = document.getElementById('gameCanvas');
+    /* ==========================================================
+       4. CUSTOM CURSOR PHYSICS (Desktop only)
+       ========================================================== */
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = -100, my = -100, rx = -100, ry = -100;
 
-    // Scene & Renderer
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x131722);
-    scene.fog = new THREE.FogExp2(0x131722, 0.0135);
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX;
+        my = e.clientY;
+      });
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvas,
-      antialias: true,
-      powerPreference: 'high-performance'
-    });
+      (function lerpCursor() {
+        requestAnimationFrame(lerpCursor);
+        rx += (mx - rx) * 0.18;
+        ry += (my - ry) * 0.18;
+        if (cursor) cursor.style.transform = `translate(${mx - 5}px, ${my - 5}px)`;
+        if (ring) ring.style.transform = `translate(${rx - 19}px, ${ry - 19}px)`;
+      })();
+
+      document.querySelectorAll('a, button, .project-card, .pill, .lang-btn').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          if (ring) {
+            ring.style.width = '56px';
+            ring.style.height = '56px';
+            ring.style.borderColor = 'rgba(255, 110, 180, 0.9)';
+            ring.style.transform = `translate(${rx - 28}px, ${ry - 28}px)`;
+          }
+        });
+        el.addEventListener('mouseleave', () => {
+          if (ring) {
+            ring.style.width = '38px';
+            ring.style.height = '38px';
+            ring.style.borderColor = 'rgba(255, 110, 180, 0.6)';
+            ring.style.transform = `translate(${rx - 19}px, ${ry - 19}px)`;
+          }
+        });
+      });
+    }
+
+
+    /* ==========================================================
+       5. THREE.JS 3D GALAXY BACKGROUND & GEOMETRIES
+       ========================================================== */
+    const canvas = document.getElementById('canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.18;
 
-    // Isometric Follow Camera
-    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.5, 300);
-    const cameraOffset = new THREE.Vector3(0, 15, 19);
-
-    // Warm Fairytale Lighting
-    const hemiLight = new THREE.HemisphereLight(0xfff1e0, 0x223355, 0.85);
-    scene.add(hemiLight);
-
-    const sunLight = new THREE.DirectionalLight(0xffebd2, 1.45);
-    sunLight.position.set(30, 45, 25);
-    sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 2048;
-    sunLight.shadow.mapSize.height = 2048;
-    sunLight.shadow.camera.near = 10;
-    sunLight.shadow.camera.far = 120;
-    sunLight.shadow.camera.left = -40;
-    sunLight.shadow.camera.right = 40;
-    sunLight.shadow.camera.top = 40;
-    sunLight.shadow.camera.bottom = -40;
-    sunLight.shadow.bias = -0.0008;
-    scene.add(sunLight);
-
-    // Violet-blue magic backlight
-    const magicLight = new THREE.DirectionalLight(0x9d4edd, 0.45);
-    magicLight.position.set(-25, 20, -25);
-    scene.add(magicLight);
-
-
-    /* ==========================================================================
-       4. GROUND TERRAIN & COBBLESTONE TRACK
-       ========================================================================== */
-    // Main Meadow Ground
-    const groundGeo = new THREE.PlaneGeometry(160, 160, 32, 32);
-    const groundMat = new THREE.MeshStandardMaterial({
-      color: 0x243e26, // Lush enchanted forest grass
-      roughness: 0.85,
-      metalness: 0.05
-    });
-    const ground = new THREE.Mesh(groundGeo, groundMat);
-    ground.rotation.x = -Math.PI / 2;
-    ground.receiveShadow = true;
-    scene.add(ground);
-
-    // Dirt/Cobblestone Road Loop
-    const roadGroup = new THREE.Group();
-    function createRoadCurve() {
-      const roadGeo = new THREE.RingGeometry(18, 25, 64);
-      const roadMat = new THREE.MeshStandardMaterial({
-        color: 0x4a3b2c, // Warm dirt road
-        roughness: 0.95
-      });
-      const road = new THREE.Mesh(roadGeo, roadMat);
-      road.rotation.x = -Math.PI / 2;
-      road.position.y = 0.02;
-      road.receiveShadow = true;
-      roadGroup.add(road);
-    }
-    createRoadCurve();
-    scene.add(roadGroup);
-
-
-    /* ==========================================================================
-       5. RETRO FAIRYTALE ROADSTER & LITTLE RED RIDING HOOD DRIVER
-       ========================================================================== */
-    const carGroup = new THREE.Group();
-    scene.add(carGroup);
-
-    // Car Body - Rounded Wooden/Red Roadster (Bruno Simon aesthetic)
-    const bodyMat = new THREE.MeshStandardMaterial({
-      color: 0xd90429, // Vibrant Crimson Red
-      roughness: 0.35,
-      metalness: 0.25
-    });
-    const woodMat = new THREE.MeshStandardMaterial({
-      color: 0x854d27, // Polished cherry wood
-      roughness: 0.55
-    });
-    const chromeMat = new THREE.MeshStandardMaterial({
-      color: 0xf4f4f4,
-      metalness: 0.85,
-      roughness: 0.15
-    });
-    const rubberMat = new THREE.MeshStandardMaterial({
-      color: 0x1f2421,
-      roughness: 0.8
-    });
-    const goldMat = new THREE.MeshStandardMaterial({
-      color: 0xffb703,
-      metalness: 0.7,
-      roughness: 0.25
-    });
-
-    // Main Cabin & Hood
-    const chassisGeo = new THREE.BoxGeometry(1.6, 0.55, 2.8);
-    const chassis = new THREE.Mesh(chassisGeo, bodyMat);
-    chassis.position.y = 0.52;
-    chassis.castShadow = true;
-    chassis.receiveShadow = true;
-    carGroup.add(chassis);
-
-    // Wooden Side Inlays
-    const woodSide1 = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.35, 1.6), woodMat);
-    woodSide1.position.set(0.81, 0.55, 0.1);
-    carGroup.add(woodSide1);
-
-    const woodSide2 = woodSide1.clone();
-    woodSide2.position.x = -0.81;
-    carGroup.add(woodSide2);
-
-    // Radiator Grille
-    const grille = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.45, 0.15), chromeMat);
-    grille.position.set(0, 0.52, 1.45);
-    carGroup.add(grille);
-
-    // Bumpers
-    const frontBumper = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 1.7, 16), chromeMat);
-    frontBumper.rotation.z = Math.PI / 2;
-    frontBumper.position.set(0, 0.35, 1.52);
-    carGroup.add(frontBumper);
-
-    // Windshield
-    const windshield = new THREE.Mesh(
-      new THREE.BoxGeometry(1.4, 0.5, 0.06),
-      new THREE.MeshStandardMaterial({ color: 0x8ecae6, transparent: true, opacity: 0.55, roughness: 0.1 })
-    );
-    windshield.position.set(0, 0.95, 0.35);
-    windshield.rotation.x = -0.25;
-    carGroup.add(windshield);
-
-    // Vintage Round Headlights with Light Cones
-    const headlightMat = new THREE.MeshStandardMaterial({
-      color: 0xfff3b0,
-      emissive: 0xffd166,
-      emissiveIntensity: 0.9
-    });
-    const headlightR = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.22, 16), headlightMat);
-    headlightR.rotation.x = Math.PI / 2;
-    headlightR.position.set(0.6, 0.65, 1.42);
-    carGroup.add(headlightR);
-
-    const headlightL = headlightR.clone();
-    headlightL.position.x = -0.6;
-    carGroup.add(headlightL);
-
-    // Real Pointlight from headlights
-    const carLight = new THREE.SpotLight(0xfff3b0, 2.2, 16, Math.PI / 5, 0.4);
-    carLight.position.set(0, 0.8, 1.3);
-    const lightTarget = new THREE.Object3D();
-    lightTarget.position.set(0, 0.2, 12);
-    carGroup.add(lightTarget);
-    carLight.target = lightTarget;
-    carGroup.add(carLight);
-
-    // Picnic Basket on Rear Rack
-    const basket = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.4, 0.65), woodMat);
-    basket.position.set(0, 0.95, -1.05);
-    basket.castShadow = true;
-    carGroup.add(basket);
-
-    // Red Apples inside basket
-    const appleMat = new THREE.MeshStandardMaterial({ color: 0xe63946, roughness: 0.3 });
-    for (let i = 0; i < 3; i++) {
-      const apple = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 12), appleMat);
-      apple.position.set(-0.2 + i * 0.2, 1.18, -1.05);
-      carGroup.add(apple);
-    }
-
-    // Wheels (4 rubber wheels with golden hubcaps)
-    const wheels = [];
-    const wheelPositions = [
-      { x: 0.92, y: 0.36, z: 0.9, isFront: true },
-      { x: -0.92, y: 0.36, z: 0.9, isFront: true },
-      { x: 0.92, y: 0.36, z: -0.85, isFront: false },
-      { x: -0.92, y: 0.36, z: -0.85, isFront: false },
-    ];
-
-    wheelPositions.forEach(pos => {
-      const wheelHub = new THREE.Group();
-      wheelHub.position.set(pos.x, pos.y, pos.z);
-
-      const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.25, 20), rubberMat);
-      tire.rotation.z = Math.PI / 2;
-      tire.castShadow = true;
-      wheelHub.add(tire);
-
-      const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.27, 16), goldMat);
-      cap.rotation.z = Math.PI / 2;
-      wheelHub.add(cap);
-
-      carGroup.add(wheelHub);
-      wheels.push({ mesh: wheelHub, isFront: pos.isFront, tireMesh: tire });
-    });
-
-    // -------------------------------------------------------------
-    // LITTLE RED RIDING HOOD (DRIVER CHARACTER)
-    // -------------------------------------------------------------
-    const hoodGroup = new THREE.Group();
-    hoodGroup.position.set(0, 0.85, -0.15); // In driver seat
-
-    // Face Texture (Canvas with big anime brown eyes, eyelashes, smile, freckles)
-    const faceCanvas = document.createElement('canvas');
-    faceCanvas.width = 256;
-    faceCanvas.height = 256;
-    const fctx = faceCanvas.getContext('2d');
-    fctx.fillStyle = '#ffdbb5'; // Fair peach skin
-    fctx.fillRect(0, 0, 256, 256);
-
-    // Rosy Cheeks
-    fctx.fillStyle = 'rgba(255, 120, 140, 0.4)';
-    fctx.beginPath(); fctx.arc(60, 160, 28, 0, Math.PI*2); fctx.fill();
-    fctx.beginPath(); fctx.arc(196, 160, 28, 0, Math.PI*2); fctx.fill();
-
-    // Freckles
-    fctx.fillStyle = '#c58b5e';
-    [70, 80, 85, 170, 175, 185].forEach((x, i) => {
-      fctx.fillRect(x, 150 + (i % 2) * 8, 3, 3);
-    });
-
-    // Big expressive brown eyes
-    fctx.fillStyle = '#3d2314';
-    fctx.beginPath(); fctx.ellipse(80, 125, 24, 30, 0, 0, Math.PI*2); fctx.fill();
-    fctx.beginPath(); fctx.ellipse(176, 125, 24, 30, 0, 0, Math.PI*2); fctx.fill();
-
-    // Eye highlights
-    fctx.fillStyle = '#ffffff';
-    fctx.beginPath(); fctx.arc(74, 116, 9, 0, Math.PI*2); fctx.fill();
-    fctx.beginPath(); fctx.arc(88, 134, 4, 0, Math.PI*2); fctx.fill();
-    fctx.beginPath(); fctx.arc(170, 116, 9, 0, Math.PI*2); fctx.fill();
-    fctx.beginPath(); fctx.arc(184, 134, 4, 0, Math.PI*2); fctx.fill();
-
-    // Eyelashes & Brow
-    fctx.strokeStyle = '#2b1608';
-    fctx.lineWidth = 4;
-    fctx.beginPath(); fctx.arc(80, 118, 26, Math.PI*1.1, Math.PI*1.9); fctx.stroke();
-    fctx.beginPath(); fctx.arc(176, 118, 26, Math.PI*1.1, Math.PI*1.9); fctx.stroke();
-
-    // Cute Smile
-    fctx.strokeStyle = '#b04a5a';
-    fctx.lineWidth = 3.5;
-    fctx.beginPath(); fctx.arc(128, 170, 20, 0.2, Math.PI - 0.2); fctx.stroke();
-
-    const faceTexture = new THREE.CanvasTexture(faceCanvas);
-    const headMat = new THREE.MeshStandardMaterial({ map: faceTexture, roughness: 0.5 });
-
-    // Head
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.38, 24, 24), headMat);
-    head.position.set(0, 0.65, 0);
-    head.castShadow = true;
-    hoodGroup.add(head);
-
-    // Brown Wavy Hair (Curls framing the face)
-    const hairMat = new THREE.MeshStandardMaterial({ color: 0x5a3825, roughness: 0.7 });
-    const hairBangs = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.45), hairMat);
-    hairBangs.position.set(0, 0.68, -0.02);
-    hoodGroup.add(hairBangs);
-
-    // Red Hood Cape (Encasing the head and shoulders)
-    const capeMat = new THREE.MeshStandardMaterial({ color: 0xc91c30, roughness: 0.45 });
-    const hoodMesh = new THREE.Mesh(new THREE.SphereGeometry(0.44, 24, 24, 0, Math.PI * 2, 0, Math.PI * 0.7), capeMat);
-    hoodMesh.rotation.x = -0.3;
-    hoodMesh.position.set(0, 0.68, -0.06);
-    hoodMesh.castShadow = true;
-    hoodGroup.add(hoodMesh);
-
-    // Red Bow Ribbon at collar
-    const bowMesh = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.05, 12, 20), capeMat);
-    bowMesh.position.set(0, 0.32, 0.36);
-    hoodGroup.add(bowMesh);
-
-    // Fluttering Cape (Behind the driver)
-    const capeGeo = new THREE.PlaneGeometry(0.8, 0.9, 8, 8);
-    const flutteringCape = new THREE.Mesh(capeGeo, capeMat);
-    flutteringCape.position.set(0, 0.38, -0.42);
-    flutteringCape.rotation.x = 0.45;
-    flutteringCape.castShadow = true;
-    hoodGroup.add(flutteringCape);
-
-    // Steering wheel
-    const steering = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.04, 12, 24), woodMat);
-    steering.position.set(0, 0.45, 0.42);
-    steering.rotation.x = 0.7;
-    hoodGroup.add(steering);
-
-    carGroup.add(hoodGroup);
-
-
-    /* ==========================================================================
-       6. TIRE DUST & DRIFT PARTICLE SYSTEM
-       ========================================================================== */
-    const dustParticles = [];
-    const dustGeo = new THREE.DodecahedronGeometry(0.15, 0);
-    const dustMat = new THREE.MeshBasicMaterial({ color: 0xd4c2a5, transparent: true, opacity: 0.65 });
-
-    for (let i = 0; i < 40; i++) {
-      const p = new THREE.Mesh(dustGeo, dustMat.clone());
-      p.visible = false;
-      scene.add(p);
-      dustParticles.push({ mesh: p, life: 0, maxLife: 30, vel: new THREE.Vector3() });
-    }
-
-    function emitDust(pos, isDrifting = false) {
-      const p = dustParticles.find(item => !item.mesh.visible);
-      if (!p) return;
-      p.mesh.visible = true;
-      p.mesh.position.copy(pos);
-      p.mesh.scale.setScalar(isDrifting ? 1.6 : 0.9);
-      p.life = 0;
-      p.maxLife = isDrifting ? 35 : 22;
-      p.mesh.material.opacity = isDrifting ? 0.75 : 0.45;
-      p.vel.set(
-        (Math.random() - 0.5) * 0.08,
-        0.04 + Math.random() * 0.05,
-        (Math.random() - 0.5) * 0.08
-      );
-    }
-
-
-    /* ==========================================================================
-       7. ENCHANTED FOREST ASSETS (BRUNO SIMON STYLE PROPS)
-       ========================================================================== */
-    const propsGroup = new THREE.Group();
-    scene.add(propsGroup);
-
-    // Tree Types
-    const pineMat = new THREE.MeshStandardMaterial({ color: 0x2d6a4f, roughness: 0.8 });
-    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x6f4e37, roughness: 0.9 });
-
-    function createPineTree(x, z, scale = 1) {
-      const tree = new THREE.Group();
-      tree.position.set(x, 0, z);
-      tree.scale.setScalar(scale);
-
-      const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.4, 1.8, 8), trunkMat);
-      trunk.position.y = 0.9;
-      trunk.castShadow = true;
-      tree.add(trunk);
-
-      [ { y: 2.2, r: 1.8, h: 2.0 }, { y: 3.4, r: 1.4, h: 1.8 }, { y: 4.4, r: 0.9, h: 1.5 } ].forEach(tier => {
-        const foliage = new THREE.Mesh(new THREE.ConeGeometry(tier.r, tier.h, 7), pineMat);
-        foliage.position.y = tier.y;
-        foliage.castShadow = true;
-        tree.add(foliage);
-      });
-
-      propsGroup.add(tree);
-      return tree;
-    }
-
-    // Forest Border Trees
-    for (let i = 0; i < 45; i++) {
-      const angle = (i / 45) * Math.PI * 2;
-      const dist = 36 + Math.random() * 16;
-      createPineTree(Math.cos(angle) * dist, Math.sin(angle) * dist, 0.9 + Math.random() * 0.6);
-    }
-
-    // Giant Glowing Fantasy Mushrooms
-    const shrooms = [];
-    function createMushroom(x, z, colorHex = 0xff4d6d, scale = 1) {
-      const shroom = new THREE.Group();
-      shroom.position.set(x, 0, z);
-      shroom.scale.setScalar(scale);
-
-      const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, 1.2, 10), new THREE.MeshStandardMaterial({ color: 0xffeedd }));
-      stem.position.y = 0.6;
-      stem.castShadow = true;
-      shroom.add(stem);
-
-      const capMat = new THREE.MeshStandardMaterial({
-        color: colorHex,
-        emissive: colorHex,
-        emissiveIntensity: 0.45,
-        roughness: 0.3
-      });
-      const cap = new THREE.Mesh(new THREE.SphereGeometry(0.85, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.55), capMat);
-      cap.position.y = 1.1;
-      cap.castShadow = true;
-      shroom.add(cap);
-
-      // Soft pointlight
-      const shroomLight = new THREE.PointLight(colorHex, 0.8, 6);
-      shroomLight.position.set(0, 1.2, 0);
-      shroom.add(shroomLight);
-
-      propsGroup.add(shroom);
-      shrooms.push({ group: shroom, capMat });
-    }
-
-    createMushroom(12, 14, 0xff4d6d, 1.2);
-    createMushroom(-16, 12, 0x4cc9f0, 1.4);
-    createMushroom(15, -16, 0xffb703, 1.3);
-    createMushroom(-18, -14, 0xb5179e, 1.1);
-
-    // -------------------------------------------------------------
-    // ZONE 1: START ARCHWAY
-    // -------------------------------------------------------------
-    const startArch = new THREE.Group();
-    startArch.position.set(0, 0, 12);
-    const postMat = new THREE.MeshStandardMaterial({ color: 0x774936 });
-
-    const postL = new THREE.Mesh(new THREE.BoxGeometry(0.5, 4.5, 0.5), postMat);
-    postL.position.set(-3.5, 2.25, 0);
-    postL.castShadow = true;
-    startArch.add(postL);
-
-    const postR = postL.clone();
-    postR.position.x = 3.5;
-    startArch.add(postR);
-
-    const beam = new THREE.Mesh(new THREE.BoxGeometry(7.8, 0.7, 0.6), postMat);
-    beam.position.set(0, 4.2, 0);
-    beam.castShadow = true;
-    startArch.add(beam);
-
-    // Banner Text on Arch
-    const bannerCanvas = document.createElement('canvas');
-    bannerCanvas.width = 512;
-    bannerCanvas.height = 128;
-    const bctx = bannerCanvas.getContext('2d');
-    bctx.fillStyle = '#ff4d6d';
-    bctx.fillRect(0, 0, 512, 128);
-    bctx.fillStyle = '#ffffff';
-    bctx.font = 'bold 36px Syne, sans-serif';
-    bctx.textAlign = 'center';
-    bctx.fillText('KOMILA ZOKIROVA', 256, 52);
-    bctx.font = '22px Space Mono, monospace';
-    bctx.fillText('// FRONTEND DEVELOPER', 256, 95);
-
-    const bannerMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(6.5, 1.35),
-      new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(bannerCanvas) })
-    );
-    bannerMesh.position.set(0, 4.2, 0.35);
-    startArch.add(bannerMesh);
-    propsGroup.add(startArch);
-
-    // -------------------------------------------------------------
-    // ZONE 2: SKILLS DOMINO PLAYGROUND (INTERACTIVE TUMBLING BLOCKS)
-    // -------------------------------------------------------------
-    const skillBlocks = [];
-    const skillData = [
-      { name: 'React 19', color: 0x00b4d8, desc: 'Eng so\'nggi React 19, Server Actions, optimallashtirilgan render.' },
-      { name: 'TypeScript', color: 0x0077b6, desc: 'Qat\'iy turlar, xatosiz kod, toza va xavfsiz arxitektura.' },
-      { name: 'Zustand', color: 0xffb703, desc: 'Yengil va chaqqon holat boshqaruvi (state management).' },
-      { name: 'Tailwind 4', color: 0x2ec4b6, desc: 'Eng zamonaviy utility-first CSS va qulay dizayn tizimlari.' },
-      { name: 'Three.js', color: 0x9d4edd, desc: '3D WebGL animatsiyalari, interaktiv muhit va fizik tajribalar.' },
-      { name: 'REST API', color: 0x52b788, desc: 'Axios, TanStack Query, asinxron ma\'lumotlar almashinuvi.' },
-      { name: 'Zod & RHF', color: 0xff4d6d, desc: 'Sxema validatsiyasi va yuqori samarali formalar.' },
-      { name: 'Vite', color: 0x7209b7, desc: 'Sekundlik build va dastur ishlab chiqish tezligi.' }
-    ];
-
-    skillData.forEach((item, idx) => {
-      const blockCanvas = document.createElement('canvas');
-      blockCanvas.width = 256;
-      blockCanvas.height = 256;
-      const sctx = blockCanvas.getContext('2d');
-      sctx.fillStyle = '#161a2b';
-      sctx.fillRect(0, 0, 256, 256);
-      sctx.strokeStyle = '#' + item.color.toString(16).padStart(6, '0');
-      sctx.lineWidth = 14;
-      sctx.strokeRect(7, 7, 242, 242);
-      sctx.fillStyle = '#ffffff';
-      sctx.font = 'bold 36px Syne, sans-serif';
-      sctx.textAlign = 'center';
-      sctx.fillText(item.name, 128, 140);
-
-      const blockMat = new THREE.MeshStandardMaterial({
-        map: new THREE.CanvasTexture(blockCanvas),
-        roughness: 0.35,
-        metalness: 0.1
-      });
-      const blockMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 2.2, 0.6), blockMat);
-      
-      const x = -14 + (idx % 4) * 2.2;
-      const z = -6 - Math.floor(idx / 4) * 3.2;
-      blockMesh.position.set(x, 1.1, z);
-      blockMesh.castShadow = true;
-      blockMesh.receiveShadow = true;
-      propsGroup.add(blockMesh);
-
-      skillBlocks.push({
-        mesh: blockMesh,
-        origPos: new THREE.Vector3(x, 1.1, z),
-        vel: new THREE.Vector3(),
-        rotVel: new THREE.Vector3(),
-        data: item,
-        isKnocked: false
-      });
-    });
-
-    // -------------------------------------------------------------
-    // ZONE 3: PROJECTS VILLAGE (COTTAGES)
-    // -------------------------------------------------------------
-    const projectCottages = [];
-    const cottageData = [
-      {
-        id: 'crm',
-        x: 18, z: 0,
-        name: "001: Bog'cha CRM",
-        desc: "Bolalar bog'chalari uchun to'liq boshqaruv CRM platformasi. React 19, TypeScript, Zustand va Recharts.",
-        demo: "https://t.me/Komila2608",
-        repo: "https://github.com/komilazokirova/Bogcha.loyixa.jsx.9"
-      },
-      {
-        id: 'portfolio',
-        x: 18, z: -14,
-        name: "002: 3D Interaktiv Portfolio",
-        desc: "Three.js, WebGL, Bruno Simon avtomobil fizikasi va ko'p tillilik (UZ, RU, EN).",
-        demo: "https://komilazokirova.github.io/",
-        repo: "https://github.com/komilazokirova/komilazokirova.github.io"
-      },
-      {
-        id: 'uikit',
-        x: 6, z: -22,
-        name: "003: React UI To'plami",
-        desc: "Modulli interaktiv UI komponentlar, kalkulyatorlar va moslashuvchan vidjetlar.",
-        demo: "https://t.me/Komila2608",
-        repo: "https://github.com/komilazokirova"
-      }
-    ];
-
-    cottageData.forEach(proj => {
-      const house = new THREE.Group();
-      house.position.set(proj.x, 0, proj.z);
-
-      // Walls
-      const walls = new THREE.Mesh(new THREE.BoxGeometry(4.2, 3.2, 4.2), woodMat);
-      walls.position.y = 1.6;
-      walls.castShadow = true;
-      house.add(walls);
-
-      // Roof
-      const roof = new THREE.Mesh(new THREE.ConeGeometry(3.6, 2.0, 4), new THREE.MeshStandardMaterial({ color: 0x9b2226, roughness: 0.6 }));
-      roof.rotation.y = Math.PI / 4;
-      roof.position.y = 4.1;
-      roof.castShadow = true;
-      house.add(roof);
-
-      // Glowing Door & Windows
-      const door = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 2.0), new THREE.MeshBasicMaterial({ color: 0xffd166 }));
-      door.position.set(0, 1.0, 2.11);
-      house.add(door);
-
-      // Signboard
-      const signCanvas = document.createElement('canvas');
-      signCanvas.width = 256; signCanvas.height = 96;
-      const sc = signCanvas.getContext('2d');
-      sc.fillStyle = '#ff4d6d'; sc.fillRect(0,0,256,96);
-      sc.fillStyle = '#fff'; sc.font = 'bold 26px Syne'; sc.textAlign = 'center';
-      sc.fillText(proj.name.split(':')[1] || proj.name, 128, 56);
-      const signMesh = new THREE.Mesh(new THREE.PlaneGeometry(2.8, 0.9), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(signCanvas) }));
-      signMesh.position.set(0, 3.4, 2.15);
-      house.add(signMesh);
-
-      // Ring trigger on ground
-      const ring = new THREE.Mesh(
-        new THREE.RingGeometry(3.6, 4.2, 32),
-        new THREE.MeshBasicMaterial({ color: 0xffb703, side: THREE.DoubleSide, transparent: true, opacity: 0.6 })
-      );
-      ring.rotation.x = -Math.PI / 2;
-      ring.position.y = 0.05;
-      house.add(ring);
-
-      propsGroup.add(house);
-      projectCottages.push({ pos: new THREE.Vector3(proj.x, 0, proj.z), data: proj, ring });
-    });
-
-    // -------------------------------------------------------------
-    // ZONE 4: GRANDMA'S CABIN & MAILBOX (CONTACT)
-    // -------------------------------------------------------------
-    const grandmaCabin = new THREE.Group();
-    grandmaCabin.position.set(-16, 0, 18);
-
-    const cabinWalls = new THREE.Mesh(new THREE.BoxGeometry(5.5, 3.6, 5.0), woodMat);
-    cabinWalls.position.y = 1.8;
-    cabinWalls.castShadow = true;
-    grandmaCabin.add(cabinWalls);
-
-    const cabinRoof = new THREE.Mesh(
-      new THREE.ConeGeometry(4.6, 2.4, 4),
-      new THREE.MeshStandardMaterial({ color: 0x582f0e, roughness: 0.7 })
-    );
-    cabinRoof.rotation.y = Math.PI / 4;
-    cabinRoof.position.y = 4.7;
-    cabinRoof.castShadow = true;
-    grandmaCabin.add(cabinRoof);
-
-    // Warm glowing windows
-    const windowLight = new THREE.PointLight(0xffbe0b, 1.8, 12);
-    windowLight.position.set(0, 2.5, 2.8);
-    grandmaCabin.add(windowLight);
-
-    // Chimney with smoke
-    const chimney = new THREE.Mesh(new THREE.BoxGeometry(0.7, 1.8, 0.7), new THREE.MeshStandardMaterial({ color: 0x4a4e69 }));
-    chimney.position.set(1.4, 5.2, -0.6);
-    grandmaCabin.add(chimney);
-
-    // Mailbox (Interactive Contact Trigger)
-    const mailbox = new THREE.Group();
-    mailbox.position.set(3.2, 0, 2.8);
-    const mPost = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.4, 10), postMat);
-    mPost.position.y = 0.7;
-    mailbox.add(mPost);
-    const mBox = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.45, 0.9), new THREE.MeshStandardMaterial({ color: 0x0077b6 }));
-    mBox.position.y = 1.35;
-    mailbox.add(mBox);
-
-    const mailTrigger = new THREE.Mesh(
-      new THREE.RingGeometry(2.0, 2.6, 32),
-      new THREE.MeshBasicMaterial({ color: 0x52b788, side: THREE.DoubleSide, transparent: true, opacity: 0.75 })
-    );
-    mailTrigger.rotation.x = -Math.PI / 2;
-    mailTrigger.position.y = 0.05;
-    mailbox.add(mailTrigger);
-
-    grandmaCabin.add(mailbox);
-    propsGroup.add(grandmaCabin);
-
-    // -------------------------------------------------------------
-    // ZONE 5: STUNT RAMP
-    // -------------------------------------------------------------
-    const rampGroup = new THREE.Group();
-    rampGroup.position.set(0, 0, -12);
-    const rampGeo = new THREE.BoxGeometry(3.5, 1.0, 4.0);
-    const rampMesh = new THREE.Mesh(rampGeo, woodMat);
-    rampMesh.position.set(0, 0.35, 0);
-    rampMesh.rotation.x = -0.22;
-    rampMesh.castShadow = true;
-    rampMesh.receiveShadow = true;
-    rampGroup.add(rampMesh);
-    propsGroup.add(rampGroup);
-
-    // -------------------------------------------------------------
-    // COLLECTABLE SHINY APPLES
-    // -------------------------------------------------------------
-    const apples = [];
-    const applePositions = [
-      { x: 0, z: 6 }, { x: 5, z: 9 }, { x: 9, z: 4 }, { x: 12, z: -2 },
-      { x: 14, z: -8 }, { x: 8, z: -16 }, { x: 0, z: -16 }, { x: -6, z: -12 },
-      { x: -10, z: -4 }, { x: -12, z: 4 }, { x: -8, z: 12 }, { x: 0, z: -9 } // Top of jump ramp
-    ];
-
-    let applesCollected = 0;
-    const totalApples = applePositions.length;
-
-    applePositions.forEach(pos => {
-      const appleHolder = new THREE.Group();
-      appleHolder.position.set(pos.x, 0.95, pos.z);
-
-      const fruit = new THREE.Mesh(new THREE.SphereGeometry(0.32, 16, 16), new THREE.MeshStandardMaterial({
-        color: 0xff0054,
-        emissive: 0xff0054,
-        emissiveIntensity: 0.35,
-        roughness: 0.2
-      }));
-      fruit.castShadow = true;
-      appleHolder.add(fruit);
-
-      const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.2, 5), new THREE.MeshBasicMaterial({ color: 0x38b000 }));
-      leaf.position.set(0.08, 0.35, 0);
-      leaf.rotation.z = -0.5;
-      appleHolder.add(leaf);
-
-      propsGroup.add(appleHolder);
-      apples.push({ mesh: appleHolder, collected: false, basePos: new THREE.Vector3(pos.x, 0.95, pos.z) });
-    });
-
-    // -------------------------------------------------------------
-    // 150 FLOATING FIREFLIES / MAGICAL POLLEN PARTICLES
-    // -------------------------------------------------------------
-    const fireflyGeo = new THREE.BufferGeometry();
-    const fireflyCount = 120;
-    const fireflyPositions = new Float32Array(fireflyCount * 3);
-    for (let i = 0; i < fireflyCount * 3; i += 3) {
-      fireflyPositions[i] = (Math.random() - 0.5) * 80;
-      fireflyPositions[i+1] = 0.5 + Math.random() * 6;
-      fireflyPositions[i+2] = (Math.random() - 0.5) * 80;
-    }
-    fireflyGeo.setAttribute('position', new THREE.BufferAttribute(fireflyPositions, 3));
-    const fireflyMat = new THREE.PointsMaterial({
-      color: 0xffe66d,
-      size: 0.35,
-      transparent: true,
-      opacity: 0.85
-    });
-    const fireflies = new THREE.Points(fireflyGeo, fireflyMat);
-    scene.add(fireflies);
-
-
-    /* ==========================================================================
-       8. ARCADE VEHICLE PHYSICS & CONTROLS
-       ========================================================================== */
-    const carState = {
-      pos: new THREE.Vector3(0, 0, 15), // Starts just before the Start Arch
-      vel: new THREE.Vector3(),
-      speed: 0,
-      heading: 0, // Facing -Z (north)
-      steerAngle: 0,
-      isDrifting: false,
-      isGrounded: true,
-      verticalVel: 0,
-      // Input flags
-      gas: false,
-      brake: false,
-      left: false,
-      right: false,
-      drift: false
-    };
-
-    // Keyboard Listeners
-    window.addEventListener('keydown', (e) => {
-      soundEngine.init();
-      switch (e.code) {
-        case 'KeyW': case 'ArrowUp': carState.gas = true; break;
-        case 'KeyS': case 'ArrowDown': carState.brake = true; break;
-        case 'KeyA': case 'ArrowLeft': carState.left = true; break;
-        case 'KeyD': case 'ArrowRight': carState.right = true; break;
-        case 'Space': carState.drift = true; break;
-        case 'KeyR': resetCar(); break;
-      }
-    });
-
-    window.addEventListener('keyup', (e) => {
-      switch (e.code) {
-        case 'KeyW': case 'ArrowUp': carState.gas = false; break;
-        case 'KeyS': case 'ArrowDown': carState.brake = false; break;
-        case 'KeyA': case 'ArrowLeft': carState.left = false; break;
-        case 'KeyD': case 'ArrowRight': carState.right = false; break;
-        case 'Space': carState.drift = false; break;
-      }
-    });
-
-    // Touch Virtual Controls
-    function bindTouch(id, prop) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const start = (e) => { e.preventDefault(); soundEngine.init(); carState[prop] = true; el.classList.add('active'); };
-      const end = (e) => { e.preventDefault(); carState[prop] = false; el.classList.remove('active'); };
-      el.addEventListener('touchstart', start, { passive: false });
-      el.addEventListener('touchend', end);
-      el.addEventListener('mousedown', start);
-      el.addEventListener('mouseup', end);
-      el.addEventListener('mouseleave', end);
-    }
-    bindTouch('btnGas', 'gas');
-    bindTouch('btnBrake', 'brake');
-    bindTouch('btnLeft', 'left');
-    bindTouch('btnRight', 'right');
-
-    function resetCar() {
-      carState.pos.set(0, 0, 15);
-      carState.speed = 0;
-      carState.vel.set(0,0,0);
-      carState.verticalVel = 0;
-      carState.heading = 0;
-      carState.steerAngle = 0;
-      showBanner(translations[currentLang].zone_start_title, translations[currentLang].zone_start_desc);
-    }
-    document.getElementById('resetBtn').addEventListener('click', resetCar);
-
-
-    /* ==========================================================================
-       9. ZONE TRIGGERS & NOTIFICATION SYSTEM
-       ========================================================================== */
-    const banner = document.getElementById('zoneBanner');
-    const bannerTitle = document.getElementById('zoneTitle');
-    const bannerDesc = document.getElementById('zoneDesc');
-    let bannerTimeout = null;
-
-    function showBanner(title, desc, duration = 4000) {
-      bannerTitle.textContent = title;
-      bannerDesc.textContent = desc;
-      banner.classList.add('visible');
-      if (bannerTimeout) clearTimeout(bannerTimeout);
-      bannerTimeout = setTimeout(() => banner.classList.remove('visible'), duration);
-    }
-
-    // Modal Manager
-    const modal = document.getElementById('gameModal');
-    const modalContent = document.getElementById('modalContent');
-    document.getElementById('modalCloseBtn').addEventListener('click', () => modal.classList.remove('active'));
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
-
-    function openProjectModal(proj) {
-      modalContent.innerHTML = `
-        <span class="section-tag" style="color:var(--accent-gold); font-size:0.75rem;">// LOYIHA HAQIDA</span>
-        <h2 style="font-family:'Syne',sans-serif; font-size:1.6rem; color:#fff; margin:0.4rem 0 0.85rem;">${proj.name}</h2>
-        <p style="color:var(--muted); line-height:1.6; margin-bottom:1.5rem; font-size:0.95rem;">${proj.desc}</p>
-        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-          <a href="${proj.demo}" target="_blank" class="btn-main btn-primary" style="flex:1; justify-content:center;">Jonli Demo ▶</a>
-          <a href="${proj.repo}" target="_blank" class="btn-main btn-outline" style="flex:1; justify-content:center;">GitHub Repo ↗</a>
-        </div>
-      `;
-      modal.classList.add('active');
-    }
-
-    function openGrandmaModal() {
-      modalContent.innerHTML = `
-        <span class="section-tag" style="color:var(--accent); font-size:0.75rem;">👵 BUVISINING KULBASI</span>
-        <h2 style="font-family:'Syne',sans-serif; font-size:1.6rem; color:#fff; margin:0.4rem 0 0.85rem;">Komila Zokirova bilan Aloqa</h2>
-        <p style="color:var(--muted); line-height:1.6; margin-bottom:1.5rem; font-size:0.95rem;">
-          Qizil Qalpoqcha manzilga yetib keldi! Yangi loyihalar, ish takliflari yoki rezyumeni (CV) so'rash uchun quyidagi tugmalar orqali bog'lanishingiz mumkin:
-        </p>
-        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-          <a href="https://t.me/Komila2608" target="_blank" class="btn-main btn-primary" style="flex:1; justify-content:center;">Telegramda yozish ✈</a>
-          <a href="mailto:zokirovakomila500@gmail.com" class="btn-main btn-outline" style="flex:1; justify-content:center;">Email orqali ✉</a>
-        </div>
-      `;
-      modal.classList.add('active');
-    }
-
-    let activeZone = null;
-    function checkZones(pos) {
-      // 1. Start Arch
-      if (pos.distanceTo(new THREE.Vector3(0, 0, 12)) < 4.5 && activeZone !== 'start') {
-        activeZone = 'start';
-        showBanner(translations[currentLang].zone_start_title, translations[currentLang].zone_start_desc);
-      }
-      // 2. Skills Playground
-      else if (pos.distanceTo(new THREE.Vector3(-10, 0, -8)) < 8.0 && activeZone !== 'skills') {
-        activeZone = 'skills';
-        showBanner(translations[currentLang].zone_skills_title, translations[currentLang].zone_skills_desc);
-      }
-      // 3. Projects Village
-      else if (pos.distanceTo(new THREE.Vector3(14, 0, -8)) < 12.0 && activeZone !== 'projects') {
-        activeZone = 'projects';
-        showBanner(translations[currentLang].zone_projects_title, translations[currentLang].zone_projects_desc);
-      }
-      // 4. Grandma's Cabin
-      else if (pos.distanceTo(new THREE.Vector3(-14, 0, 18)) < 7.0 && activeZone !== 'grandma') {
-        activeZone = 'grandma';
-        showBanner(translations[currentLang].zone_grandma_title, translations[currentLang].zone_grandma_desc);
-      }
-
-      // Check Cottage Proximity
-      projectCottages.forEach(c => {
-        if (pos.distanceTo(c.pos) < 3.2 && !modal.classList.contains('active')) {
-          openProjectModal(c.data);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 5);
+
+    // Galaxy Particle System
+    function createGalaxy() {
+      const isMobile = window.innerWidth <= 768;
+      const count = isMobile ? 1800 : 3800;
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(count * 3);
+      const col = new Float32Array(count * 3);
+      const sizes = new Float32Array(count);
+
+      const branches = 4;
+      const spin = 1.2;
+      const spread = 2.5;
+
+      for (let i = 0; i < count; i++) {
+        const r = Math.random() * 6.5;
+        const branch = ((i % branches) / branches) * Math.PI * 2;
+        const spinAngle = r * spin;
+        const randX = Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1) * spread * (r / 6.5);
+        const randY = Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1) * spread * (r / 6.5);
+        const randZ = Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1) * spread * (r / 6.5);
+
+        pos[i * 3]     = Math.cos(branch + spinAngle) * r + randX;
+        pos[i * 3 + 1] = randY * 0.35;
+        pos[i * 3 + 2] = Math.sin(branch + spinAngle) * r + randZ;
+
+        sizes[i] = Math.random() * 2 + 0.5;
+
+        // Gradient: Neon Pink -> Neon Purple -> Mint Teal
+        const ratio = r / 6.5;
+        if (ratio < 0.38) {
+          col[i * 3]     = 1.0;
+          col[i * 3 + 1] = 0.43 + ratio * 0.5;
+          col[i * 3 + 2] = 0.70 + ratio * 0.4;
+        } else if (ratio < 0.72) {
+          col[i * 3]     = 0.69 - (ratio - 0.38) * 0.5;
+          col[i * 3 + 1] = 0.43;
+          col[i * 3 + 2] = 1.0;
+        } else {
+          col[i * 3]     = 0.25;
+          col[i * 3 + 1] = 0.95;
+          col[i * 3 + 2] = 0.85;
         }
+      }
+
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+      const mat = new THREE.PointsMaterial({
+        size: 0.02,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85,
+        sizeAttenuation: true,
+        depthWrite: false,
       });
 
-      // Check Mailbox Proximity
-      if (pos.distanceTo(new THREE.Vector3(-12.8, 0, 20.8)) < 2.5 && !modal.classList.contains('active')) {
-        openGrandmaModal();
-      }
+      return new THREE.Points(geo, mat);
     }
 
+    const galaxy = createGalaxy();
+    galaxy.rotation.x = 0.42;
+    scene.add(galaxy);
 
-    /* ==========================================================================
-       10. ANIMATION & PHYSICS LOOP
-       ========================================================================== */
+    // Floating Geometric Shapes
+    const icoMesh = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.85, 1),
+      new THREE.MeshStandardMaterial({ color: 0xff6eb4, wireframe: true, transparent: true, opacity: 0.35 })
+    );
+    icoMesh.position.set(3.6, 0.2, -1);
+    scene.add(icoMesh);
+
+    const knotMesh = new THREE.Mesh(
+      new THREE.TorusKnotGeometry(0.55, 0.16, 120, 16),
+      new THREE.MeshStandardMaterial({ color: 0xb06eff, wireframe: true, transparent: true, opacity: 0.3 })
+    );
+    knotMesh.position.set(-3.6, 0, -1);
+    scene.add(knotMesh);
+
+    const octMesh = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.48),
+      new THREE.MeshStandardMaterial({ color: 0x6effd4, wireframe: true, transparent: true, opacity: 0.4 })
+    );
+    octMesh.position.set(2.0, 2.3, -2);
+    scene.add(octMesh);
+
+    // Lighting
+    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+
+    const pinkLight = new THREE.PointLight(0xff6eb4, 3, 12);
+    pinkLight.position.set(3, 2, 2);
+    scene.add(pinkLight);
+
+    const purpleLight = new THREE.PointLight(0xb06eff, 2.5, 12);
+    purpleLight.position.set(-3, -1, 1);
+    scene.add(purpleLight);
+
+    // Mouse Interaction
+    let targetX = 0, targetY = 0;
+    document.addEventListener('mousemove', e => {
+      targetX = (e.clientX / window.innerWidth - 0.5) * 1.2;
+      targetY = -(e.clientY / window.innerHeight - 0.5) * 1.2;
+    });
+
+    // Animation Loop
     const clock = new THREE.Clock();
-    const speedValEl = document.getElementById('speedVal');
-    const speedBarEl = document.getElementById('speedBar');
-    const appleScoreText = document.getElementById('appleScoreText');
-
-    function animate() {
+    (function animate() {
       requestAnimationFrame(animate);
-      const dt = Math.min(clock.getDelta(), 0.1);
-      const time = clock.getElapsedTime();
+      const t = clock.getElapsedTime();
 
-      // --- 1. Vehicle Acceleration & Steering ---
-      const maxSpeed = carState.drift ? 14 : 18;
-      const accel = 18;
-      const drag = 3.5;
+      galaxy.rotation.y = t * 0.035;
 
-      if (carState.gas) {
-        carState.speed += accel * dt;
-        if (carState.speed > maxSpeed) carState.speed = maxSpeed;
-      } else if (carState.brake) {
-        carState.speed -= accel * 1.3 * dt;
-        if (carState.speed < -7) carState.speed = -7;
-      } else {
-        // Natural friction
-        if (carState.speed > 0) {
-          carState.speed = Math.max(0, carState.speed - drag * dt);
-        } else if (carState.speed < 0) {
-          carState.speed = Math.min(0, carState.speed + drag * dt);
-        }
-      }
+      icoMesh.rotation.x = t * 0.3;
+      icoMesh.rotation.y = t * 0.22;
+      icoMesh.position.y = 0.2 + Math.sin(t * 0.7) * 0.18;
 
-      // Steering with speed sensitivity
-      const steerSpeed = 2.4;
-      const targetSteer = (carState.left ? 1 : 0) - (carState.right ? 1 : 0);
-      carState.steerAngle += (targetSteer * 0.55 - carState.steerAngle) * steerSpeed * dt * 4;
+      knotMesh.rotation.x = t * 0.25;
+      knotMesh.rotation.z = t * 0.35;
+      knotMesh.position.y = Math.sin(t * 0.6 + 1) * 0.2;
 
-      if (Math.abs(carState.speed) > 0.1) {
-        const turnMult = carState.speed > 0 ? 1 : -1;
-        const driftBoost = carState.drift ? 1.65 : 1.0;
-        carState.heading += carState.steerAngle * (carState.speed / maxSpeed) * turnMult * driftBoost * 2.8 * dt;
-      }
+      octMesh.rotation.x = t * 0.5;
+      octMesh.rotation.y = t * 0.38;
+      octMesh.position.y = 2.3 + Math.sin(t * 0.9) * 0.12;
 
-      // --- 2. Update Position & Orientation ---
-      const moveVec = new THREE.Vector3(
-        -Math.sin(carState.heading) * carState.speed * dt,
-        0,
-        -Math.cos(carState.heading) * carState.speed * dt
-      );
-      carState.pos.add(moveVec);
+      pinkLight.intensity = 2.5 + Math.sin(t * 1.2) * 0.8;
+      purpleLight.intensity = 2.0 + Math.sin(t * 0.9 + 1) * 0.7;
 
-      // Bound within map
-      carState.pos.x = Math.max(-55, Math.min(55, carState.pos.x));
-      carState.pos.z = Math.max(-55, Math.min(55, carState.pos.z));
+      camera.position.x += (targetX - camera.position.x) * 0.04;
+      camera.position.y += (targetY - camera.position.y) * 0.04;
+      camera.lookAt(scene.position);
 
-      // --- 3. Stunt Ramp Jumping Physics ---
-      const rampDist = carState.pos.distanceTo(new THREE.Vector3(0, 0, -12));
-      if (rampDist < 2.5 && carState.pos.y <= 0.1 && Math.abs(carState.speed) > 6) {
-        carState.verticalVel = 7.5; // Jump launch!
-        carState.isGrounded = false;
-        soundEngine.playBump();
-      }
-
-      if (!carState.isGrounded || carState.pos.y > 0) {
-        carState.verticalVel -= 22 * dt; // Gravity
-        carState.pos.y += carState.verticalVel * dt;
-        if (carState.pos.y <= 0) {
-          carState.pos.y = 0;
-          carState.verticalVel = 0;
-          carState.isGrounded = true;
-          soundEngine.playBump();
-        }
-      }
-
-      // Apply to car 3D mesh
-      carGroup.position.copy(carState.pos);
-      carGroup.rotation.y = carState.heading;
-
-      // Suspension roll when turning & pitch when braking
-      const rollAngle = -carState.steerAngle * (carState.speed / maxSpeed) * 0.15;
-      const pitchAngle = carState.brake ? 0.08 : (carState.gas ? -0.05 : 0);
-      chassis.rotation.z = rollAngle;
-      chassis.rotation.x = pitchAngle;
-
-      // Front wheels steering & all wheels rolling
-      wheels.forEach(w => {
-        if (w.isFront) {
-          w.mesh.rotation.y = carState.steerAngle;
-        }
-        w.tireMesh.rotation.x -= (carState.speed / 0.36) * dt;
-      });
-
-      // Little Red Riding Hood Head & Cape Flutter
-      head.rotation.y = -carState.steerAngle * 0.6;
-      flutteringCape.rotation.x = 0.45 + (carState.speed / maxSpeed) * 0.4 + Math.sin(time * 16) * 0.08;
-
-      // Engine sound frequency
-      const speedRatio = Math.abs(carState.speed) / maxSpeed;
-      soundEngine.updateEngineSpeed(speedRatio);
-
-      // HUD Speedometer Update
-      const kmh = Math.round(speedRatio * 85);
-      speedValEl.textContent = kmh;
-      speedBarEl.style.width = Math.min(100, (kmh / 85) * 100) + '%';
-
-      // --- 4. Tire Dust & Drift Particles ---
-      if (Math.abs(carState.speed) > 3) {
-        if (Math.random() < 0.4) {
-          const rearPos = carState.pos.clone().add(new THREE.Vector3(0, 0.2, 0.8).applyAxisAngle(new THREE.Vector3(0,1,0), carState.heading));
-          emitDust(rearPos, carState.drift);
-        }
-        if (carState.drift && Math.random() < 0.15) {
-          soundEngine.playSkid();
-        }
-      }
-
-      // Update dust particles
-      dustParticles.forEach(p => {
-        if (!p.mesh.visible) return;
-        p.life++;
-        p.mesh.position.add(p.vel);
-        p.mesh.scale.multiplyScalar(1.02);
-        p.mesh.material.opacity *= 0.94;
-        if (p.life >= p.maxLife) p.mesh.visible = false;
-      });
-
-      // --- 5. Skill Blocks Collision & Tumbling ---
-      skillBlocks.forEach(b => {
-        const dist = carState.pos.distanceTo(b.mesh.position);
-        if (dist < 1.6) {
-          if (!b.isKnocked) {
-            b.isKnocked = true;
-            soundEngine.playBump();
-            showBanner(`⚡ ${b.data.name}`, b.data.desc, 3500);
-            b.vel.set(
-              -Math.sin(carState.heading) * (carState.speed * 0.6),
-              3.5,
-              -Math.cos(carState.heading) * (carState.speed * 0.6)
-            );
-            b.rotVel.set(Math.random() * 4 - 2, Math.random() * 4 - 2, Math.random() * 4 - 2);
-          }
-        }
-
-        // Tumbling physics
-        if (b.isKnocked) {
-          b.mesh.position.addScaledVector(b.vel, dt);
-          b.mesh.rotation.x += b.rotVel.x * dt;
-          b.mesh.rotation.y += b.rotVel.y * dt;
-          b.mesh.rotation.z += b.rotVel.z * dt;
-
-          b.vel.y -= 18 * dt; // Gravity
-          if (b.mesh.position.y <= 0.6) {
-            b.mesh.position.y = 0.6;
-            b.vel.y *= -0.4;
-            b.vel.x *= 0.8;
-            b.vel.z *= 0.8;
-          }
-        }
-      });
-
-      // --- 6. Collect Shiny Apples ---
-      apples.forEach(apple => {
-        if (apple.collected) return;
-        apple.mesh.rotation.y = time * 2.2;
-        apple.mesh.position.y = apple.basePos.y + Math.sin(time * 3 + apple.basePos.x) * 0.12;
-
-        if (carState.pos.distanceTo(apple.mesh.position) < 1.6) {
-          apple.collected = true;
-          apple.mesh.visible = false;
-          applesCollected++;
-          appleScoreText.textContent = `${applesCollected} / ${totalApples}`;
-          soundEngine.playAppleChime();
-          showBanner('🍎 Olma Topildi!', `Siz sehrli olmani yig'dingiz! (${applesCollected}/${totalApples})`, 2500);
-        }
-      });
-
-      // --- 7. Fireflies & Glowing Mushrooms Animation ---
-      shrooms.forEach((shroom, i) => {
-        shroom.capMat.emissiveIntensity = 0.35 + Math.sin(time * 2.5 + i) * 0.2;
-      });
-
-      const posAttr = fireflyGeo.attributes.position;
-      for (let i = 0; i < fireflyCount; i++) {
-        const yIdx = i * 3 + 1;
-        posAttr.array[yIdx] += Math.sin(time * 2 + i) * 0.008;
-      }
-      posAttr.needsUpdate = true;
-
-      // --- 8. Smooth Camera Tracking ---
-      const targetCamPos = carState.pos.clone().add(cameraOffset);
-      camera.position.lerp(targetCamPos, 0.065);
-      const lookTarget = carState.pos.clone().add(new THREE.Vector3(0, 1.2, 0));
-      camera.lookAt(lookTarget);
-
-      // Check current zone triggers
-      checkZones(carState.pos);
-
-      // Render 3D Scene
       renderer.render(scene, camera);
-    }
+    })();
 
-    animate();
-
-    // Window Resize Handler
+    // Resize Handler
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-
-    /* ==========================================================================
-       11. MODE SWITCHER & CLASSIC PORTFOLIO TOGGLE
-       ========================================================================== */
-    const modeToggleBtn = document.getElementById('modeToggleBtn');
-    const modeIcon = document.getElementById('modeIcon');
-    const modeText = document.getElementById('modeText');
-    const classicPortfolio = document.getElementById('classic-portfolio');
-    const gameContainer = document.getElementById('game-container');
-    let isGameMode = true;
-
-    function toggleMode() {
-      isGameMode = !isGameMode;
-      if (isGameMode) {
-        classicPortfolio.classList.remove('visible');
-        modeIcon.textContent = '📄';
-        modeText.textContent = 'Klassik Portfolio';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        classicPortfolio.classList.add('visible');
-        modeIcon.textContent = '🎮';
-        modeText.textContent = "3D O'yinga Qaytish";
-        classicPortfolio.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    function switchToGame() {
-      if (!isGameMode) toggleMode();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    modeToggleBtn.addEventListener('click', toggleMode);
-
-    // Initial Language Setup
-    setLanguage(currentLang);
-    showBanner(translations[currentLang].zone_start_title, translations[currentLang].zone_start_desc, 6000);
-
-    // Contact Form Telegram Handler
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-      contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('cName').value.trim();
-        const contact = document.getElementById('cContact').value.trim();
-        const message = document.getElementById('cMessage').value.trim();
-        if (!name || !message) return;
-
-        const text = encodeURIComponent(
-          `Salom Komila! Portfoliangiz (3D Ertaklar O'rmoni) orqali xabar:\n\n👤 Ism: ${name}\n📞 Kontakt: ${contact}\n💬 Xabar: ${message}`
-        );
-        window.open(`https://t.me/Komila2608?text=${text}`, '_blank');
-      });
-    }
-
-    // CV Download Button Modal
-    document.getElementById('cvDownloadBtn')?.addEventListener('click', () => {
-      openGrandmaModal();
+    // Scroll Parallax
+    window.addEventListener('scroll', () => {
+      galaxy.rotation.z = window.scrollY * 0.00025;
+      galaxy.position.y = window.scrollY * 0.0005;
     });
   </script>
 </body>
